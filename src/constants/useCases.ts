@@ -16,6 +16,11 @@ export type UseCasePreset = {
   outcome: string;
   idealFor: ReadonlyArray<string>;
   audience: ReadonlyArray<LaunchPathAudience>;
+  timeBudget: {
+    minMinutes: number;
+    maxMinutes: number;
+    label: string;
+  };
   momentumTip: string;
   taskTemplates: ReadonlyArray<{ icon: string; text: string }>;
   playbook: {
@@ -36,6 +41,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Best for consistency over long study days.',
     idealFor: ['Exam prep', 'Lecture backlog', 'Balanced energy'],
     audience: ['desk'],
+    timeBudget: {
+      minMinutes: 90,
+      maxMinutes: 240,
+      label: '90-240 min deep study windows',
+    },
     momentumTip: 'Batch 2-3 related chapters per cycle to avoid context switching.',
     taskTemplates: [
       { icon: '🧠', text: 'Summarize one chapter into 10 active-recall prompts' },
@@ -58,6 +68,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Fewer switches, more deep concentration.',
     idealFor: ['Feature shipping', 'Writing drafts', 'High clarity windows'],
     audience: ['desk'],
+    timeBudget: {
+      minMinutes: 120,
+      maxMinutes: 300,
+      label: '120-300 min maker blocks',
+    },
     momentumTip: 'Define one hard outcome before pressing start to protect the block.',
     taskTemplates: [
       { icon: '🛠️', text: 'Ship one feature slice end-to-end (build + test + commit)' },
@@ -80,6 +95,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Fast momentum when energy is scattered.',
     idealFor: ['Low motivation', 'Task anxiety', 'Quick restart days'],
     audience: ['desk', 'reset'],
+    timeBudget: {
+      minMinutes: 30,
+      maxMinutes: 90,
+      label: '30-90 min restart sessions',
+    },
     momentumTip: 'Aim for 3 fast wins first; confidence usually rebounds by session 2.',
     taskTemplates: [
       { icon: '✅', text: 'Finish one avoided 15-minute starter task' },
@@ -102,6 +122,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Turn fragmented travel time into measurable progress.',
     idealFor: ['Transit sessions', 'Errand gaps', 'On-the-go planning'],
     audience: ['mobile', 'reset'],
+    timeBudget: {
+      minMinutes: 30,
+      maxMinutes: 75,
+      label: '30-75 min commute pockets',
+    },
     momentumTip: 'Queue bite-sized tasks before leaving home so you can start instantly.',
     taskTemplates: [
       { icon: '📱', text: 'Process and archive one quick message triage batch' },
@@ -124,6 +149,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Protect maker time between calls while staying responsive.',
     idealFor: ['Meeting-heavy days', 'Context switching', 'Office or hybrid schedules'],
     audience: ['desk', 'mobile'],
+    timeBudget: {
+      minMinutes: 45,
+      maxMinutes: 150,
+      label: '45-150 min between calls',
+    },
     momentumTip: 'Anchor one must-ship output in every 2 focus blocks to avoid meeting-day drift.',
     taskTemplates: [
       { icon: '📦', text: 'Ship one scoped deliverable before your next meeting starts' },

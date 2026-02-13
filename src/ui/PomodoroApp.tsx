@@ -1124,6 +1124,10 @@ Rescue
               <strong>{recommendedPreset?.xpPerHour ?? activePlanPerformance.xpPerHour}</strong>
             </li>
             <li>
+              <span>Best time budget</span>
+              <strong>{heroRecommendedPath.timeBudget.label}</strong>
+            </li>
+            <li>
               <span>Finish first run by</span>
               <strong>{heroRecommendedTiming?.finishByLabel ?? formatFinishBy(heroRecommendedPath.settings.focus)}</strong>
             </li>
@@ -1227,6 +1231,7 @@ Rescue
                   <li><span>Rhythm</span><strong>{plan.preset.settings.focus}/{plan.preset.settings.shortBreak}/{plan.preset.settings.longBreak}</strong></li>
                   <li><span>Sessions/day</span><strong>{plan.sessions}</strong></li>
                   <li><span>Projected XP/hour</span><strong>{plan.xpPerHour}</strong></li>
+                  <li><span>Best time budget</span><strong>{plan.preset.timeBudget.label}</strong></li>
                   <li>
                     <span>Finish by (if started now)</span>
                     <strong>{launchPathTimings.get(plan.preset.id)?.finishByLabel ?? formatFinishBy(plan.preset.settings.focus)}</strong>
@@ -1921,6 +1926,7 @@ Rescue
                   <h3>{blueprint.icon} {blueprint.title}</h3>
                   <p>{blueprint.summary}</p>
                   <small>Recommended rhythm: {preset.name}</small>
+                  <small>Best time budget: {preset.timeBudget.label}</small>
                   <div className="preset-tags" aria-label="Best-fit situations">
                     {preset.idealFor.map((tag) => (
                       <span key={`${blueprint.id}-${tag}`}>{tag}</span>
@@ -1967,6 +1973,7 @@ Rescue
                 <small>
                   Rhythm: {preset.settings.focus}m focus / {preset.settings.shortBreak}m break · long break every {preset.settings.longBreakInterval}
                 </small>
+                <small>Best time budget: {preset.timeBudget.label}</small>
                 <small>Cycle length: {cycleMinutes} min</small>
                 <button type="button" className="ghost" disabled={isActive} onClick={() => applyPresetAndStart(preset)}>
                   {isActive ? 'Current active setup' : 'Use this rhythm now'}
