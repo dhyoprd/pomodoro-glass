@@ -244,6 +244,8 @@ export function PomodoroApp() {
 
   const recommendedPreset = rankedPresetPlans[0];
 
+  const activePlaybookPreset = activePreset ?? recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
+
   const profileRecommendation = useMemo(
     () => recommendPresetByProfile(USE_CASE_PRESETS, matchmaker),
     [matchmaker],
@@ -628,6 +630,31 @@ export function PomodoroApp() {
           <article>
             <strong>3) Compound visible wins</strong>
             <p>Track weekly consistency, unlock milestones, and ship real progress instead of random timer noise.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="use-case-playbook" aria-label="Use-case execution playbook">
+        <div className="use-case-playbook-head">
+          <h2>{activePlaybookPreset.icon} {activePlaybookPreset.name} Playbook</h2>
+          <span>Use-case-first execution guide. Switch presets to load a different runbook.</span>
+        </div>
+        <div className="use-case-playbook-grid">
+          <article>
+            <strong>Objective</strong>
+            <p>{activePlaybookPreset.playbook.objective}</p>
+          </article>
+          <article>
+            <strong>Kickoff</strong>
+            <p>{activePlaybookPreset.playbook.kickoff}</p>
+          </article>
+          <article>
+            <strong>Loop</strong>
+            <p>{activePlaybookPreset.playbook.loop}</p>
+          </article>
+          <article>
+            <strong>Review</strong>
+            <p>{activePlaybookPreset.playbook.review}</p>
           </article>
         </div>
       </section>
