@@ -1126,10 +1126,16 @@ export function PomodoroApp() {
         </div>
         {topPresetScoreboard.length ? (
           <div className="launch-paths-grid">
-            {topPresetScoreboard.map((plan) => (
-              <article key={`launch-${plan.preset.id}`} className="launch-path-card">
+            {topPresetScoreboard.map((plan) => {
+              const isRecommendedPath = plan.preset.id === recommendedPreset?.preset.id;
+
+              return (
+                <article key={`launch-${plan.preset.id}`} className="launch-path-card">
                 <div className="launch-path-card-head">
-                  <strong>{plan.preset.icon} {plan.preset.name}</strong>
+                  <div className="launch-path-card-title-row">
+                    <strong>{plan.preset.icon} {plan.preset.name}</strong>
+                    {isRecommendedPath ? <span className="launch-path-badge">Best fit now</span> : null}
+                  </div>
                   <span>{Math.round(plan.focusRatio * 100)}% focus density</span>
                 </div>
                 <p>{plan.preset.outcome}</p>
@@ -1158,7 +1164,8 @@ export function PomodoroApp() {
                   </button>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="launch-path-empty" role="status">
