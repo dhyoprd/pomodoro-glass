@@ -63,6 +63,7 @@ export function PomodoroApp() {
   const [quickStartLinkStatus, setQuickStartLinkStatus] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
   const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [activeSectionId, setActiveSectionId] = useState('focus-timer');
+  const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
   const hasHydratedQuickStart = useRef(false);
 
   const scrollToSection = (sectionId: string) => {
@@ -728,12 +729,24 @@ export function PomodoroApp() {
           <span>Quick answers before you start your first session.</span>
         </div>
         <div className="landing-faq-grid">
-          {LANDING_FAQ.map((item) => (
-            <article key={item.id}>
-              <h3>{item.question}</h3>
-              <p>{item.answer}</p>
-            </article>
-          ))}
+          {LANDING_FAQ.map((item) => {
+            const isOpen = openFaqId === item.id;
+
+            return (
+              <article key={item.id}>
+                <button
+                  type="button"
+                  className="faq-toggle"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpenFaqId((current) => (current === item.id ? null : item.id))}
+                >
+                  <h3>{item.question}</h3>
+                  <span aria-hidden="true">{isOpen ? '−' : '+'}</span>
+                </button>
+                {isOpen ? <p>{item.answer}</p> : null}
+              </article>
+            );
+          })}
         </div>
       </section>
 

@@ -364,6 +364,25 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   font-size: 0.92rem;
 }
 
+.faq-toggle {
+  border: none;
+  background: transparent;
+  color: inherit;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-toggle span {
+  font-size: 1rem;
+  color: var(--muted);
+}
+
 .landing-faq-grid p {
   margin: 0;
   color: var(--muted);
