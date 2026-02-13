@@ -120,6 +120,8 @@ export function PomodoroApp() {
       const focusMinutes = sessions * preset.settings.focus;
       const remainder = planningMinutes - sessions * cycleMinutes;
       const focusRatio = focusMinutes / planningMinutes;
+      const estimatedXp = sessions * XP_PER_SESSION + focusMinutes * XP_PER_FOCUS_MINUTE;
+      const xpPerHour = Math.round((estimatedXp / planningMinutes) * 60);
       const score = focusRatio * 100 - remainder;
 
       return {
@@ -128,6 +130,8 @@ export function PomodoroApp() {
         focusMinutes,
         remainder,
         score,
+        focusRatio,
+        xpPerHour,
       };
     }).sort((a, b) => b.score - a.score),
   [planningMinutes]);
@@ -290,6 +294,9 @@ export function PomodoroApp() {
                       <span>{plan.preset.icon} {plan.preset.name}</span>
                     </div>
                     <small>{plan.sessions} sessions · {plan.focusMinutes} focus min · {plan.remainder} min buffer</small>
+                    <small>
+                      Focus density: {Math.round(plan.focusRatio * 100)}% · XP/hour: {plan.xpPerHour}
+                    </small>
                     <button type="button" className="ghost" disabled={isActivePlan} onClick={() => applyPreset(plan.preset)}>
                       {isActivePlan ? 'Current setup' : 'Switch to this'}
                     </button>
