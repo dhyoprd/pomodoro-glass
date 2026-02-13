@@ -30,6 +30,7 @@ src/
     AppController.ts          # orchestration / use-case layer
   constants/
     index.ts
+    useCases.ts              # presets + outcome blueprints source of truth
   domain/
     Timer.ts
   hooks/
@@ -55,6 +56,10 @@ npm run dev
 ```
 
 Open `http://localhost:3000`.
+
+## 📚 Product docs
+
+- [Use-Case-First Playbook](docs/use-case-first.md)
 
 ## 🧪 Quality checks
 
