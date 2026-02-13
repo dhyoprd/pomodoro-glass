@@ -9,6 +9,7 @@ import {
   USE_CASE_PRESETS,
   type UseCasePreset,
 } from '@/constants/useCases';
+import { LANDING_SOCIAL_PROOF } from '@/constants/landingProof';
 import {
   XP_PER_FOCUS_MINUTE,
   XP_PER_SESSION,
@@ -578,6 +579,29 @@ export function PomodoroApp() {
           >
             {deferredInstallPrompt ? 'Install Loose app' : 'Install unavailable'}
           </button>
+        </div>
+      </section>
+
+      <section className="landing-social-proof" aria-label="Real use-case momentum wins">
+        <div className="landing-social-proof-head">
+          <h2>Outcome-first wins from real focus routines</h2>
+          <span>Short stories mapped directly to Loose blueprints.</span>
+        </div>
+        <div className="landing-social-proof-grid">
+          {LANDING_SOCIAL_PROOF.map((story) => (
+            <article key={story.id}>
+              <div className="story-head">
+                <strong>{story.icon} {story.archetype}</strong>
+                <span>{story.blueprint}</span>
+              </div>
+              <p>{story.quote}</p>
+              <ul aria-label={`Momentum stats for ${story.archetype}`}>
+                <li><span>Outcome</span><strong>{story.outcome}</strong></li>
+                <li><span>Streak lift</span><strong>{story.streakLift}</strong></li>
+                <li><span>Focus sessions</span><strong>{story.focusWins}</strong></li>
+              </ul>
+            </article>
+          ))}
         </div>
       </section>
 
