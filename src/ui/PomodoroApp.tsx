@@ -732,11 +732,31 @@ export function PomodoroApp() {
   const shareLink = async (url: string, title: string, text: string, successMessage: string) => {
     if (typeof window === 'undefined') return;
 
+    const fallbackToClipboard = async () => {
+      if (!navigator.clipboard) {
+        setQuickStartLinkStatus({
+          kind: 'error',
+          message: 'Sharing is unavailable and clipboard access is blocked in this browser.',
+        });
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(url);
+        setQuickStartLinkStatus({
+          kind: 'success',
+          message: `${successMessage} Link copied to clipboard.`,
+        });
+      } catch {
+        setQuickStartLinkStatus({
+          kind: 'error',
+          message: 'Could not share or copy this link right now. Try again.',
+        });
+      }
+    };
+
     if (!navigator.share) {
-      setQuickStartLinkStatus({
-        kind: 'error',
-        message: 'Native sharing is unavailable on this device. Try copy link instead.',
-      });
+      await fallbackToClipboard();
       return;
     }
 
@@ -755,10 +775,7 @@ export function PomodoroApp() {
         return;
       }
 
-      setQuickStartLinkStatus({
-        kind: 'error',
-        message: 'Could not open share sheet right now. Try again.',
-      });
+      await fallbackToClipboard();
     }
   };
 
