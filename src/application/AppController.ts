@@ -85,6 +85,13 @@ export class AppController {
     this.emit();
   }
 
+  beginFocusSession() {
+    this.mode = 'focus';
+    this.timer.setDuration(this.getModeDurationSeconds('focus'));
+    this.timer.start();
+    this.emit();
+  }
+
   addTask(text: string) {
     this.tasks.unshift({ id: crypto.randomUUID(), text, done: false });
     this.deps.tasksRepo.save(this.tasks);

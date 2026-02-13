@@ -326,7 +326,13 @@ button.ghost { background: transparent; }
   font-size: 0.78rem;
 }
 
-.blueprint-card button {
+.preset-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.preset-actions button {
   justify-self: start;
 }
 

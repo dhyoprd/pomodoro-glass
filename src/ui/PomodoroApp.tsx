@@ -197,6 +197,11 @@ export function PomodoroApp() {
     });
   };
 
+  const applyPresetAndStart = (preset: (typeof USE_CASE_PRESETS)[number]) => {
+    applyPreset(preset);
+    controller.beginFocusSession();
+  };
+
   return (
     <main className="app">
       <header>
@@ -338,9 +343,14 @@ export function PomodoroApp() {
                   <h3>{blueprint.icon} {blueprint.title}</h3>
                   <p>{blueprint.summary}</p>
                   <small>Recommended rhythm: {preset.name}</small>
-                  <button type="button" disabled={isActive} onClick={() => applyPreset(preset)}>
-                    {isActive ? 'Already active' : 'Use blueprint'}
-                  </button>
+                  <div className="preset-actions">
+                    <button type="button" disabled={isActive} onClick={() => applyPreset(preset)}>
+                      {isActive ? 'Already active' : 'Use blueprint'}
+                    </button>
+                    <button type="button" className="ghost" onClick={() => applyPresetAndStart(preset)}>
+                      Use & start focus
+                    </button>
+                  </div>
                 </article>
               );
             })}
@@ -364,9 +374,14 @@ export function PomodoroApp() {
                   <small>
                     {preset.settings.focus}/{preset.settings.shortBreak}/{preset.settings.longBreak} min · every {preset.settings.longBreakInterval} sessions
                   </small>
-                  <button type="button" disabled={isActive} onClick={() => applyPreset(preset)}>
-                    {isActive ? 'Applied' : 'Apply preset'}
-                  </button>
+                  <div className="preset-actions">
+                    <button type="button" disabled={isActive} onClick={() => applyPreset(preset)}>
+                      {isActive ? 'Applied' : 'Apply preset'}
+                    </button>
+                    <button type="button" className="ghost" onClick={() => applyPresetAndStart(preset)}>
+                      Apply & start focus
+                    </button>
+                  </div>
                 </article>
               );
             })}
