@@ -1,8 +1,10 @@
 import { STORAGE_KEYS } from './constants.js';
 import { AppController } from './appController.js';
+import { SessionHistoryRepository } from './repositories/sessionHistoryRepository.js';
+import { SettingsRepository } from './repositories/settingsRepository.js';
 import { StatsRepository } from './repositories/statsRepository.js';
 import { TasksRepository } from './repositories/tasksRepository.js';
-import { SettingsRepository } from './repositories/settingsRepository.js';
+import { AnalyticsService } from './services/analyticsService.js';
 import { NotificationService } from './services/notificationService.js';
 import { StorageService } from './services/storageService.js';
 import { getDomRefs } from './ui/domRefs.js';
@@ -18,6 +20,8 @@ const app = new AppController({
   statsRepo: new StatsRepository(storage, STORAGE_KEYS),
   tasksRepo: new TasksRepository(storage, STORAGE_KEYS.tasks),
   settingsRepo: new SettingsRepository(storage, STORAGE_KEYS.settings),
+  sessionHistoryRepo: new SessionHistoryRepository(storage, STORAGE_KEYS.sessionHistory),
+  analyticsService: new AnalyticsService(),
   notify,
 });
 

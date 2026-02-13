@@ -1,0 +1,9 @@
+{
+  "name": "pomodoro-glass",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "smoke": "node scripts/smoke-check.mjs",
+    "check": "node --check js/main.js && node --check js/appController.js && node --check js/ui/uiRenderer.js"
+  }
+}

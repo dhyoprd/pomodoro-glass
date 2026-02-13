@@ -38,13 +38,35 @@
 
       <section class="stats glass-inner">
         <div>
-          <span class="label">Completed Today</span>
+          <span class="label">Completed (All Time)</span>
           <strong id="completedCount">0</strong>
         </div>
         <div>
-          <span class="label">Focus Minutes</span>
+          <span class="label">Focus Minutes (All Time)</span>
           <strong id="focusMinutes">0</strong>
         </div>
+      </section>
+
+      <section class="analytics glass-inner">
+        <div class="analytics-grid">
+          <div>
+            <span class="label">Today Sessions</span>
+            <strong id="todaySessions">0</strong>
+          </div>
+          <div>
+            <span class="label">Today Minutes</span>
+            <strong id="todayMinutes">0</strong>
+          </div>
+          <div>
+            <span class="label">Current Streak</span>
+            <strong id="streakCurrent">0d</strong>
+          </div>
+          <div>
+            <span class="label">Best Streak</span>
+            <strong id="streakBest">0d</strong>
+          </div>
+        </div>
+        <div class="week-bars" id="weekBars" aria-label="Last 7 days session activity"></div>
       </section>
 
       <section class="settings glass-inner">

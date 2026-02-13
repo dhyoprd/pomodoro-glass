@@ -9,4 +9,5 @@ export const STORAGE_KEYS = Object.freeze({
   focusMinutes: 'pomodoro.focusMinutes',
   tasks: 'pomodoro.tasks',
   settings: 'pomodoro.settings',
+  sessionHistory: 'pomodoro.sessionHistory',
 });

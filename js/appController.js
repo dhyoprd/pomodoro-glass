@@ -2,17 +2,20 @@ import { DEFAULT_SETTINGS_MINUTES } from './constants.js';
 import { Timer } from './domain/timer.js';
 
 export class AppController {
-  constructor({ ui, statsRepo, tasksRepo, settingsRepo, notify }) {
+  constructor({ ui, statsRepo, tasksRepo, settingsRepo, sessionHistoryRepo, analyticsService, notify }) {
     this.ui = ui;
     this.statsRepo = statsRepo;
     this.tasksRepo = tasksRepo;
     this.settingsRepo = settingsRepo;
+    this.sessionHistoryRepo = sessionHistoryRepo;
+    this.analyticsService = analyticsService;
     this.notify = notify;
 
     this.mode = 'focus';
     this.stats = this.statsRepo.load();
     this.tasks = this.tasksRepo.load();
     this.settings = this.settingsRepo.load();
+    this.sessionHistory = this.sessionHistoryRepo.load();
 
     this.timer = new Timer({
       onTick: () => this.render(),
@@ -111,6 +114,15 @@ export class AppController {
       this.stats.completed += 1;
       this.stats.focusMinutes += this.settings.focus;
       this.statsRepo.save(this.stats);
+
+      this.sessionHistory.unshift({
+        id: crypto.randomUUID(),
+        completedAt: new Date().toISOString(),
+        focusMinutes: this.settings.focus,
+      });
+      this.sessionHistory = this.sessionHistory.slice(0, 365);
+      this.sessionHistoryRepo.save(this.sessionHistory);
+
       this.notify.notify('Focus done. Break time 🌿');
       const nextMode = this.stats.completed % 4 === 0 ? 'longBreak' : 'shortBreak';
       this.setMode(nextMode);
@@ -133,5 +145,8 @@ export class AppController {
       onToggle: (id) => this.toggleTask(id),
       onDelete: (id) => this.deleteTask(id),
     });
+
+    const analytics = this.analyticsService.build(this.sessionHistory);
+    this.ui.renderAnalytics(analytics);
   }
 }

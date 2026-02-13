@@ -18,6 +18,33 @@ export class UIRenderer {
     this.refs.focusMinutes.textContent = focusMinutes;
   }
 
+  renderAnalytics({ today, streak, week }) {
+    this.refs.todaySessions.textContent = today.sessions;
+    this.refs.todayMinutes.textContent = today.focusMinutes;
+    this.refs.streakCurrent.textContent = `${streak.current}d`;
+    this.refs.streakBest.textContent = `${streak.best}d`;
+
+    this.refs.weekBars.innerHTML = '';
+    const maxSessions = Math.max(...week.map((day) => day.sessions), 1);
+
+    week.forEach((day) => {
+      const item = document.createElement('div');
+      item.className = 'week-bar-item';
+
+      const bar = document.createElement('div');
+      bar.className = 'week-bar-fill';
+      bar.style.height = `${Math.max((day.sessions / maxSessions) * 100, day.sessions ? 12 : 4)}%`;
+      bar.title = `${day.day}: ${day.sessions} sessions (${day.focusMinutes}m)`;
+
+      const label = document.createElement('span');
+      label.className = 'week-bar-label';
+      label.textContent = day.day;
+
+      item.append(bar, label);
+      this.refs.weekBars.appendChild(item);
+    });
+  }
+
   renderModes(activeMode) {
     this.refs.modeButtons.forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.mode === activeMode);

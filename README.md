@@ -21,6 +21,7 @@ Most timers are either too plain or too noisy.
 - Start / Pause / Reset controls
 - Progress bar + document title timer
 - Completed sessions + focus minutes stats
+- Session history analytics (today, weekly, streaks)
 - Task list (add / done / delete)
 - Browser notifications when a session ends
 - Keyboard shortcuts:
@@ -62,7 +63,7 @@ That’s it.
 ## 📌 Roadmap
 
 - custom durations (user settings)
-- session history analytics
+- deeper trend insights (weekly/monthly trends)
 - soundscapes / ambient audio
 - dark/light accent themes
 
