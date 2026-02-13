@@ -804,6 +804,26 @@ export function PomodoroApp() {
         </button>
       </nav>
 
+      <aside className="mobile-command-bar" aria-label="Mobile quick actions">
+        <button type="button" onClick={() => controller.toggleTimer()}>
+          {state.timer.running ? '⏸ Pause' : '▶️ Start'}
+        </button>
+        <button type="button" className="ghost" onClick={() => controller.resetTimer()}>
+          ↺ Reset
+        </button>
+        <button type="button" className="ghost" onClick={() => scrollToSection('task-capture')}>
+          ✅ Tasks
+        </button>
+        <button
+          type="button"
+          className="ghost"
+          onClick={() => void installLooseApp()}
+          disabled={!canTriggerInstall}
+        >
+          📲 {installActionLabel}
+        </button>
+      </aside>
+
       <section className="startup-hero" aria-label="Loose value proposition">
         <div className="hero-eyebrow">Built for real outcomes, not random timer streaks</div>
         <h2>Turn every study block into measurable momentum.</h2>
