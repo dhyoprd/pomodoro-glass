@@ -2,6 +2,7 @@ import { STORAGE_KEYS } from './constants.js';
 import { AppController } from './appController.js';
 import { StatsRepository } from './repositories/statsRepository.js';
 import { TasksRepository } from './repositories/tasksRepository.js';
+import { SettingsRepository } from './repositories/settingsRepository.js';
 import { NotificationService } from './services/notificationService.js';
 import { StorageService } from './services/storageService.js';
 import { getDomRefs } from './ui/domRefs.js';
@@ -16,6 +17,7 @@ const app = new AppController({
   ui,
   statsRepo: new StatsRepository(storage, STORAGE_KEYS),
   tasksRepo: new TasksRepository(storage, STORAGE_KEYS.tasks),
+  settingsRepo: new SettingsRepository(storage, STORAGE_KEYS.settings),
   notify,
 });
 
@@ -29,6 +31,20 @@ refs.taskForm.addEventListener('submit', (e) => {
   if (!text) return;
   app.addTask(text);
   refs.taskInput.value = '';
+});
+
+refs.settingsForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const result = app.updateSettings({
+    focus: refs.focusMinutesInput.value,
+    shortBreak: refs.shortBreakMinutesInput.value,
+    longBreak: refs.longBreakMinutesInput.value,
+  });
+
+  if (!result.ok) {
+    alert(result.error);
+  }
 });
 
 window.addEventListener('keydown', (e) => {

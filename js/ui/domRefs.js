@@ -9,6 +9,10 @@ export function getDomRefs() {
     taskForm: document.getElementById('taskForm'),
     taskInput: document.getElementById('taskInput'),
     taskList: document.getElementById('taskList'),
+    settingsForm: document.getElementById('settingsForm'),
+    focusMinutesInput: document.getElementById('focusMinutesInput'),
+    shortBreakMinutesInput: document.getElementById('shortBreakMinutesInput'),
+    longBreakMinutesInput: document.getElementById('longBreakMinutesInput'),
     modeButtons: Array.from(document.querySelectorAll('.mode')),
   };
 }

@@ -47,6 +47,27 @@
         </div>
       </section>
 
+      <section class="settings glass-inner">
+        <div class="settings-head">
+          <h2>Timer Settings</h2>
+        </div>
+        <form id="settingsForm" class="settings-form">
+          <label>
+            <span>Focus</span>
+            <input id="focusMinutesInput" type="number" min="10" max="90" step="1" required />
+          </label>
+          <label>
+            <span>Short Break</span>
+            <input id="shortBreakMinutesInput" type="number" min="1" max="30" step="1" required />
+          </label>
+          <label>
+            <span>Long Break</span>
+            <input id="longBreakMinutesInput" type="number" min="5" max="60" step="1" required />
+          </label>
+          <button type="submit">Save</button>
+        </form>
+      </section>
+
       <section class="tasks glass-inner">
         <div class="tasks-head">
           <h2>Tasks</h2>

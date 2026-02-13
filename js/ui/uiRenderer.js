@@ -24,6 +24,12 @@ export class UIRenderer {
     });
   }
 
+  renderSettings(settings) {
+    this.refs.focusMinutesInput.value = settings.focus;
+    this.refs.shortBreakMinutesInput.value = settings.shortBreak;
+    this.refs.longBreakMinutesInput.value = settings.longBreak;
+  }
+
   renderTasks(tasks, { onToggle, onDelete }) {
     this.refs.taskList.innerHTML = '';
 

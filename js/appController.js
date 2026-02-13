@@ -1,32 +1,71 @@
-import { MODES } from './constants.js';
 import { Timer } from './domain/timer.js';
 
 export class AppController {
-  constructor({ ui, statsRepo, tasksRepo, notify }) {
+  constructor({ ui, statsRepo, tasksRepo, settingsRepo, notify }) {
     this.ui = ui;
     this.statsRepo = statsRepo;
     this.tasksRepo = tasksRepo;
+    this.settingsRepo = settingsRepo;
     this.notify = notify;
 
     this.mode = 'focus';
     this.stats = this.statsRepo.load();
     this.tasks = this.tasksRepo.load();
+    this.settings = this.settingsRepo.load();
 
     this.timer = new Timer({
       onTick: () => this.render(),
       onComplete: () => this.handleComplete(),
     });
-    this.timer.setDuration(MODES[this.mode]);
+    this.timer.setDuration(this.getModeDurationSeconds(this.mode));
   }
 
   initialize() {
     this.render();
+    this.ui.renderSettings(this.settings);
+  }
+
+  getModeDurationSeconds(mode) {
+    return this.settings[mode] * 60;
   }
 
   setMode(mode) {
     this.mode = mode;
-    this.timer.setDuration(MODES[mode]);
+    this.timer.setDuration(this.getModeDurationSeconds(mode));
     this.render();
+  }
+
+  updateSettings(nextSettingsMinutes) {
+    const validated = this.validateSettings(nextSettingsMinutes);
+    if (!validated.ok) return validated;
+
+    this.settings = validated.value;
+    this.settingsRepo.save(this.settings);
+    this.setMode(this.mode);
+    this.ui.renderSettings(this.settings);
+    return { ok: true };
+  }
+
+  validateSettings(raw) {
+    const next = {
+      focus: Number(raw.focus),
+      shortBreak: Number(raw.shortBreak),
+      longBreak: Number(raw.longBreak),
+    };
+
+    if (!Number.isFinite(next.focus) || next.focus < 10 || next.focus > 90) {
+      return { ok: false, error: 'Focus must be between 10 and 90 minutes.' };
+    }
+
+    if (!Number.isFinite(next.shortBreak) || next.shortBreak < 1 || next.shortBreak > 30) {
+      return { ok: false, error: 'Short break must be between 1 and 30 minutes.' };
+    }
+
+    if (!Number.isFinite(next.longBreak) || next.longBreak < 5 || next.longBreak > 60) {
+      return { ok: false, error: 'Long break must be between 5 and 60 minutes.' };
+    }
+
+    return { ok: true, value: next };
   }
 
   toggleTimer() {
@@ -61,7 +100,7 @@ export class AppController {
   handleComplete() {
     if (this.mode === 'focus') {
       this.stats.completed += 1;
-      this.stats.focusMinutes += Math.round(MODES.focus / 60);
+      this.stats.focusMinutes += this.settings.focus;
       this.statsRepo.save(this.stats);
       this.notify.notify('Focus done. Break time 🌿');
       const nextMode = this.stats.completed % 4 === 0 ? 'longBreak' : 'shortBreak';
