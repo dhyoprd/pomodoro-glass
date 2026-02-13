@@ -182,6 +182,12 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   filter: none;
 }
 
+.install-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #bfdbfe;
+}
+
 .landing-metrics-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

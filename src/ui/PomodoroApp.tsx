@@ -78,6 +78,7 @@ export function PomodoroApp() {
   const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '', longBreakInterval: '' });
   const [quickStartLinkStatus, setQuickStartLinkStatus] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
   const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installContext, setInstallContext] = useState({ isIosSafari: false, isStandalone: false });
   const [activeSectionId, setActiveSectionId] = useState('focus-timer');
   const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
   const [launchPathSortMode, setLaunchPathSortMode] = useState<PresetPlanSortMode>('best-fit');
@@ -140,6 +141,16 @@ export function PomodoroApp() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    const userAgent = window.navigator.userAgent;
+    const isIosDevice = /iPad|iPhone|iPod/.test(userAgent);
+    const isSafari = /Safari/.test(userAgent) && !/CriOS|FxiOS|EdgiOS/.test(userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+
+    setInstallContext({
+      isIosSafari: isIosDevice && isSafari,
+      isStandalone,
+    });
 
     const onBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
@@ -452,8 +463,10 @@ export function PomodoroApp() {
   const installLooseApp = async () => {
     if (!deferredInstallPrompt) {
       setQuickStartLinkStatus({
-        kind: 'error',
-        message: 'Install option is not available in this browser yet.',
+        kind: installContext.isIosSafari && !installContext.isStandalone ? 'success' : 'error',
+        message: installContext.isIosSafari && !installContext.isStandalone
+          ? 'On iPhone/iPad: tap Share, then “Add to Home Screen” to install Loose.'
+          : 'Install option is not available in this browser yet.',
       });
       return;
     }
@@ -795,11 +808,18 @@ export function PomodoroApp() {
             type="button"
             className="ghost install-cta"
             onClick={() => void installLooseApp()}
-            disabled={!deferredInstallPrompt}
+            disabled={!deferredInstallPrompt && !(installContext.isIosSafari && !installContext.isStandalone)}
           >
-            {deferredInstallPrompt ? 'Install Loose app' : 'Install unavailable'}
+            {deferredInstallPrompt
+              ? 'Install Loose app'
+              : installContext.isIosSafari && !installContext.isStandalone
+                ? 'Install on iPhone'
+                : 'Install unavailable'}
           </button>
         </div>
+        {installContext.isIosSafari && !installContext.isStandalone ? (
+          <p className="install-hint" role="status">iOS install: Share → Add to Home Screen.</p>
+        ) : null}
       </section>
 
       <section className="landing-metrics-strip" aria-label="Loose startup proof metrics">
