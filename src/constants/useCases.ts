@@ -12,6 +12,8 @@ export type UseCasePreset = {
   name: string;
   description: string;
   outcome: string;
+  idealFor: ReadonlyArray<string>;
+  momentumTip: string;
   settings: TimerSettings;
 };
 
@@ -22,6 +24,8 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     name: 'Student Revision',
     description: 'Steady pace for lectures, homework, and exam prep.',
     outcome: 'Best for consistency over long study days.',
+    idealFor: ['Exam prep', 'Lecture backlog', 'Balanced energy'],
+    momentumTip: 'Batch 2-3 related chapters per cycle to avoid context switching.',
     settings: { focus: 25, shortBreak: 5, longBreak: 15, longBreakInterval: 4 },
   },
   {
@@ -30,6 +34,8 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     name: 'Deep Work Sprint',
     description: 'Longer focus windows for coding or writing sessions.',
     outcome: 'Fewer switches, more deep concentration.',
+    idealFor: ['Feature shipping', 'Writing drafts', 'High clarity windows'],
+    momentumTip: 'Define one hard outcome before pressing start to protect the block.',
     settings: { focus: 50, shortBreak: 10, longBreak: 20, longBreakInterval: 3 },
   },
   {
@@ -38,6 +44,8 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     name: 'High-Energy Loop',
     description: 'Short cycles for quick wins when motivation is low.',
     outcome: 'Fast momentum when energy is scattered.',
+    idealFor: ['Low motivation', 'Task anxiety', 'Quick restart days'],
+    momentumTip: 'Aim for 3 fast wins first; confidence usually rebounds by session 2.',
     settings: { focus: 15, shortBreak: 3, longBreak: 10, longBreakInterval: 4 },
   },
   {
@@ -46,6 +54,8 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     name: 'Commute Micro-Sprints',
     description: 'Phone-friendly loops for trains, buses, and waiting windows.',
     outcome: 'Turn fragmented travel time into measurable progress.',
+    idealFor: ['Transit sessions', 'Errand gaps', 'On-the-go planning'],
+    momentumTip: 'Queue bite-sized tasks before leaving home so you can start instantly.',
     settings: { focus: 10, shortBreak: 2, longBreak: 8, longBreakInterval: 5 },
   },
 ] as const;

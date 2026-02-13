@@ -648,6 +648,21 @@ button.ghost { background: transparent; }
   font-size: 0.78rem;
 }
 
+.preset-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preset-tags span {
+  font-size: 0.73rem;
+  color: #ddd6fe;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #4c1d95;
+  background: rgba(76, 29, 149, 0.22);
+}
+
 .preset-actions {
   display: flex;
   gap: 8px;

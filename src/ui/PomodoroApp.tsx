@@ -272,6 +272,7 @@ export function PomodoroApp() {
                 <small>
                   {recommendedPreset.sessions} sessions · {recommendedPreset.focusMinutes} focus min · {recommendedPreset.remainder} min buffer
                 </small>
+                <small>{recommendedPreset.preset.momentumTip}</small>
               </div>
               <div className="preset-actions">
                 <button type="button" onClick={() => applyPreset(recommendedPreset.preset)}>Apply</button>
@@ -462,6 +463,12 @@ export function PomodoroApp() {
                   <h3>{blueprint.icon} {blueprint.title}</h3>
                   <p>{blueprint.summary}</p>
                   <small>Recommended rhythm: {preset.name}</small>
+                  <div className="preset-tags" aria-label="Best-fit situations">
+                    {preset.idealFor.map((tag) => (
+                      <span key={`${blueprint.id}-${tag}`}>{tag}</span>
+                    ))}
+                  </div>
+                  <small>{preset.momentumTip}</small>
                   <div className="preset-actions">
                     <button type="button" disabled={isActive} onClick={() => applyPreset(preset)}>
                       {isActive ? 'Already active' : 'Use blueprint'}
@@ -490,9 +497,15 @@ export function PomodoroApp() {
                   <h3>{preset.icon} {preset.name}</h3>
                   <p>{preset.description}</p>
                   <small>{preset.outcome}</small>
+                  <div className="preset-tags" aria-label="Best-fit situations">
+                    {preset.idealFor.map((tag) => (
+                      <span key={`${preset.id}-${tag}`}>{tag}</span>
+                    ))}
+                  </div>
                   <small>
                     {preset.settings.focus}/{preset.settings.shortBreak}/{preset.settings.longBreak} min · every {preset.settings.longBreakInterval} sessions
                   </small>
+                  <small>{preset.momentumTip}</small>
                   <div className="preset-actions">
                     <button type="button" disabled={isActive} onClick={() => applyPreset(preset)}>
                       {isActive ? 'Applied' : 'Apply preset'}
