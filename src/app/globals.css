@@ -244,6 +244,23 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   font-size: 0.84rem;
 }
 
+.launch-path-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.launch-path-sort select {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0f1116;
+  color: var(--text);
+  font: inherit;
+  padding: 5px 9px;
+}
+
 .launch-paths-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

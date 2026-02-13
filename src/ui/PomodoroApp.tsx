@@ -28,9 +28,11 @@ import {
   buildWeeklyMomentumForecast,
   rankPresetPlans,
   recommendPresetByProfile,
+  sortPresetPlans,
   type MatchmakerContext,
   type MatchmakerEnergy,
   type MatchmakerGoal,
+  type PresetPlanSortMode,
 } from '@/application/SessionPlannerEngine';
 import {
   buildMatchmakerProfileUrl as buildMatchmakerProfileUrlFromLib,
@@ -65,6 +67,7 @@ export function PomodoroApp() {
   const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [activeSectionId, setActiveSectionId] = useState('focus-timer');
   const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
+  const [launchPathSortMode, setLaunchPathSortMode] = useState<PresetPlanSortMode>('best-fit');
   const hasHydratedQuickStart = useRef(false);
   const hasHydratedPlannerPreferences = useRef(false);
 
@@ -282,7 +285,12 @@ export function PomodoroApp() {
     [planningMinutes],
   );
 
-  const topPresetScoreboard = rankedPresetPlans.slice(0, 3);
+  const sortedLaunchPathPlans = useMemo(
+    () => sortPresetPlans(rankedPresetPlans, launchPathSortMode),
+    [launchPathSortMode, rankedPresetPlans],
+  );
+
+  const topPresetScoreboard = sortedLaunchPathPlans.slice(0, 3);
 
   const launchPathTimings = useMemo(() => {
     const entries = topPresetScoreboard.map((plan) => {
@@ -301,7 +309,7 @@ export function PomodoroApp() {
     return new Map(entries);
   }, [planningMinutes, topPresetScoreboard]);
 
-  const recommendedPreset = rankedPresetPlans[0];
+  const recommendedPreset = sortedLaunchPathPlans[0] ?? rankedPresetPlans[0];
 
   const roiProjection = useMemo(() => {
     const dailyFocusHours = Number((sessionPlanner.estimatedFocusMinutes / 60).toFixed(1));
@@ -789,6 +797,18 @@ export function PomodoroApp() {
         <div className="launch-paths-head">
           <h2>Pick a launch path for today</h2>
           <span>One tap to run a proven rhythm for your available {planningMinutes} minutes.</span>
+          <label className="launch-path-sort" htmlFor="launch-path-sort-mode">
+            Sort by
+            <select
+              id="launch-path-sort-mode"
+              value={launchPathSortMode}
+              onChange={(event) => setLaunchPathSortMode(event.target.value as PresetPlanSortMode)}
+            >
+              <option value="best-fit">Best fit</option>
+              <option value="xp-hour">XP per hour</option>
+              <option value="fast-finish">Fast finish cycle</option>
+            </select>
+          </label>
         </div>
         <div className="launch-paths-grid">
           {topPresetScoreboard.map((plan) => (

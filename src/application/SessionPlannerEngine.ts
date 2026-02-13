@@ -20,6 +20,8 @@ export type RankedPresetPlan = {
   xpPerHour: number;
 };
 
+export type PresetPlanSortMode = 'best-fit' | 'xp-hour' | 'fast-finish';
+
 export type SessionTimelineBlock = {
   id: string;
   kind: 'focus' | 'shortBreak' | 'longBreak';
@@ -150,6 +152,32 @@ export function rankPresetPlans(presets: ReadonlyArray<UseCasePreset>, planningM
       };
     })
     .sort((a, b) => b.score - a.score);
+}
+
+export function sortPresetPlans(
+  plans: ReadonlyArray<RankedPresetPlan>,
+  mode: PresetPlanSortMode,
+): RankedPresetPlan[] {
+  const sorted = [...plans];
+
+  sorted.sort((a, b) => {
+    if (mode === 'xp-hour') {
+      if (b.xpPerHour !== a.xpPerHour) return b.xpPerHour - a.xpPerHour;
+      return b.score - a.score;
+    }
+
+    if (mode === 'fast-finish') {
+      const aCycle = a.preset.settings.focus + a.preset.settings.shortBreak;
+      const bCycle = b.preset.settings.focus + b.preset.settings.shortBreak;
+
+      if (aCycle !== bCycle) return aCycle - bCycle;
+      return b.score - a.score;
+    }
+
+    return b.score - a.score;
+  });
+
+  return sorted;
 }
 
 export function recommendPresetByProfile(
