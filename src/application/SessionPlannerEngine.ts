@@ -20,6 +20,12 @@ export type PlanPerformance = {
   cycleMinutes: number;
 };
 
+export type PlanReadinessSignal = {
+  label: 'Balanced' | 'Intense' | 'Recovery';
+  tone: 'positive' | 'caution' | 'neutral';
+  summary: string;
+};
+
 export type RankedPresetPlan = {
   preset: UseCasePreset;
   sessions: number;
@@ -157,6 +163,33 @@ export function buildPlanPerformance(settings: TimerSettings, planningMinutes: n
     xpPerHour,
     estimatedXp,
     cycleMinutes,
+  };
+}
+
+export function buildPlanReadinessSignal(settings: TimerSettings, planningMinutes: number): PlanReadinessSignal {
+  const performance = buildPlanPerformance(settings, planningMinutes);
+  const breakMinutesPerHour = Math.round((settings.shortBreak / (settings.focus + settings.shortBreak)) * 60);
+
+  if (settings.focus >= 40 || performance.focusRatio >= 0.82) {
+    return {
+      label: 'Intense',
+      tone: 'caution',
+      summary: `High-output cadence. Protect it with at least ${breakMinutesPerHour}m recovery per hour.`,
+    };
+  }
+
+  if (settings.focus <= 18 || performance.focusRatio <= 0.62) {
+    return {
+      label: 'Recovery',
+      tone: 'neutral',
+      summary: 'Lower-friction rhythm for restart days and interruption-heavy schedules.',
+    };
+  }
+
+  return {
+    label: 'Balanced',
+    tone: 'positive',
+    summary: 'Sustainable tempo for multi-hour consistency without overloading energy.',
   };
 }
 

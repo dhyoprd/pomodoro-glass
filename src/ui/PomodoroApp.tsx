@@ -25,6 +25,7 @@ import {
 } from '@/application/GamificationEngine';
 import {
   buildPlanPerformance,
+  buildPlanReadinessSignal,
   buildSessionPlannerSummary,
   buildSessionTimeline,
   buildWeeklyMomentumForecast,
@@ -424,6 +425,11 @@ export function PomodoroApp() {
   const activePlanPerformance = useMemo(
     () => buildPlanPerformance(state.settings, planningMinutes),
     [planningMinutes, state.settings],
+  );
+
+  const activePlanReadiness = useMemo(
+    () => buildPlanReadinessSignal(plannerSettings, planningMinutes),
+    [plannerSettings, planningMinutes],
   );
 
   const launchPathAudienceCounts = useMemo(() => {
@@ -1189,10 +1195,11 @@ export function PomodoroApp() {
           <>
             <div className="launch-paths-grid">
               {visibleLaunchPathPlans.map((plan) => {
-              const isRecommendedPath = plan.preset.id === recommendedPreset?.preset.id;
+                const isRecommendedPath = plan.preset.id === recommendedPreset?.preset.id;
+                const planReadiness = buildPlanReadinessSignal(plan.preset.settings, planningMinutes);
 
-              return (
-                <article key={`launch-${plan.preset.id}`} className="launch-path-card">
+                return (
+                  <article key={`launch-${plan.preset.id}`} className="launch-path-card">
                 <div className="launch-path-card-head">
                   <div className="launch-path-card-title-row">
                     <strong>{plan.preset.icon} {plan.preset.name}</strong>
@@ -1204,6 +1211,9 @@ export function PomodoroApp() {
                   </small>
                 </div>
                 <p>{plan.preset.outcome}</p>
+                <small className={`launch-path-readiness ${planReadiness.tone}`}>
+                  {planReadiness.label} cadence · {planReadiness.summary}
+                </small>
                 <div className="preset-tags" aria-label={`${plan.preset.name} ideal for`}>
                   {plan.preset.idealFor.map((item) => (
                     <span key={`${plan.preset.id}-${item}`}>{item}</span>
@@ -1672,6 +1682,9 @@ export function PomodoroApp() {
                 </small>
                 <small>Start now → wraps around {formatFinishBy(plannerRunMinutes)}</small>
                 <small>{recommendedPreset.preset.momentumTip}</small>
+                <small className={`planner-readiness ${activePlanReadiness.tone}`}>
+                  {activePlanReadiness.label} cadence · {activePlanReadiness.summary}
+                </small>
                 <div className="preset-tags" aria-label={`${recommendedPreset.preset.name} ideal for`}>
                   {recommendedPreset.preset.idealFor.map((item) => (
                     <span key={`planner-rec-${recommendedPreset.preset.id}-${item}`}>{item}</span>
