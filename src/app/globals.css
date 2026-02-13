@@ -202,6 +202,92 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   line-height: 1.4;
 }
 
+.preset-scoreboard {
+  display: grid;
+  gap: 12px;
+  border-color: #3f3f46;
+  background: linear-gradient(155deg, #11111a 0%, #15152a 100%);
+}
+
+.preset-scoreboard-head {
+  display: grid;
+  gap: 4px;
+}
+
+.preset-scoreboard-head h2 {
+  margin: 0;
+  font-size: clamp(1rem, 2.3vw, 1.2rem);
+}
+
+.preset-scoreboard-head span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.preset-scoreboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.preset-scoreboard-card {
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.preset-scoreboard-rank {
+  width: fit-content;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #c4b5fd;
+  border: 1px solid #4c1d95;
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
+.preset-scoreboard-card strong {
+  font-size: 0.92rem;
+}
+
+.preset-scoreboard-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.preset-scoreboard-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.preset-scoreboard-card li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #d4d4d8;
+}
+
+.preset-scoreboard-card li span {
+  color: var(--muted);
+}
+
+.preset-scoreboard-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.preset-scoreboard-actions button {
+  flex: 1;
+}
+
 section {
   background: var(--panel-2);
   border: 1px solid var(--line);
@@ -1288,6 +1374,7 @@ input:focus { border-color: #71717a; }
   .selector-grid { grid-template-columns: 1fr; }
   .momentum-grid { grid-template-columns: 1fr; }
   .quick-onboarding-grid { grid-template-columns: 1fr; }
+  .preset-scoreboard-grid { grid-template-columns: 1fr; }
   .planner-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .planner-fit-grid { grid-template-columns: 1fr; }
   .matchmaker-grid { grid-template-columns: 1fr; }

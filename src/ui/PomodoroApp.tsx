@@ -233,6 +233,8 @@ export function PomodoroApp() {
     [planningMinutes],
   );
 
+  const topPresetScoreboard = rankedPresetPlans.slice(0, 3);
+
   const recommendedPreset = rankedPresetPlans[0];
 
   const profileRecommendation = useMemo(
@@ -597,6 +599,31 @@ export function PomodoroApp() {
             <strong>3) Compound visible wins</strong>
             <p>Track weekly consistency, unlock milestones, and ship real progress instead of random timer noise.</p>
           </article>
+        </div>
+      </section>
+
+      <section className="preset-scoreboard" aria-label="Top preset scorecard">
+        <div className="preset-scoreboard-head">
+          <h2>Best-fit presets for your {planningMinutes}-minute plan</h2>
+          <span>Ranked by focus density and low context-switch waste.</span>
+        </div>
+        <div className="preset-scoreboard-grid">
+          {topPresetScoreboard.map((plan, index) => (
+            <article key={`score-${plan.preset.id}`} className="preset-scoreboard-card">
+              <div className="preset-scoreboard-rank">#{index + 1}</div>
+              <strong>{plan.preset.icon} {plan.preset.name}</strong>
+              <p>{plan.preset.description}</p>
+              <ul>
+                <li><span>Focus ratio</span><strong>{Math.round(plan.focusRatio * 100)}%</strong></li>
+                <li><span>Sessions</span><strong>{plan.sessions}</strong></li>
+                <li><span>XP/hour</span><strong>{plan.xpPerHour}</strong></li>
+              </ul>
+              <div className="preset-scoreboard-actions">
+                <button type="button" onClick={() => applyPreset(plan.preset)}>Apply rhythm</button>
+                <button type="button" className="ghost" onClick={() => applyPresetAndStart(plan.preset)}>Run now</button>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
