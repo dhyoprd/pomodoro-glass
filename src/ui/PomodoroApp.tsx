@@ -113,8 +113,8 @@ export function PomodoroApp() {
     };
   }, [activePreset?.settings, planningMinutes, state.settings]);
 
-  const recommendedPreset = useMemo(() => {
-    const ranked = USE_CASE_PRESETS.map((preset) => {
+  const rankedPresetPlans = useMemo(() =>
+    USE_CASE_PRESETS.map((preset) => {
       const cycleMinutes = preset.settings.focus + preset.settings.shortBreak;
       const sessions = Math.max(1, Math.floor(planningMinutes / cycleMinutes));
       const focusMinutes = sessions * preset.settings.focus;
@@ -129,10 +129,10 @@ export function PomodoroApp() {
         remainder,
         score,
       };
-    }).sort((a, b) => b.score - a.score);
+    }).sort((a, b) => b.score - a.score),
+  [planningMinutes]);
 
-    return ranked[0];
-  }, [planningMinutes]);
+  const recommendedPreset = rankedPresetPlans[0];
 
   const showQuickOnboarding = state.stats.completed === 0 && state.tasks.length === 0;
 
@@ -276,6 +276,27 @@ export function PomodoroApp() {
                 </button>
               </div>
             </article>
+          ) : null}
+          {rankedPresetPlans.length ? (
+            <div className="planner-fit-grid" aria-label="Preset fit ranking">
+              {rankedPresetPlans.slice(0, 3).map((plan, index) => {
+                const isTopPick = index === 0;
+                const isActivePlan = plan.preset.id === activePreset?.id;
+
+                return (
+                  <article className={`planner-fit-card ${isTopPick ? 'top' : ''} ${isActivePlan ? 'active' : ''}`} key={`fit-${plan.preset.id}`}>
+                    <div className="planner-fit-head">
+                      <strong>{isTopPick ? 'Top pick' : `Option ${index + 1}`}</strong>
+                      <span>{plan.preset.icon} {plan.preset.name}</span>
+                    </div>
+                    <small>{plan.sessions} sessions · {plan.focusMinutes} focus min · {plan.remainder} min buffer</small>
+                    <button type="button" className="ghost" disabled={isActivePlan} onClick={() => applyPreset(plan.preset)}>
+                      {isActivePlan ? 'Current setup' : 'Switch to this'}
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
           ) : null}
           <p>
             Based on {activePreset?.name ?? 'current settings'} ({sessionPlanner.cycleMinutes} min per focus cycle).
