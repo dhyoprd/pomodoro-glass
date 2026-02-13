@@ -398,6 +398,11 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   gap: 10px;
 }
 
+.launch-path-expand {
+  display: flex;
+  justify-content: center;
+}
+
 .launch-path-empty {
   margin: 0;
   padding: 12px;

@@ -134,6 +134,7 @@ export function PomodoroApp() {
   const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
   const [launchPathSortMode, setLaunchPathSortMode] = useState<PresetPlanSortMode>('best-fit');
   const [launchPathAudienceFilter, setLaunchPathAudienceFilter] = useState<LaunchPathAudienceFilter>('all');
+  const [showAllLaunchPaths, setShowAllLaunchPaths] = useState(false);
   const [launchSourceBadge, setLaunchSourceBadge] = useState<LaunchSourceBadge | null>(null);
   const hasHydratedQuickStart = useRef(false);
   const hasHydratedPlannerPreferences = useRef(false);
@@ -462,10 +463,15 @@ export function PomodoroApp() {
     [filteredLaunchPathPlans, launchPathSortMode],
   );
 
-  const topPresetScoreboard = sortedLaunchPathPlans.slice(0, 3);
+  const visibleLaunchPathPlans = useMemo(
+    () => (showAllLaunchPaths ? sortedLaunchPathPlans : sortedLaunchPathPlans.slice(0, 3)),
+    [showAllLaunchPaths, sortedLaunchPathPlans],
+  );
+
+  const hiddenLaunchPathCount = Math.max(sortedLaunchPathPlans.length - visibleLaunchPathPlans.length, 0);
 
   const launchPathTimings = useMemo(() => {
-    const entries = topPresetScoreboard.map((plan) => {
+    const entries = sortedLaunchPathPlans.map((plan) => {
       const timeline = buildSessionTimeline(plan.preset.settings, planningMinutes);
       const totalMinutes = timeline[timeline.length - 1]?.endsAtMinute ?? plan.preset.settings.focus;
 
@@ -479,7 +485,7 @@ export function PomodoroApp() {
     });
 
     return new Map(entries);
-  }, [planningMinutes, topPresetScoreboard]);
+  }, [planningMinutes, sortedLaunchPathPlans]);
 
   const recommendedPreset = sortedLaunchPathPlans[0] ?? rankedPresetPlans[0];
 
@@ -880,6 +886,10 @@ export function PomodoroApp() {
   }, [launchPathAudienceFilter, launchPathSortMode, matchmaker, planningMinutes, quickStartAutostart]);
 
   useEffect(() => {
+    setShowAllLaunchPaths(false);
+  }, [launchPathAudienceFilter, launchPathSortMode, planningMinutes]);
+
+  useEffect(() => {
     if (hasHydratedQuickStart.current || typeof window === 'undefined') return;
 
     hasHydratedQuickStart.current = true;
@@ -1175,9 +1185,10 @@ export function PomodoroApp() {
             Quick-start links auto-run timer
           </label>
         </div>
-        {topPresetScoreboard.length ? (
-          <div className="launch-paths-grid">
-            {topPresetScoreboard.map((plan) => {
+        {visibleLaunchPathPlans.length ? (
+          <>
+            <div className="launch-paths-grid">
+              {visibleLaunchPathPlans.map((plan) => {
               const isRecommendedPath = plan.preset.id === recommendedPreset?.preset.id;
 
               return (
@@ -1217,10 +1228,25 @@ export function PomodoroApp() {
                     Share path
                   </button>
                 </div>
-              </article>
+                </article>
               );
             })}
-          </div>
+            </div>
+            {sortedLaunchPathPlans.length > 3 ? (
+              <div className="launch-path-expand">
+                <button
+                  type="button"
+                  className="ghost"
+                  onClick={() => setShowAllLaunchPaths((current) => !current)}
+                  aria-expanded={showAllLaunchPaths}
+                >
+                  {showAllLaunchPaths
+                    ? 'Show top 3 paths'
+                    : `Show ${hiddenLaunchPathCount} more path${hiddenLaunchPathCount === 1 ? '' : 's'}`}
+                </button>
+              </div>
+            ) : null}
+          </>
         ) : (
           <div className="launch-path-empty" role="status">
             <span>No paths match this audience yet.</span>
@@ -1375,7 +1401,7 @@ export function PomodoroApp() {
           <span>Ranked by focus density and low context-switch waste.</span>
         </div>
         <div className="preset-scoreboard-grid">
-          {topPresetScoreboard.map((plan, index) => (
+          {sortedLaunchPathPlans.slice(0, 3).map((plan, index) => (
             <article key={`score-${plan.preset.id}`} className="preset-scoreboard-card">
               <div className="preset-scoreboard-rank">#{index + 1}</div>
               <strong>{plan.preset.icon} {plan.preset.name}</strong>
