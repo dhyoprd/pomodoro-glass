@@ -16,6 +16,7 @@ import {
   buildDailyQuestProgress,
   buildFocusHealthScore,
   buildGamificationProgress,
+  buildNextMilestone,
 } from '@/application/GamificationEngine';
 
 export function PomodoroApp() {
@@ -62,6 +63,7 @@ export function PomodoroApp() {
   );
 
   const gamification = useMemo(() => buildGamificationProgress(state), [state]);
+  const nextMilestone = useMemo(() => buildNextMilestone(state), [state]);
 
   const sessionPulse = useMemo(() => {
     const completedInCycle = state.stats.completed % state.settings.longBreakInterval;
@@ -440,6 +442,31 @@ export function PomodoroApp() {
           <div className="progress-wrap level-progress-wrap" aria-hidden="true">
             <div className="progress-bar level-progress-bar" style={{ width: `${gamification.levelProgress}%` }} />
           </div>
+        </section>
+
+      <section className="next-milestone" aria-label="Next milestone">
+          <div className="quests-head">
+            <h2>Next Unlock</h2>
+            <span>Small target, visible momentum.</span>
+          </div>
+          {nextMilestone.nextAchievement ? (
+            <article className="milestone-card">
+              <div>
+                <strong>
+                  {nextMilestone.nextAchievement.icon} {nextMilestone.nextAchievement.title}
+                </strong>
+                <p>
+                  {nextMilestone.nextAchievement.remaining} {nextMilestone.nextAchievement.unit} left ({nextMilestone.nextAchievement.progressValue}/{nextMilestone.nextAchievement.target})
+                </p>
+              </div>
+              <small>Level up pace: about {nextMilestone.sessionsUntilLevelUp} more focus session{nextMilestone.sessionsUntilLevelUp === 1 ? '' : 's'}.</small>
+            </article>
+          ) : (
+            <article className="milestone-card complete">
+              <strong>🏆 All current milestones unlocked</strong>
+              <p>More milestones coming in the next release.</p>
+            </article>
+          )}
         </section>
 
       <section className="achievements" aria-label="Milestones">

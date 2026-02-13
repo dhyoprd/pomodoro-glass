@@ -100,6 +100,33 @@ export function buildDailyQuestProgress(state: AppState) {
   });
 }
 
+export function buildNextMilestone(state: AppState) {
+  const pendingAchievements = ACHIEVEMENTS
+    .map((achievement) => {
+      const progressValue = achievement.getProgress(state);
+      const remaining = Math.max(achievement.target - progressValue, 0);
+
+      return {
+        ...achievement,
+        progressValue,
+        remaining,
+      };
+    })
+    .filter((achievement) => achievement.remaining > 0)
+    .sort((a, b) => a.remaining - b.remaining);
+
+  const nextAchievement = pendingAchievements[0] ?? null;
+  const sessionsUntilLevelUp = Math.max(
+    Math.ceil(buildGamificationProgress(state).xpToNextLevel / (XP_PER_SESSION + state.settings.focus * XP_PER_FOCUS_MINUTE)),
+    1,
+  );
+
+  return {
+    nextAchievement,
+    sessionsUntilLevelUp,
+  };
+}
+
 export function buildFocusHealthScore(state: AppState) {
   const weeklySessions = state.analytics.week.reduce((sum, day) => sum + day.sessions, 0);
   const activeDays = state.analytics.week.filter((day) => day.sessions > 0).length;
