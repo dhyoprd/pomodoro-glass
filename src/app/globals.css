@@ -52,6 +52,54 @@ section {
   padding: 14px;
 }
 
+.momentum {
+  display: grid;
+  gap: 10px;
+}
+
+.momentum-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.momentum-head h2 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.momentum-head span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.momentum-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.momentum-card {
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.momentum-card strong {
+  font-size: 1.1rem;
+}
+
+.momentum-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
 .timer-card { display: grid; gap: 14px; }
 .mode-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .mode {
@@ -390,6 +438,7 @@ input:focus { border-color: #71717a; }
   .analytics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .quest-grid { grid-template-columns: 1fr; }
   .preset-grid { grid-template-columns: 1fr; }
+  .momentum-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {

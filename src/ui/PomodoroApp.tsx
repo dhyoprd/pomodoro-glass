@@ -138,6 +138,20 @@ export function PomodoroApp() {
     [state],
   );
 
+  const momentumStats = useMemo(() => {
+    const totalHours = (state.stats.focusMinutes / 60).toFixed(1);
+    const avgMinutesPerSession = state.stats.completed
+      ? Math.round(state.stats.focusMinutes / state.stats.completed)
+      : 0;
+    const activeDays = state.analytics.week.filter((day) => day.sessions > 0).length;
+
+    return {
+      totalHours,
+      avgMinutesPerSession,
+      activeDays,
+    };
+  }, [state.analytics.week, state.stats.completed, state.stats.focusMinutes]);
+
   const activePreset = useMemo(
     () =>
       USE_CASE_PRESETS.find((preset) =>
@@ -155,6 +169,27 @@ export function PomodoroApp() {
         <h1>Loose</h1>
         <p>Your productivity OS for study and work.</p>
       </header>
+
+      <section className="momentum" aria-label="Momentum snapshot">
+        <div className="momentum-head">
+          <h2>Momentum Snapshot</h2>
+          <span>Proof your system is compounding.</span>
+        </div>
+        <div className="momentum-grid">
+          <article className="momentum-card">
+            <strong>⏱️ {momentumStats.totalHours}h</strong>
+            <p>Total focused hours tracked</p>
+          </article>
+          <article className="momentum-card">
+            <strong>🍅 {formatAverageMinutes(momentumStats.avgMinutesPerSession)}m</strong>
+            <p>Average minutes per completed session</p>
+          </article>
+          <article className="momentum-card">
+            <strong>📈 {momentumStats.activeDays}/7</strong>
+            <p>Active days this week</p>
+          </article>
+        </div>
+      </section>
 
       <section className="timer-card">
           <div className="mode-row">
@@ -344,5 +379,9 @@ export function PomodoroApp() {
       </section>
     </main>
   );
+}
+
+function formatAverageMinutes(value: number): string {
+  return value > 0 ? String(value) : '—';
 }
 
