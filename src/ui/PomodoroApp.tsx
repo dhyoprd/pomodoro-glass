@@ -1110,6 +1110,12 @@ export function PomodoroApp() {
                 <div className="preset-actions">
                   <button type="button" onClick={() => applyPreset(plan.preset)}>Apply path</button>
                   <button type="button" className="ghost" onClick={() => applyPresetAndStart(plan.preset)}>Run now</button>
+                  <button type="button" className="ghost" onClick={() => void copyPresetQuickStartLink(plan.preset)}>
+                    Copy quick-start
+                  </button>
+                  <button type="button" className="ghost" onClick={() => void sharePresetQuickStartLink(plan.preset)}>
+                    Share path
+                  </button>
                 </div>
               </article>
             ))}
