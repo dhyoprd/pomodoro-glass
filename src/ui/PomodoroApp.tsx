@@ -289,6 +289,32 @@ export function PomodoroApp() {
     }
   };
 
+  const copyMatchmakerProfileLink = async () => {
+    if (typeof window === 'undefined') return;
+
+    if (!navigator.clipboard) {
+      setQuickStartLinkStatus({
+        kind: 'error',
+        message: 'Clipboard unavailable in this browser context.',
+      });
+      return;
+    }
+
+    try {
+      const profileUrl = buildMatchmakerProfileUrl(window.location.href, matchmaker, planningMinutes);
+      await navigator.clipboard.writeText(profileUrl);
+      setQuickStartLinkStatus({
+        kind: 'success',
+        message: 'Copied matchmaker profile link.',
+      });
+    } catch {
+      setQuickStartLinkStatus({
+        kind: 'error',
+        message: 'Could not copy matchmaker profile link. Try again.',
+      });
+    }
+  };
+
   useEffect(() => {
     if (hasHydratedQuickStart.current || typeof window === 'undefined') return;
 
@@ -296,47 +322,69 @@ export function PomodoroApp() {
 
     const params = new URLSearchParams(window.location.search);
     const presetId = params.get('preset');
+    const profileEnergy = parseMatchmakerEnergy(params.get('profileEnergy'));
+    const profileContext = parseMatchmakerContext(params.get('profileContext'));
+    const profileGoal = parseMatchmakerGoal(params.get('profileGoal'));
 
-    if (!presetId) return;
+    const hasQuickStartPreset = Boolean(presetId);
+    const hasProfileSeed = Boolean(profileEnergy && profileContext && profileGoal);
 
-    const preset = USE_CASE_PRESETS.find((item) => item.id === presetId);
-    if (!preset) return;
+    if (!hasQuickStartPreset && !hasProfileSeed) return;
 
     const planningMinutesParam = Number(params.get('minutes'));
     if (Number.isFinite(planningMinutesParam) && planningMinutesParam >= 60) {
       setPlanningMinutes(normalizePlanningMinutes(planningMinutesParam));
     }
 
-    const seededTask = params.get('task')?.trim();
-    if (seededTask) {
-      const normalizedTask = seededTask.slice(0, 90);
-      setTaskText(normalizedTask);
-      controller.addTask(normalizedTask);
+    if (hasProfileSeed && profileEnergy && profileContext && profileGoal) {
+      setMatchmaker({
+        energy: profileEnergy,
+        context: profileContext,
+        goal: profileGoal,
+      });
     }
 
-    controller.updateSettings(preset.settings);
-    setSettingsForm({
-      focus: String(preset.settings.focus),
-      shortBreak: String(preset.settings.shortBreak),
-      longBreak: String(preset.settings.longBreak),
-      longBreakInterval: String(preset.settings.longBreakInterval),
-    });
+    if (presetId) {
+      const preset = USE_CASE_PRESETS.find((item) => item.id === presetId);
+      if (preset) {
+        const seededTask = params.get('task')?.trim();
+        if (seededTask) {
+          const normalizedTask = seededTask.slice(0, 90);
+          setTaskText(normalizedTask);
+          controller.addTask(normalizedTask);
+        }
 
-    const shouldAutostart = params.get('autostart') === '1';
-    if (shouldAutostart) {
-      controller.beginFocusSession();
+        controller.updateSettings(preset.settings);
+        setSettingsForm({
+          focus: String(preset.settings.focus),
+          shortBreak: String(preset.settings.shortBreak),
+          longBreak: String(preset.settings.longBreak),
+          longBreakInterval: String(preset.settings.longBreakInterval),
+        });
+
+        const shouldAutostart = params.get('autostart') === '1';
+        if (shouldAutostart) {
+          controller.beginFocusSession();
+        }
+
+        const hydrationNotes: string[] = [];
+        if (params.get('minutes')) hydrationNotes.push('planner synced');
+        if (seededTask) hydrationNotes.push('task imported');
+        if (hasProfileSeed) hydrationNotes.push('matchmaker synced');
+
+        setQuickStartLinkStatus({
+          kind: 'success',
+          message: shouldAutostart
+            ? `Quick start loaded: ${preset.name} and timer started${hydrationNotes.length ? ` (${hydrationNotes.join(', ')})` : ''}.`
+            : `Quick start loaded: ${preset.name}${hydrationNotes.length ? ` (${hydrationNotes.join(', ')})` : ''}.`,
+        });
+      }
+    } else if (hasProfileSeed) {
+      setQuickStartLinkStatus({
+        kind: 'success',
+        message: 'Matchmaker profile loaded from shared link.',
+      });
     }
-
-    const hydrationNotes: string[] = [];
-    if (params.get('minutes')) hydrationNotes.push('planner synced');
-    if (seededTask) hydrationNotes.push('task imported');
-
-    setQuickStartLinkStatus({
-      kind: 'success',
-      message: shouldAutostart
-        ? `Quick start loaded: ${preset.name} and timer started${hydrationNotes.length ? ` (${hydrationNotes.join(', ')})` : ''}.`
-        : `Quick start loaded: ${preset.name}${hydrationNotes.length ? ` (${hydrationNotes.join(', ')})` : ''}.`,
-    });
 
     consumeQuickStartParamsFromUrl(window.location.href);
   }, [controller]);
@@ -521,9 +569,14 @@ export function PomodoroApp() {
                 {profileRecommendation.reasons.map((reason) => (
                   <small key={reason}>{reason}</small>
                 ))}
-                <button type="button" className="ghost" onClick={() => applyPreset(profileRecommendation.preset)}>
-                  Apply this profile fit
-                </button>
+                <div className="preset-actions">
+                  <button type="button" className="ghost" onClick={() => applyPreset(profileRecommendation.preset)}>
+                    Apply this profile fit
+                  </button>
+                  <button type="button" className="ghost" onClick={() => void copyMatchmakerProfileLink()}>
+                    Copy profile link
+                  </button>
+                </div>
               </div>
             ) : null}
           </article>
@@ -967,6 +1020,19 @@ function buildPresetQuickStartUrl(
   return url.toString();
 }
 
+function buildMatchmakerProfileUrl(
+  currentUrl: string,
+  profile: { energy: MatchmakerEnergy; context: MatchmakerContext; goal: MatchmakerGoal },
+  planningMinutes: number,
+): string {
+  const url = new URL(currentUrl);
+  url.searchParams.set('profileEnergy', profile.energy);
+  url.searchParams.set('profileContext', profile.context);
+  url.searchParams.set('profileGoal', profile.goal);
+  url.searchParams.set('minutes', String(normalizePlanningMinutes(planningMinutes)));
+  return url.toString();
+}
+
 function consumeQuickStartParamsFromUrl(currentUrl: string): void {
   if (typeof window === 'undefined') return;
 
@@ -975,7 +1041,10 @@ function consumeQuickStartParamsFromUrl(currentUrl: string): void {
     url.searchParams.has('preset') ||
     url.searchParams.has('autostart') ||
     url.searchParams.has('task') ||
-    url.searchParams.has('minutes');
+    url.searchParams.has('minutes') ||
+    url.searchParams.has('profileEnergy') ||
+    url.searchParams.has('profileContext') ||
+    url.searchParams.has('profileGoal');
 
   if (!hadQuickStartParams) return;
 
@@ -983,9 +1052,27 @@ function consumeQuickStartParamsFromUrl(currentUrl: string): void {
   url.searchParams.delete('autostart');
   url.searchParams.delete('task');
   url.searchParams.delete('minutes');
+  url.searchParams.delete('profileEnergy');
+  url.searchParams.delete('profileContext');
+  url.searchParams.delete('profileGoal');
 
   const nextPath = `${url.pathname}${url.search}${url.hash}`;
   window.history.replaceState(window.history.state, '', nextPath);
+}
+
+function parseMatchmakerEnergy(value: string | null): MatchmakerEnergy | null {
+  if (value === 'low' || value === 'steady' || value === 'high') return value;
+  return null;
+}
+
+function parseMatchmakerContext(value: string | null): MatchmakerContext | null {
+  if (value === 'desk' || value === 'mobile') return value;
+  return null;
+}
+
+function parseMatchmakerGoal(value: string | null): MatchmakerGoal | null {
+  if (value === 'consistency' || value === 'depth' || value === 'restart') return value;
+  return null;
 }
 
 function normalizePlanningMinutes(value: number): number {
