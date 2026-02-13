@@ -258,6 +258,28 @@ export function PomodoroApp() {
 
   const recommendedPreset = rankedPresetPlans[0];
 
+  const roiProjection = useMemo(() => {
+    const dailyFocusHours = Number((sessionPlanner.estimatedFocusMinutes / 60).toFixed(1));
+    const weeklyFocusHours = Number((dailyFocusHours * 5).toFixed(1));
+    const monthlyFocusHours = Number((dailyFocusHours * 22).toFixed(1));
+
+    const weeklySessions = sessionPlanner.estimatedSessions * 5;
+    const monthlySessions = sessionPlanner.estimatedSessions * 22;
+
+    const weeklyXp = sessionPlanner.estimatedXp * 5;
+    const monthlyXp = sessionPlanner.estimatedXp * 22;
+
+    return {
+      dailyFocusHours,
+      weeklyFocusHours,
+      monthlyFocusHours,
+      weeklySessions,
+      monthlySessions,
+      weeklyXp,
+      monthlyXp,
+    };
+  }, [sessionPlanner.estimatedFocusMinutes, sessionPlanner.estimatedSessions, sessionPlanner.estimatedXp]);
+
   const activePlaybookPreset = activePreset ?? recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
 
   const profileRecommendation = useMemo(
@@ -644,6 +666,30 @@ export function PomodoroApp() {
           <article>
             <strong>3) Compound visible wins</strong>
             <p>Track weekly consistency, unlock milestones, and ship real progress instead of random timer noise.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="roi-strip" aria-label="Focus return-on-time projection">
+        <div className="roi-strip-head">
+          <h2>What this plan returns in 1 week and 1 month</h2>
+          <span>Use-case-first projection based on your current daily plan ({planningMinutes} min/day).</span>
+        </div>
+        <div className="roi-strip-grid">
+          <article>
+            <strong>1 Day</strong>
+            <p>{roiProjection.dailyFocusHours}h focused</p>
+            <small>{sessionPlanner.estimatedSessions} sessions · {sessionPlanner.estimatedXp} XP</small>
+          </article>
+          <article>
+            <strong>1 Week (5 days)</strong>
+            <p>{roiProjection.weeklyFocusHours}h focused</p>
+            <small>{roiProjection.weeklySessions} sessions · {roiProjection.weeklyXp} XP</small>
+          </article>
+          <article>
+            <strong>1 Month (22 days)</strong>
+            <p>{roiProjection.monthlyFocusHours}h focused</p>
+            <small>{roiProjection.monthlySessions} sessions · {roiProjection.monthlyXp} XP</small>
           </article>
         </div>
       </section>
