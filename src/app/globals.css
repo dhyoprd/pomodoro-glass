@@ -88,6 +88,33 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   background: rgba(15, 15, 22, 0.7);
 }
 
+.hero-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hero-kpis article {
+  border: 1px solid #3f3f46;
+  border-radius: 10px;
+  background: rgba(12, 12, 18, 0.72);
+  padding: 10px;
+  display: grid;
+  gap: 2px;
+}
+
+.hero-kpis strong {
+  font-size: 1rem;
+  letter-spacing: -0.015em;
+}
+
+.hero-kpis span {
+  color: #a1a1aa;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1182,6 +1209,7 @@ input:focus { border-color: #71717a; }
     align-items: flex-start;
   }
   .planner-metrics { grid-template-columns: 1fr; }
+  .hero-kpis { grid-template-columns: 1fr; }
 
   .mobile-quick-start {
     position: fixed;

@@ -430,6 +430,20 @@ export function PomodoroApp() {
           <span>🎮 Gamified focus loop</span>
           <span>📱 Mobile-ready quick controls</span>
         </div>
+        <div className="hero-kpis" aria-label="Proof of momentum">
+          <article>
+            <strong>{gamification.xp.toLocaleString()}</strong>
+            <span>Total XP</span>
+          </article>
+          <article>
+            <strong>{state.stats.completed}</strong>
+            <span>Focus wins</span>
+          </article>
+          <article>
+            <strong>{state.analytics.streak.best}d</strong>
+            <span>Best streak</span>
+          </article>
+        </div>
         <div className="hero-actions">
           <a href="#outcome-blueprints">Start with an outcome</a>
           <a href="#session-planner" className="ghost-link">Plan my day</a>
