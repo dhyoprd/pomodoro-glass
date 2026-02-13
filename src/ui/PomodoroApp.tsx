@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePomodoroController } from '@/hooks/usePomodoroController';
 import { clamp, formatTime } from '@/lib/utils';
 import {
@@ -648,18 +648,26 @@ export function PomodoroApp() {
     scrollToSection('focus-timer');
   };
 
-  const addSuggestedTask = (task: string) => {
+  const importTaskSeed = useCallback((task: string): 'added' | 'duplicate' | null => {
     const normalizedTask = task.trim().slice(0, 90);
-    if (!normalizedTask) return;
+    if (!normalizedTask) return null;
 
     const hasDuplicate = state.tasks.some((item) => item.text.toLowerCase() === normalizedTask.toLowerCase());
+    setTaskText(normalizedTask);
+
     if (hasDuplicate) {
-      setTaskText(normalizedTask);
-      return;
+      return 'duplicate';
     }
 
     controller.addTask(normalizedTask);
-    setTaskText('');
+    return 'added';
+  }, [controller, state.tasks]);
+
+  const addSuggestedTask = (task: string) => {
+    const taskImportStatus = importTaskSeed(task);
+    if (taskImportStatus === 'added') {
+      setTaskText('');
+    }
   };
 
   const installLooseApp = async () => {
@@ -942,11 +950,7 @@ export function PomodoroApp() {
       const preset = USE_CASE_PRESETS.find((item) => item.id === presetId);
       if (preset) {
         const seededTask = params.get('task')?.trim();
-        if (seededTask) {
-          const normalizedTask = seededTask.slice(0, 90);
-          setTaskText(normalizedTask);
-          controller.addTask(normalizedTask);
-        }
+        const seededTaskImportStatus = seededTask ? importTaskSeed(seededTask) : null;
 
         controller.updateSettings(preset.settings);
         setSettingsForm({
@@ -963,7 +967,8 @@ export function PomodoroApp() {
 
         const hydrationNotes: string[] = [];
         if (params.get('minutes')) hydrationNotes.push('planner synced');
-        if (seededTask) hydrationNotes.push('task imported');
+        if (seededTaskImportStatus === 'added') hydrationNotes.push('task imported');
+        if (seededTaskImportStatus === 'duplicate') hydrationNotes.push('task reused');
         if (hasProfileSeed) hydrationNotes.push('matchmaker synced');
         if (sourceBadge) hydrationNotes.push(`via ${sourceBadge.label}`);
 
@@ -982,7 +987,7 @@ export function PomodoroApp() {
     }
 
     consumeQuickStartParamsFromUrl(window.location.href);
-  }, [controller]);
+  }, [controller, importTaskSeed]);
 
   useEffect(() => {
     if (!quickStartLinkStatus) return;
