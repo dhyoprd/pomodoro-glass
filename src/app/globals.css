@@ -322,6 +322,55 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   background: linear-gradient(150deg, #101118 0%, #14162a 100%);
 }
 
+.landing-faq {
+  display: grid;
+  gap: 12px;
+  border-color: #3f3f46;
+  background: linear-gradient(155deg, #101118 0%, #141327 100%);
+}
+
+.landing-faq-head {
+  display: grid;
+  gap: 4px;
+}
+
+.landing-faq-head h2 {
+  margin: 0;
+  font-size: clamp(1rem, 2.3vw, 1.2rem);
+}
+
+.landing-faq-head span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.landing-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.landing-faq-grid article {
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.landing-faq-grid h3 {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.landing-faq-grid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
 .startup-proof-head {
   display: grid;
   gap: 4px;
@@ -1679,6 +1728,7 @@ input:focus { border-color: #71717a; }
   .startup-proof-grid { grid-template-columns: 1fr; }
   .launch-paths-grid { grid-template-columns: 1fr; }
   .landing-social-proof-grid { grid-template-columns: 1fr; }
+  .landing-faq-grid { grid-template-columns: 1fr; }
   .use-case-playbook-grid { grid-template-columns: 1fr; }
 }
 

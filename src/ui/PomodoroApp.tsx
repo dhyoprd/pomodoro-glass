@@ -10,6 +10,7 @@ import {
   type UseCasePreset,
 } from '@/constants/useCases';
 import { LANDING_SOCIAL_PROOF } from '@/constants/landingProof';
+import { LANDING_FAQ } from '@/constants/landingFaq';
 import {
   XP_PER_FOCUS_MINUTE,
   XP_PER_SESSION,
@@ -699,6 +700,21 @@ export function PomodoroApp() {
             <strong>3) Compound visible wins</strong>
             <p>Track weekly consistency, unlock milestones, and ship real progress instead of random timer noise.</p>
           </article>
+        </div>
+      </section>
+
+      <section className="landing-faq" aria-label="Frequently asked questions about Loose">
+        <div className="landing-faq-head">
+          <h2>FAQ</h2>
+          <span>Quick answers before you start your first session.</span>
+        </div>
+        <div className="landing-faq-grid">
+          {LANDING_FAQ.map((item) => (
+            <article key={item.id}>
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </article>
+          ))}
         </div>
       </section>
 
