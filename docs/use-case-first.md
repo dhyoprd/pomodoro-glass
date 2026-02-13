@@ -32,6 +32,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Mobile users have an explicit commute blueprint optimized for short, interruption-prone windows.
 - Mobile quick bar includes a one-tap **Rescue** action that auto-runs the best momentum-recovery preset when the user needs to restart fast.
 - Mobile install CTA now gracefully handles iOS Safari (`Add to Home`) instead of disabling install in browsers without `beforeinstallprompt`.
+- PWA shortcuts now include a dedicated **Momentum Rescue** entry (high-energy autostart) plus source-tagged deep-work/commute/planner launches for cleaner attribution and faster one-tap re-entry.
 
 ## V1 guardrails
 
