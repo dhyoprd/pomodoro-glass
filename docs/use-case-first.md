@@ -25,6 +25,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Returning users can still use full preset/settings controls.
 - Each blueprint can be applied and started in one tap.
 - Session planner now recommends the best-fit preset for the user’s available deep-work window, with one-tap apply/start.
+- Blueprint quick-start links now carry context (`preset`, `minutes`, optional `task`) so users can share a ready-to-run focus setup that opens preconfigured on any device.
 - Mobile users have an explicit commute blueprint optimized for short, interruption-prone windows.
 
 ## V1 guardrails

@@ -232,7 +232,11 @@ export function PomodoroApp() {
     }
 
     try {
-      const quickStartUrl = buildPresetQuickStartUrl(window.location.href, preset.id);
+      const seededTask = state.tasks.find((task) => !task.done)?.text ?? taskText.trim();
+      const quickStartUrl = buildPresetQuickStartUrl(window.location.href, preset.id, {
+        planningMinutes,
+        task: seededTask,
+      });
       await navigator.clipboard.writeText(quickStartUrl);
       setQuickStartLinkStatus({
         kind: 'success',
@@ -259,6 +263,18 @@ export function PomodoroApp() {
     const preset = USE_CASE_PRESETS.find((item) => item.id === presetId);
     if (!preset) return;
 
+    const planningMinutesParam = Number(params.get('minutes'));
+    if (Number.isFinite(planningMinutesParam) && planningMinutesParam >= 60) {
+      setPlanningMinutes(normalizePlanningMinutes(planningMinutesParam));
+    }
+
+    const seededTask = params.get('task')?.trim();
+    if (seededTask) {
+      const normalizedTask = seededTask.slice(0, 90);
+      setTaskText(normalizedTask);
+      controller.addTask(normalizedTask);
+    }
+
     controller.updateSettings(preset.settings);
     setSettingsForm({
       focus: String(preset.settings.focus),
@@ -272,11 +288,15 @@ export function PomodoroApp() {
       controller.beginFocusSession();
     }
 
+    const hydrationNotes: string[] = [];
+    if (params.get('minutes')) hydrationNotes.push('planner synced');
+    if (seededTask) hydrationNotes.push('task imported');
+
     setQuickStartLinkStatus({
       kind: 'success',
       message: shouldAutostart
-        ? `Quick start loaded: ${preset.name} and timer started.`
-        : `Quick start loaded: ${preset.name}.`,
+        ? `Quick start loaded: ${preset.name} and timer started${hydrationNotes.length ? ` (${hydrationNotes.join(', ')})` : ''}.`
+        : `Quick start loaded: ${preset.name}${hydrationNotes.length ? ` (${hydrationNotes.join(', ')})` : ''}.`,
     });
 
     consumeQuickStartParamsFromUrl(window.location.href);
@@ -854,10 +874,22 @@ export function PomodoroApp() {
   );
 }
 
-function buildPresetQuickStartUrl(currentUrl: string, presetId: string): string {
+function buildPresetQuickStartUrl(
+  currentUrl: string,
+  presetId: string,
+  options?: { task?: string; planningMinutes?: number },
+): string {
   const url = new URL(currentUrl);
   url.searchParams.set('preset', presetId);
   url.searchParams.set('autostart', '1');
+
+  if (options?.task) {
+    url.searchParams.set('task', options.task.slice(0, 90));
+  }
+
+  if (typeof options?.planningMinutes === 'number' && Number.isFinite(options.planningMinutes)) {
+    url.searchParams.set('minutes', String(normalizePlanningMinutes(options.planningMinutes)));
+  }
 
   return url.toString();
 }
@@ -866,15 +898,26 @@ function consumeQuickStartParamsFromUrl(currentUrl: string): void {
   if (typeof window === 'undefined') return;
 
   const url = new URL(currentUrl);
-  const hadQuickStartParams = url.searchParams.has('preset') || url.searchParams.has('autostart');
+  const hadQuickStartParams =
+    url.searchParams.has('preset') ||
+    url.searchParams.has('autostart') ||
+    url.searchParams.has('task') ||
+    url.searchParams.has('minutes');
 
   if (!hadQuickStartParams) return;
 
   url.searchParams.delete('preset');
   url.searchParams.delete('autostart');
+  url.searchParams.delete('task');
+  url.searchParams.delete('minutes');
 
   const nextPath = `${url.pathname}${url.search}${url.hash}`;
   window.history.replaceState(window.history.state, '', nextPath);
+}
+
+function normalizePlanningMinutes(value: number): number {
+  const steppedValue = Math.round(value / 15) * 15;
+  return clamp(steppedValue, 60, 360);
 }
 
 function formatAverageMinutes(value: number): string {
