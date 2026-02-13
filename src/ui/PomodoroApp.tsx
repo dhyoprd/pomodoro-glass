@@ -310,6 +310,31 @@ export function PomodoroApp() {
     [planningMinutes],
   );
 
+  const launchPathAudienceCounts = useMemo(() => {
+    const counts: Record<LaunchPathAudienceFilter, number> = {
+      all: rankedPresetPlans.length,
+      desk: 0,
+      mobile: 0,
+      reset: 0,
+    };
+
+    rankedPresetPlans.forEach((plan) => {
+      plan.preset.audience.forEach((audience) => {
+        counts[audience] += 1;
+      });
+    });
+
+    return counts;
+  }, [rankedPresetPlans]);
+
+  const launchPathAudienceOptions = useMemo(
+    () => LAUNCH_PATH_AUDIENCE_OPTIONS.map((option) => ({
+      ...option,
+      label: `${option.label} (${launchPathAudienceCounts[option.id]})`,
+    })),
+    [launchPathAudienceCounts],
+  );
+
   const filteredLaunchPathPlans = useMemo(
     () => (launchPathAudienceFilter === 'all'
       ? rankedPresetPlans
@@ -845,7 +870,7 @@ export function PomodoroApp() {
           <h2>Pick a launch path for today</h2>
           <span>One tap to run a proven rhythm for your available {planningMinutes} minutes.</span>
           <div className="launch-path-audience" role="group" aria-label="Launch path audience filter">
-            {LAUNCH_PATH_AUDIENCE_OPTIONS.map((option) => {
+            {launchPathAudienceOptions.map((option) => {
               const isActive = launchPathAudienceFilter === option.id;
               return (
                 <button
@@ -904,7 +929,12 @@ export function PomodoroApp() {
             ))}
           </div>
         ) : (
-          <p className="launch-path-empty">No paths match this audience yet. Try “All paths”.</p>
+          <div className="launch-path-empty" role="status">
+            <span>No paths match this audience yet.</span>
+            <button type="button" className="ghost" onClick={() => setLaunchPathAudienceFilter('all')}>
+              Reset to all paths
+            </button>
+          </div>
         )}
       </section>
 
