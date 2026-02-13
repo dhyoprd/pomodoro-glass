@@ -68,6 +68,30 @@ const USE_CASE_PRESETS = [
   },
 ] as const;
 
+const OUTCOME_BLUEPRINTS = [
+  {
+    id: 'exam-week',
+    icon: '📚',
+    title: 'Exam Week Coverage',
+    summary: 'Sustain 4-6 hours/day without burnout.',
+    presetId: 'student-revision',
+  },
+  {
+    id: 'ship-feature',
+    icon: '🚀',
+    title: 'Ship a Feature Fast',
+    summary: 'Protect deep blocks and reduce context switching.',
+    presetId: 'deep-work',
+  },
+  {
+    id: 'reset-momentum',
+    icon: '🪫',
+    title: 'Recover Momentum',
+    summary: 'Use shorter loops to rebuild consistency.',
+    presetId: 'high-energy',
+  },
+] as const;
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -162,6 +186,16 @@ export function PomodoroApp() {
       ),
     [state.settings],
   );
+
+  const applyPreset = (preset: (typeof USE_CASE_PRESETS)[number]) => {
+    controller.updateSettings(preset.settings);
+    setSettingsForm({
+      focus: String(preset.settings.focus),
+      shortBreak: String(preset.settings.shortBreak),
+      longBreak: String(preset.settings.longBreak),
+      longBreakInterval: String(preset.settings.longBreakInterval),
+    });
+  };
 
   return (
     <main className="app">
@@ -287,6 +321,32 @@ export function PomodoroApp() {
           </div>
         </section>
 
+      <section className="blueprints" aria-label="Outcome blueprints">
+          <div className="presets-head">
+            <h2>Plan by Outcome</h2>
+            <span>Pick the result you want. Loose maps it to a timer rhythm.</span>
+          </div>
+          <div className="blueprint-grid">
+            {OUTCOME_BLUEPRINTS.map((blueprint) => {
+              const preset = USE_CASE_PRESETS.find((item) => item.id === blueprint.presetId);
+              if (!preset) return null;
+
+              const isActive = activePreset?.id === preset.id;
+
+              return (
+                <article className={`blueprint-card ${isActive ? 'active' : ''}`} key={blueprint.id}>
+                  <h3>{blueprint.icon} {blueprint.title}</h3>
+                  <p>{blueprint.summary}</p>
+                  <small>Recommended rhythm: {preset.name}</small>
+                  <button type="button" disabled={isActive} onClick={() => applyPreset(preset)}>
+                    {isActive ? 'Already active' : 'Use blueprint'}
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
       <section className="presets" aria-label="Use-case presets">
           <div className="presets-head">
             <h2>Start from a Use Case</h2>
@@ -304,19 +364,7 @@ export function PomodoroApp() {
                   <small>
                     {preset.settings.focus}/{preset.settings.shortBreak}/{preset.settings.longBreak} min · every {preset.settings.longBreakInterval} sessions
                   </small>
-                  <button
-                    type="button"
-                    disabled={isActive}
-                    onClick={() => {
-                      controller.updateSettings(preset.settings);
-                      setSettingsForm({
-                        focus: String(preset.settings.focus),
-                        shortBreak: String(preset.settings.shortBreak),
-                        longBreak: String(preset.settings.longBreak),
-                        longBreakInterval: String(preset.settings.longBreakInterval),
-                      });
-                    }}
-                  >
+                  <button type="button" disabled={isActive} onClick={() => applyPreset(preset)}>
                     {isActive ? 'Applied' : 'Apply preset'}
                   </button>
                 </article>
