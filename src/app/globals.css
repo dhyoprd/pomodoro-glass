@@ -956,9 +956,49 @@ button.ghost { background: transparent; }
 }
 
 .blueprints,
-.presets {
+.presets,
+.preset-selector {
   display: grid;
   gap: 12px;
+}
+
+.selector-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.selector-card {
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.selector-card.active {
+  border-color: #22d3ee;
+  box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.25);
+}
+
+.selector-head {
+  display: grid;
+  gap: 4px;
+}
+
+.selector-head strong {
+  font-size: 0.94rem;
+}
+
+.selector-head span,
+.selector-card small {
+  color: var(--muted);
+  font-size: 0.79rem;
+}
+
+.selector-card button {
+  justify-self: start;
 }
 
 .blueprint-grid {
@@ -1245,6 +1285,7 @@ input:focus { border-color: #71717a; }
   .achievement-grid { grid-template-columns: 1fr; }
   .blueprint-grid { grid-template-columns: 1fr; }
   .preset-grid { grid-template-columns: 1fr; }
+  .selector-grid { grid-template-columns: 1fr; }
   .momentum-grid { grid-template-columns: 1fr; }
   .quick-onboarding-grid { grid-template-columns: 1fr; }
   .planner-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }

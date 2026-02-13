@@ -1050,6 +1050,36 @@ export function PomodoroApp() {
           </div>
         </section>
 
+      <section className="preset-selector" aria-label="Use-case selector matrix">
+        <div className="presets-head">
+          <h2>Use-Case Selector Matrix</h2>
+          <span>Pick by situation first. Loose handles the timer math.</span>
+        </div>
+        <div className="selector-grid">
+          {USE_CASE_PRESETS.map((preset) => {
+            const isActive = activePreset?.id === preset.id;
+            const cycleMinutes = preset.settings.focus + preset.settings.shortBreak;
+
+            return (
+              <article className={`selector-card ${isActive ? 'active' : ''}`} key={`selector-${preset.id}`}>
+                <div className="selector-head">
+                  <strong>{preset.icon} {preset.name}</strong>
+                  <span>{preset.outcome}</span>
+                </div>
+                <small>Best when: {preset.idealFor.slice(0, 2).join(' · ')}</small>
+                <small>
+                  Rhythm: {preset.settings.focus}m focus / {preset.settings.shortBreak}m break · long break every {preset.settings.longBreakInterval}
+                </small>
+                <small>Cycle length: {cycleMinutes} min</small>
+                <button type="button" className="ghost" disabled={isActive} onClick={() => applyPresetAndStart(preset)}>
+                  {isActive ? 'Current active setup' : 'Use this rhythm now'}
+                </button>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
       <section className="presets" aria-label="Use-case presets">
           <div className="presets-head">
             <h2>Start from a Use Case</h2>
