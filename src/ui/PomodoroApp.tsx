@@ -386,6 +386,69 @@ export function PomodoroApp() {
     }
   };
 
+  const shareLink = async (url: string, title: string, text: string, successMessage: string) => {
+    if (typeof window === 'undefined') return;
+
+    if (!navigator.share) {
+      setQuickStartLinkStatus({
+        kind: 'error',
+        message: 'Native sharing is unavailable on this device. Try copy link instead.',
+      });
+      return;
+    }
+
+    try {
+      await navigator.share({
+        title,
+        text,
+        url,
+      });
+      setQuickStartLinkStatus({
+        kind: 'success',
+        message: successMessage,
+      });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return;
+      }
+
+      setQuickStartLinkStatus({
+        kind: 'error',
+        message: 'Could not open share sheet right now. Try again.',
+      });
+    }
+  };
+
+  const sharePresetQuickStartLink = async (preset: UseCasePreset) => {
+    if (typeof window === 'undefined') return;
+
+    const seededTask = state.tasks.find((task) => !task.done)?.text ?? taskText.trim();
+    const quickStartUrl = buildPresetQuickStartUrl(window.location.href, preset.id, {
+      planningMinutes,
+      task: seededTask,
+    });
+
+    await shareLink(
+      quickStartUrl,
+      `Loose quick start · ${preset.name}`,
+      `Run ${preset.name} on Loose with one tap.`,
+      `Shared ${preset.name} quick-start link.`,
+    );
+  };
+
+  const shareMatchmakerProfileLink = async () => {
+    if (typeof window === 'undefined') return;
+
+    const profileUrl = buildMatchmakerProfileUrl(window.location.href, matchmaker, planningMinutes);
+
+    await shareLink(
+      profileUrl,
+      'Loose profile matchmaker',
+      'Use this profile to get a best-fit Loose rhythm.',
+      'Shared matchmaker profile link.',
+    );
+  };
+
   useEffect(() => {
     if (hasHydratedQuickStart.current || typeof window === 'undefined') return;
 
@@ -710,6 +773,9 @@ export function PomodoroApp() {
                   <button type="button" className="ghost" onClick={() => void copyMatchmakerProfileLink()}>
                     Copy profile link
                   </button>
+                  <button type="button" className="ghost" onClick={() => void shareMatchmakerProfileLink()}>
+                    Share profile
+                  </button>
                 </div>
               </div>
             ) : null}
@@ -974,6 +1040,9 @@ export function PomodoroApp() {
                     <button type="button" className="ghost" onClick={() => void copyPresetQuickStartLink(preset)}>
                       Copy quick-start link
                     </button>
+                    <button type="button" className="ghost" onClick={() => void sharePresetQuickStartLink(preset)}>
+                      Share quick-start
+                    </button>
                   </div>
                 </article>
               );
@@ -1013,6 +1082,9 @@ export function PomodoroApp() {
                     </button>
                     <button type="button" className="ghost" onClick={() => void copyPresetQuickStartLink(preset)}>
                       Copy quick-start link
+                    </button>
+                    <button type="button" className="ghost" onClick={() => void sharePresetQuickStartLink(preset)}>
+                      Share quick-start
                     </button>
                   </div>
                 </article>
