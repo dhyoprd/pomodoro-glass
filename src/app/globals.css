@@ -398,6 +398,33 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   font-size: 0.84rem;
 }
 
+.landing-social-proof-pulse {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.landing-social-proof-pulse article {
+  border: 1px solid var(--line);
+  background: #0f1018;
+  border-radius: 12px;
+  padding: 10px;
+  display: grid;
+  gap: 3px;
+}
+
+.landing-social-proof-pulse span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.landing-social-proof-pulse strong {
+  font-size: 0.95rem;
+  color: #f5f3ff;
+}
+
 .landing-social-proof-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1928,6 +1955,7 @@ input:focus { border-color: #71717a; }
   .startup-proof-grid { grid-template-columns: 1fr; }
   .landing-metrics-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .launch-paths-grid { grid-template-columns: 1fr; }
+  .landing-social-proof-pulse { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .landing-social-proof-grid { grid-template-columns: 1fr; }
   .landing-faq-grid { grid-template-columns: 1fr; }
   .use-case-playbook-grid { grid-template-columns: 1fr; }
@@ -1959,6 +1987,7 @@ input:focus { border-color: #71717a; }
   .planner-metrics { grid-template-columns: 1fr; }
   .hero-kpis { grid-template-columns: 1fr; }
   .landing-metrics-strip { grid-template-columns: 1fr; }
+  .landing-social-proof-pulse { grid-template-columns: 1fr; }
 
   .mobile-command-bar {
     position: fixed;

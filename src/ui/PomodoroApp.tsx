@@ -258,6 +258,29 @@ export function PomodoroApp() {
 
   const questProgress = useMemo(() => buildDailyQuestProgress(state), [state]);
 
+  const socialProofPulse = useMemo(() => {
+    const totalFocusWins = LANDING_SOCIAL_PROOF.reduce((sum, story) => {
+      const wins = Number(story.focusWins.match(/\d+/)?.[0] ?? 0);
+      return sum + wins;
+    }, 0);
+
+    const averageStreakLift = LANDING_SOCIAL_PROOF.length
+      ? Math.round(
+          LANDING_SOCIAL_PROOF.reduce((sum, story) => {
+            const lift = Number(story.streakLift.match(/-?\d+/)?.[0] ?? 0);
+            return sum + lift;
+          }, 0) / LANDING_SOCIAL_PROOF.length,
+        )
+      : 0;
+
+    return {
+      stories: LANDING_SOCIAL_PROOF.length,
+      totalFocusWins,
+      averageStreakLift,
+      blueprintCoverage: new Set(LANDING_SOCIAL_PROOF.map((story) => story.blueprint)).size,
+    };
+  }, []);
+
   const focusHealth = useMemo(() => buildFocusHealthScore(state), [state]);
 
   const momentumStats = useMemo(() => {
@@ -964,6 +987,24 @@ export function PomodoroApp() {
         <div className="landing-social-proof-head">
           <h2>Outcome-first wins from real focus routines</h2>
           <span>Short stories mapped directly to Loose blueprints.</span>
+        </div>
+        <div className="landing-social-proof-pulse" aria-label="Social proof summary">
+          <article>
+            <span>Stories</span>
+            <strong>{socialProofPulse.stories}</strong>
+          </article>
+          <article>
+            <span>Focus wins logged</span>
+            <strong>{socialProofPulse.totalFocusWins}</strong>
+          </article>
+          <article>
+            <span>Avg streak lift</span>
+            <strong>+{socialProofPulse.averageStreakLift} days</strong>
+          </article>
+          <article>
+            <span>Blueprint coverage</span>
+            <strong>{socialProofPulse.blueprintCoverage} paths</strong>
+          </article>
         </div>
         <div className="landing-social-proof-grid">
           {LANDING_SOCIAL_PROOF.map((story) => (
