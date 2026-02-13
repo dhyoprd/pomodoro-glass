@@ -362,6 +362,12 @@ export function PomodoroApp() {
     controller.beginFocusSession();
   };
 
+  const startRecommendedFocusNow = () => {
+    const preset = recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
+    applyPresetAndStart(preset);
+    scrollToSection('focus-timer');
+  };
+
   const addSuggestedTask = (task: string) => {
     const normalizedTask = task.trim().slice(0, 90);
     if (!normalizedTask) return;
@@ -640,6 +646,9 @@ export function PomodoroApp() {
         </div>
         <div className="hero-actions">
           <a href="#outcome-blueprints">Start with an outcome</a>
+          <button type="button" className="ghost" onClick={startRecommendedFocusNow}>
+            Run best-fit focus now
+          </button>
           <a href="#session-planner" className="ghost-link">Plan my day</a>
           <button
             type="button"
