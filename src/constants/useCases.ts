@@ -14,6 +14,7 @@ export type UseCasePreset = {
   outcome: string;
   idealFor: ReadonlyArray<string>;
   momentumTip: string;
+  taskTemplates: ReadonlyArray<{ icon: string; text: string }>;
   playbook: {
     objective: string;
     kickoff: string;
@@ -32,6 +33,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Best for consistency over long study days.',
     idealFor: ['Exam prep', 'Lecture backlog', 'Balanced energy'],
     momentumTip: 'Batch 2-3 related chapters per cycle to avoid context switching.',
+    taskTemplates: [
+      { icon: '🧠', text: 'Summarize one chapter into 10 active-recall prompts' },
+      { icon: '✍️', text: 'Complete one past-paper section and mark weak spots' },
+      { icon: '📌', text: 'Create a 15-card flashcard set for today\'s topic' },
+    ],
     playbook: {
       objective: 'Cover exam-critical chapters with stable daily consistency.',
       kickoff: 'Pick one chapter cluster and write 3 questions you must answer by the end of the block.',
@@ -48,6 +54,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Fewer switches, more deep concentration.',
     idealFor: ['Feature shipping', 'Writing drafts', 'High clarity windows'],
     momentumTip: 'Define one hard outcome before pressing start to protect the block.',
+    taskTemplates: [
+      { icon: '🛠️', text: 'Ship one feature slice end-to-end (build + test + commit)' },
+      { icon: '🧪', text: 'Close one edge-case bug and add regression coverage' },
+      { icon: '📝', text: 'Draft and finalize one high-leverage design note' },
+    ],
     playbook: {
       objective: 'Ship one meaningful artifact (feature, draft, or decision doc) per deep-work window.',
       kickoff: 'Write a single “done means” sentence for this block before starting the timer.',
@@ -64,6 +75,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Fast momentum when energy is scattered.',
     idealFor: ['Low motivation', 'Task anxiety', 'Quick restart days'],
     momentumTip: 'Aim for 3 fast wins first; confidence usually rebounds by session 2.',
+    taskTemplates: [
+      { icon: '✅', text: 'Finish one avoided 15-minute starter task' },
+      { icon: '🧹', text: 'Clear your top-priority inbox or notes backlog batch' },
+      { icon: '📍', text: 'Set tomorrow\'s first action and prep all materials' },
+    ],
     playbook: {
       objective: 'Regain traction quickly on low-motivation days with visible wins.',
       kickoff: 'Break one avoided task into a 15-minute “first move” action.',
@@ -80,6 +96,11 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Turn fragmented travel time into measurable progress.',
     idealFor: ['Transit sessions', 'Errand gaps', 'On-the-go planning'],
     momentumTip: 'Queue bite-sized tasks before leaving home so you can start instantly.',
+    taskTemplates: [
+      { icon: '📱', text: 'Process and archive one quick message triage batch' },
+      { icon: '🎧', text: 'Review one audio lesson and capture 3 key takeaways' },
+      { icon: '🗂️', text: 'Organize tomorrow\'s top 3 priorities in notes' },
+    ],
     playbook: {
       objective: 'Convert fragmented commute windows into measurable progress.',
       kickoff: 'Preload 3 phone-friendly tasks (notes, flashcards, triage) before you head out.',

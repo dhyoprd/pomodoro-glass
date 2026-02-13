@@ -1676,6 +1676,30 @@ input:focus { border-color: #71717a; }
 #taskForm { display: flex; gap: 8px; }
 #taskInput { min-width: 240px; }
 #taskInput::placeholder { color: #71717a; }
+
+.task-templates {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.task-templates > span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.task-template-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.task-template-chip {
+  font-size: 0.76rem;
+  line-height: 1.2;
+  border-radius: 999px;
+}
+
 #taskList {
   margin: 14px 0 0;
   padding: 0;

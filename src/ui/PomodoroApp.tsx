@@ -288,6 +288,11 @@ export function PomodoroApp() {
 
   const activePlaybookPreset = activePreset ?? recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
 
+  const taskTemplates = useMemo(
+    () => activePreset?.taskTemplates ?? recommendedPreset?.preset.taskTemplates ?? USE_CASE_PRESETS[0].taskTemplates,
+    [activePreset, recommendedPreset?.preset.taskTemplates],
+  );
+
   const profileRecommendation = useMemo(
     () => recommendPresetByProfile(USE_CASE_PRESETS, matchmaker),
     [matchmaker],
@@ -354,6 +359,20 @@ export function PomodoroApp() {
   const applyPresetAndStart = (preset: UseCasePreset) => {
     applyPreset(preset);
     controller.beginFocusSession();
+  };
+
+  const addSuggestedTask = (task: string) => {
+    const normalizedTask = task.trim().slice(0, 90);
+    if (!normalizedTask) return;
+
+    const hasDuplicate = state.tasks.some((item) => item.text.toLowerCase() === normalizedTask.toLowerCase());
+    if (hasDuplicate) {
+      setTaskText(normalizedTask);
+      return;
+    }
+
+    controller.addTask(normalizedTask);
+    setTaskText('');
   };
 
   const installLooseApp = async () => {
@@ -1366,6 +1385,21 @@ export function PomodoroApp() {
               <input id="taskInput" value={taskText} onChange={(e) => setTaskText(e.target.value)} type="text" maxLength={90} placeholder="What are you studying?" required />
               <button type="submit">Add</button>
             </form>
+          </div>
+          <div className="task-templates" aria-label="Suggested task starters">
+            <span>Quick add from {activePreset?.name ?? 'recommended rhythm'}:</span>
+            <div className="task-template-list" role="list">
+              {taskTemplates.map((template) => (
+                <button
+                  key={`${activePreset?.id ?? 'recommended'}-${template.text}`}
+                  type="button"
+                  className="ghost task-template-chip"
+                  onClick={() => addSuggestedTask(template.text)}
+                >
+                  {template.icon} {template.text}
+                </button>
+              ))}
+            </div>
           </div>
           <ul id="taskList">
             {!state.tasks.length ? (
