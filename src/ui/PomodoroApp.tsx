@@ -9,64 +9,13 @@ import {
   USE_CASE_PRESETS,
   type UseCasePreset,
 } from '@/constants/useCases';
-
-const XP_PER_SESSION = 100;
-const XP_PER_FOCUS_MINUTE = 2;
-const XP_PER_LEVEL = 500;
-
-const ACHIEVEMENTS = [
-  {
-    id: 'ach-first-session',
-    icon: '🥉',
-    title: 'First Win',
-    target: 1,
-    unit: 'session',
-    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.stats.completed,
-  },
-  {
-    id: 'ach-focus-1000',
-    icon: '🥈',
-    title: '1,000 Focus Minutes',
-    target: 1000,
-    unit: 'minutes',
-    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.stats.focusMinutes,
-  },
-  {
-    id: 'ach-streak-7',
-    icon: '🥇',
-    title: '7-Day Streak',
-    target: 7,
-    unit: 'days',
-    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.analytics.streak.current,
-  },
-] as const;
-
-const DAILY_QUESTS = [
-  {
-    id: 'quest-focus-minutes',
-    icon: '⚡',
-    title: 'Focus Momentum',
-    target: 120,
-    description: 'Accumulate 120 focused minutes today.',
-    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.analytics.today.focusMinutes,
-  },
-  {
-    id: 'quest-sessions',
-    icon: '🍅',
-    title: 'Pomodoro Finisher',
-    target: 4,
-    description: 'Complete 4 sessions in a day.',
-    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.analytics.today.sessions,
-  },
-  {
-    id: 'quest-task-clear',
-    icon: '✅',
-    title: 'Task Clarity',
-    target: 3,
-    description: 'Close out 3 tasks from your queue.',
-    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.tasks.filter((task) => task.done).length,
-  },
-] as const;
+import {
+  XP_PER_FOCUS_MINUTE,
+  XP_PER_SESSION,
+  buildAchievementProgress,
+  buildDailyQuestProgress,
+  buildGamificationProgress,
+} from '@/application/GamificationEngine';
 
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
@@ -111,50 +60,11 @@ export function PomodoroApp() {
     [state.analytics.week],
   );
 
-  const gamification = useMemo(() => {
-    const xp = state.stats.completed * XP_PER_SESSION + state.stats.focusMinutes * XP_PER_FOCUS_MINUTE;
-    const level = Math.floor(xp / XP_PER_LEVEL) + 1;
-    const levelBaseXp = (level - 1) * XP_PER_LEVEL;
-    const xpIntoLevel = xp - levelBaseXp;
-    const xpToNextLevel = XP_PER_LEVEL - xpIntoLevel;
-    const levelProgress = clamp((xpIntoLevel / XP_PER_LEVEL) * 100, 0, 100);
+  const gamification = useMemo(() => buildGamificationProgress(state), [state]);
 
-    return { xp, level, xpToNextLevel, levelProgress };
-  }, [state.stats.completed, state.stats.focusMinutes]);
+  const achievementProgress = useMemo(() => buildAchievementProgress(state), [state]);
 
-  const achievementProgress = useMemo(
-    () =>
-      ACHIEVEMENTS.map((achievement) => {
-        const progressValue = achievement.getProgress(state);
-        const progress = clamp((progressValue / achievement.target) * 100, 0, 100);
-        const unlocked = progressValue >= achievement.target;
-
-        return {
-          ...achievement,
-          progressValue,
-          progress,
-          unlocked,
-        };
-      }),
-    [state],
-  );
-
-  const questProgress = useMemo(
-    () =>
-      DAILY_QUESTS.map((quest) => {
-        const progressValue = quest.getProgress(state);
-        const progress = clamp((progressValue / quest.target) * 100, 0, 100);
-        const complete = progressValue >= quest.target;
-
-        return {
-          ...quest,
-          progressValue,
-          progress,
-          complete,
-        };
-      }),
-    [state],
-  );
+  const questProgress = useMemo(() => buildDailyQuestProgress(state), [state]);
 
   const momentumStats = useMemo(() => {
     const totalHours = (state.stats.focusMinutes / 60).toFixed(1);
