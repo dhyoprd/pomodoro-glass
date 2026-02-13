@@ -13,13 +13,14 @@ const MODES = [
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
-  const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '' });
+  const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '', longBreakInterval: '' });
 
   useEffect(() => {
     setSettingsForm({
       focus: String(state.settings.focus),
       shortBreak: String(state.settings.shortBreak),
       longBreak: String(state.settings.longBreak),
+      longBreakInterval: String(state.settings.longBreakInterval),
     });
   }, [state.settings]);
 
@@ -130,6 +131,7 @@ export function PomodoroApp() {
             <label><span>Focus</span><input value={settingsForm.focus} onChange={(e) => setSettingsForm((s) => ({ ...s, focus: e.target.value }))} type="number" min={10} max={90} required /></label>
             <label><span>Short Break</span><input value={settingsForm.shortBreak} onChange={(e) => setSettingsForm((s) => ({ ...s, shortBreak: e.target.value }))} type="number" min={1} max={30} required /></label>
             <label><span>Long Break</span><input value={settingsForm.longBreak} onChange={(e) => setSettingsForm((s) => ({ ...s, longBreak: e.target.value }))} type="number" min={5} max={60} required /></label>
+            <label><span>Long Break Every</span><input value={settingsForm.longBreakInterval} onChange={(e) => setSettingsForm((s) => ({ ...s, longBreakInterval: e.target.value }))} type="number" min={2} max={8} required /></label>
             <button type="submit">Save</button>
             <button type="button" className="ghost" onClick={() => controller.resetSettingsToDefaults()}>Defaults</button>
           </form>

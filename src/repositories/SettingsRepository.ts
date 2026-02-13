@@ -13,6 +13,7 @@ export class SettingsRepository {
       focus: Number(raw.focus) || DEFAULT_SETTINGS_MINUTES.focus,
       shortBreak: Number(raw.shortBreak) || DEFAULT_SETTINGS_MINUTES.shortBreak,
       longBreak: Number(raw.longBreak) || DEFAULT_SETTINGS_MINUTES.longBreak,
+      longBreakInterval: Number(raw.longBreakInterval) || DEFAULT_SETTINGS_MINUTES.longBreakInterval,
     };
   }
 
@@ -20,4 +21,3 @@ export class SettingsRepository {
     this.storage.setJson(this.key, settings);
   }
 }
-

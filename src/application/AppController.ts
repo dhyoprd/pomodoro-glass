@@ -103,7 +103,7 @@ export class AppController {
     this.emit();
   }
 
-  updateSettings(nextSettingsMinutes: Record<string, string | number>) {
+  updateSettings(nextSettingsMinutes: Partial<Record<keyof TimerSettings, string | number>>) {
     const validated = this.validateSettings(nextSettingsMinutes);
     if (!validated.ok) {
       this.emit({ kind: 'error', message: validated.error });
@@ -139,13 +139,13 @@ export class AppController {
       this.sessionHistory = this.sessionHistory.slice(0, 365);
       this.deps.sessionHistoryRepo.save(this.sessionHistory);
 
-      this.deps.notify.notify('Focus done. Break time ??');
-      const nextMode: Mode = this.stats.completed % 4 === 0 ? 'longBreak' : 'shortBreak';
+      this.deps.notify.notify('Focus done. Break time 🧘');
+      const nextMode: Mode = this.stats.completed % this.settings.longBreakInterval === 0 ? 'longBreak' : 'shortBreak';
       this.setMode(nextMode);
       return;
     }
 
-    this.deps.notify.notify('Break over. Back to focus ?');
+    this.deps.notify.notify('Break over. Back to focus 💪');
     this.setMode('focus');
   }
 
@@ -169,11 +169,12 @@ export class AppController {
     return this.settings[mode] * 60;
   }
 
-  private validateSettings(raw: Record<string, string | number>) {
+  private validateSettings(raw: Partial<Record<keyof TimerSettings, string | number>>) {
     const next: TimerSettings = {
       focus: Number(raw.focus),
       shortBreak: Number(raw.shortBreak),
       longBreak: Number(raw.longBreak),
+      longBreakInterval: Number(raw.longBreakInterval),
     };
 
     if (!Number.isFinite(next.focus) || next.focus < 10 || next.focus > 90) {
@@ -190,6 +191,14 @@ export class AppController {
 
     if (!Number.isFinite(next.longBreak) || next.longBreak < 5 || next.longBreak > 60) {
       return { ok: false as const, field: 'longBreak' as const, error: 'Long break must be between 5 and 60 minutes.' };
+    }
+
+    if (!Number.isFinite(next.longBreakInterval) || next.longBreakInterval < 2 || next.longBreakInterval > 8) {
+      return {
+        ok: false as const,
+        field: 'longBreakInterval' as const,
+        error: 'Long break interval must be between 2 and 8 focus sessions.',
+      };
     }
 
     return { ok: true as const, value: next };

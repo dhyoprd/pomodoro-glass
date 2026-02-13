@@ -2,6 +2,7 @@
   focus: 25,
   shortBreak: 5,
   longBreak: 15,
+  longBreakInterval: 4,
 });
 
 export const STORAGE_KEYS = Object.freeze({
@@ -18,6 +19,7 @@ export type TimerSettings = {
   focus: number;
   shortBreak: number;
   longBreak: number;
+  longBreakInterval: number;
 };
 
 export type Task = {
@@ -36,4 +38,3 @@ export type Stats = {
   completed: number;
   focusMinutes: number;
 };
-

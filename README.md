@@ -4,7 +4,7 @@ Pomodoro Glass has been migrated from static modular JavaScript to a **Next.js f
 
 ## ✅ What’s preserved
 
-- Focus / Short Break / Long Break modes
+- Focus / Short Break / Long Break modes (with configurable long-break interval)
 - Start / Pause / Reset timer controls
 - Progress bar + dynamic document title timer
 - Completed sessions + all-time focus minutes
