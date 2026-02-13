@@ -438,6 +438,10 @@ export function PomodoroApp() {
           ? `Outcome selected: ${activePreset.name}`
           : 'Pick a use-case blueprint',
         done: Boolean(activePreset),
+        action: {
+          label: 'Pick outcome',
+          run: () => scrollToSection('outcome-blueprints'),
+        },
       },
       {
         id: 'task',
@@ -445,6 +449,10 @@ export function PomodoroApp() {
           ? `Task captured: ${state.tasks[0]?.text ?? 'Ready'}`
           : 'Add your first task',
         done: state.tasks.length > 0,
+        action: {
+          label: 'Add task',
+          run: () => scrollToSection('task-capture'),
+        },
       },
       {
         id: 'focus',
@@ -452,6 +460,10 @@ export function PomodoroApp() {
           ? `First focus win complete (${state.stats.completed} total)`
           : 'Complete one focus session',
         done: state.stats.completed > 0,
+        action: {
+          label: 'Go to timer',
+          run: () => scrollToSection('focus-timer'),
+        },
       },
     ];
 
@@ -1136,6 +1148,11 @@ export function PomodoroApp() {
             <li key={item.id} className={item.done ? 'done' : ''}>
               <strong>{item.done ? '✅' : '⬜'}</strong>
               <span>{item.label}</span>
+              {!item.done ? (
+                <button type="button" className="onboarding-action" onClick={item.action.run}>
+                  {item.action.label}
+                </button>
+              ) : null}
             </li>
           ))}
         </ul>
