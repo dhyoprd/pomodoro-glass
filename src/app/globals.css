@@ -228,6 +228,36 @@ section {
   font-size: 0.82rem;
 }
 
+.planner-recommendation {
+  background: linear-gradient(145deg, #171724, #101017);
+  border: 1px solid #3f3f46;
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.planner-recommendation > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.planner-recommendation span {
+  color: #c4b5fd;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.planner-recommendation strong {
+  font-size: 0.96rem;
+}
+
+.planner-recommendation small {
+  color: var(--muted);
+  font-size: 0.79rem;
+}
+
 .timer-card { display: grid; gap: 14px; }
 .mode-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .mode {

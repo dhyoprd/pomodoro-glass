@@ -203,6 +203,27 @@ export function PomodoroApp() {
     };
   }, [activePreset?.settings, planningMinutes, state.settings]);
 
+  const recommendedPreset = useMemo(() => {
+    const ranked = USE_CASE_PRESETS.map((preset) => {
+      const cycleMinutes = preset.settings.focus + preset.settings.shortBreak;
+      const sessions = Math.max(1, Math.floor(planningMinutes / cycleMinutes));
+      const focusMinutes = sessions * preset.settings.focus;
+      const remainder = planningMinutes - sessions * cycleMinutes;
+      const focusRatio = focusMinutes / planningMinutes;
+      const score = focusRatio * 100 - remainder;
+
+      return {
+        preset,
+        sessions,
+        focusMinutes,
+        remainder,
+        score,
+      };
+    }).sort((a, b) => b.score - a.score);
+
+    return ranked[0];
+  }, [planningMinutes]);
+
   const showQuickOnboarding = state.stats.completed === 0 && state.tasks.length === 0;
 
   const applyPreset = (preset: UseCasePreset) => {
@@ -312,6 +333,23 @@ export function PomodoroApp() {
               <span>5-day XP runway</span>
             </article>
           </div>
+          {recommendedPreset ? (
+            <article className="planner-recommendation" aria-live="polite">
+              <div>
+                <span>Recommended rhythm for {planningMinutes} min</span>
+                <strong>{recommendedPreset.preset.icon} {recommendedPreset.preset.name}</strong>
+                <small>
+                  {recommendedPreset.sessions} sessions · {recommendedPreset.focusMinutes} focus min · {recommendedPreset.remainder} min buffer
+                </small>
+              </div>
+              <div className="preset-actions">
+                <button type="button" onClick={() => applyPreset(recommendedPreset.preset)}>Apply</button>
+                <button type="button" className="ghost" onClick={() => applyPresetAndStart(recommendedPreset.preset)}>
+                  Apply & start
+                </button>
+              </div>
+            </article>
+          ) : null}
           <p>
             Based on {activePreset?.name ?? 'current settings'} ({sessionPlanner.cycleMinutes} min per focus cycle).
           </p>

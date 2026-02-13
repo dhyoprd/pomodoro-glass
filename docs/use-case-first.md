@@ -22,6 +22,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - New users see quick onboarding with outcome cards first.
 - Returning users can still use full preset/settings controls.
 - Each blueprint can be applied and started in one tap.
+- Session planner now recommends the best-fit preset for the user’s available deep-work window, with one-tap apply/start.
 
 ## V1 guardrails
 
