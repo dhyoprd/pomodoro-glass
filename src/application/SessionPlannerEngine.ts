@@ -10,6 +10,16 @@ export type SessionPlannerSummary = {
   cycleMinutes: number;
 };
 
+export type PlanPerformance = {
+  sessions: number;
+  focusMinutes: number;
+  remainder: number;
+  focusRatio: number;
+  xpPerHour: number;
+  estimatedXp: number;
+  cycleMinutes: number;
+};
+
 export type RankedPresetPlan = {
   preset: UseCasePreset;
   sessions: number;
@@ -129,26 +139,41 @@ export function buildWeeklyMomentumForecast(
   };
 }
 
+export function buildPlanPerformance(settings: TimerSettings, planningMinutes: number): PlanPerformance {
+  const normalizedPlanningMinutes = Math.max(planningMinutes, settings.focus);
+  const cycleMinutes = settings.focus + settings.shortBreak;
+  const sessions = Math.max(1, Math.floor(normalizedPlanningMinutes / cycleMinutes));
+  const focusMinutes = sessions * settings.focus;
+  const remainder = normalizedPlanningMinutes - sessions * cycleMinutes;
+  const focusRatio = focusMinutes / normalizedPlanningMinutes;
+  const estimatedXp = sessions * XP_PER_SESSION + focusMinutes * XP_PER_FOCUS_MINUTE;
+  const xpPerHour = Math.round((estimatedXp / normalizedPlanningMinutes) * 60);
+
+  return {
+    sessions,
+    focusMinutes,
+    remainder,
+    focusRatio,
+    xpPerHour,
+    estimatedXp,
+    cycleMinutes,
+  };
+}
+
 export function rankPresetPlans(presets: ReadonlyArray<UseCasePreset>, planningMinutes: number): RankedPresetPlan[] {
   return presets
     .map((preset) => {
-      const cycleMinutes = preset.settings.focus + preset.settings.shortBreak;
-      const sessions = Math.max(1, Math.floor(planningMinutes / cycleMinutes));
-      const focusMinutes = sessions * preset.settings.focus;
-      const remainder = planningMinutes - sessions * cycleMinutes;
-      const focusRatio = focusMinutes / planningMinutes;
-      const estimatedXp = sessions * XP_PER_SESSION + focusMinutes * XP_PER_FOCUS_MINUTE;
-      const xpPerHour = Math.round((estimatedXp / planningMinutes) * 60);
-      const score = focusRatio * 100 - remainder;
+      const performance = buildPlanPerformance(preset.settings, planningMinutes);
+      const score = performance.focusRatio * 100 - performance.remainder;
 
       return {
         preset,
-        sessions,
-        focusMinutes,
-        remainder,
+        sessions: performance.sessions,
+        focusMinutes: performance.focusMinutes,
+        remainder: performance.remainder,
         score,
-        focusRatio,
-        xpPerHour,
+        focusRatio: performance.focusRatio,
+        xpPerHour: performance.xpPerHour,
       };
     })
     .sort((a, b) => b.score - a.score);

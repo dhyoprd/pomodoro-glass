@@ -24,6 +24,7 @@ import {
   buildNextMilestone,
 } from '@/application/GamificationEngine';
 import {
+  buildPlanPerformance,
   buildSessionPlannerSummary,
   buildSessionTimeline,
   buildWeeklyMomentumForecast,
@@ -419,6 +420,11 @@ export function PomodoroApp() {
   const rankedPresetPlans = useMemo(
     () => rankPresetPlans(USE_CASE_PRESETS, planningMinutes),
     [planningMinutes],
+  );
+
+  const activePlanPerformance = useMemo(
+    () => buildPlanPerformance(state.settings, planningMinutes),
+    [planningMinutes, state.settings],
   );
 
   const launchPathAudienceCounts = useMemo(() => {
@@ -1151,6 +1157,9 @@ export function PomodoroApp() {
                     {isRecommendedPath ? <span className="launch-path-badge">Best fit now</span> : null}
                   </div>
                   <span>{Math.round(plan.focusRatio * 100)}% focus density</span>
+                  <small className="launch-path-delta" aria-label={`Comparison against current rhythm for ${plan.preset.name}`}>
+                    vs current rhythm: {formatSignedNumber(plan.xpPerHour - activePlanPerformance.xpPerHour)} XP/hr | {formatSignedPercent(Math.round((plan.focusRatio - activePlanPerformance.focusRatio) * 100))} focus density
+                  </small>
                 </div>
                 <p>{plan.preset.outcome}</p>
                 <div className="preset-tags" aria-label={`${plan.preset.name} ideal for`}>
@@ -2156,6 +2165,17 @@ function formatFinishBy(minutesFromNow: number): string {
     hour: 'numeric',
     minute: '2-digit',
   }).format(target);
+}
+
+function formatSignedNumber(value: number): string {
+  if (value > 0) return `+${value}`;
+  return String(value);
+}
+
+function formatSignedPercent(value: number): string {
+  if (value > 0) return `+${value}%`;
+  if (value < 0) return `${value}%`;
+  return '0%';
 }
 
 function formatAverageMinutes(value: number): string {
