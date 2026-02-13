@@ -1204,6 +1204,8 @@ input:focus { border-color: #71717a; }
   .mobile-mode-actions {
     display: flex;
     gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   .mobile-shortcuts button,
@@ -1216,5 +1218,11 @@ input:focus { border-color: #71717a; }
   .mobile-shortcuts button {
     border-color: #3f3f46;
     color: #d4d4d8;
+  }
+
+  .mobile-shortcuts button.active-shortcut {
+    border-color: #22d3ee;
+    background: rgba(34, 211, 238, 0.16);
+    color: #67e8f9;
   }
 }

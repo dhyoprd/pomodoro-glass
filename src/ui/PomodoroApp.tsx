@@ -43,6 +43,7 @@ export function PomodoroApp() {
   });
   const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '', longBreakInterval: '' });
   const [quickStartLinkStatus, setQuickStartLinkStatus] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
+  const [activeSectionId, setActiveSectionId] = useState('focus-timer');
   const hasHydratedQuickStart = useRef(false);
 
   const scrollToSection = (sectionId: string) => {
@@ -78,6 +79,37 @@ export function PomodoroApp() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [controller]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const sections = ['session-planner', 'focus-timer', 'task-capture', 'outcome-blueprints']
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target.id) {
+          setActiveSectionId(visible.target.id);
+        }
+      },
+      {
+        root: null,
+        threshold: [0.35, 0.6, 0.85],
+        rootMargin: '-20% 0px -45% 0px',
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
 
   const progress = useMemo(
     () => clamp(((state.timer.total - state.timer.remaining) / state.timer.total) * 100 || 0, 0, 100),
@@ -868,14 +900,37 @@ export function PomodoroApp() {
             {state.timer.running ? 'Pause' : 'Start Focus'}
           </button>
           <div className="mobile-shortcuts" role="group" aria-label="Quick section shortcuts">
-            <button type="button" className="ghost" onClick={() => scrollToSection('session-planner')}>
+            <button
+              type="button"
+              className={`ghost ${activeSectionId === 'session-planner' ? 'active-shortcut' : ''}`}
+              aria-current={activeSectionId === 'session-planner' ? 'true' : undefined}
+              onClick={() => scrollToSection('session-planner')}
+            >
               Plan
             </button>
-            <button type="button" className="ghost" onClick={() => scrollToSection('task-capture')}>
+            <button
+              type="button"
+              className={`ghost ${activeSectionId === 'task-capture' ? 'active-shortcut' : ''}`}
+              aria-current={activeSectionId === 'task-capture' ? 'true' : undefined}
+              onClick={() => scrollToSection('task-capture')}
+            >
               Tasks
             </button>
-            <button type="button" className="ghost" onClick={() => scrollToSection('focus-timer')}>
+            <button
+              type="button"
+              className={`ghost ${activeSectionId === 'focus-timer' ? 'active-shortcut' : ''}`}
+              aria-current={activeSectionId === 'focus-timer' ? 'true' : undefined}
+              onClick={() => scrollToSection('focus-timer')}
+            >
               Timer
+            </button>
+            <button
+              type="button"
+              className={`ghost ${activeSectionId === 'outcome-blueprints' ? 'active-shortcut' : ''}`}
+              aria-current={activeSectionId === 'outcome-blueprints' ? 'true' : undefined}
+              onClick={() => scrollToSection('outcome-blueprints')}
+            >
+              Wins
             </button>
           </div>
           <div className="mobile-mode-actions" role="group" aria-label="Quick mode actions">
