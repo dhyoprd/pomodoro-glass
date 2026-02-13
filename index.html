@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro Glass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg"></div>
+    <main class="app glass">
+      <header>
+        <h1>Pomodoro Glass</h1>
+        <p>Focus beautifully.</p>
+      </header>
+
+      <section class="timer-card glass-inner">
+        <div class="mode-row">
+          <button class="mode active" data-mode="focus">Focus</button>
+          <button class="mode" data-mode="shortBreak">Short Break</button>
+          <button class="mode" data-mode="longBreak">Long Break</button>
+        </div>
+
+        <div class="time" id="timeDisplay">25:00</div>
+
+        <div class="controls">
+          <button id="startPauseBtn" class="primary">Start</button>
+          <button id="resetBtn" class="ghost">Reset</button>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </section>
+
+      <section class="stats glass-inner">
+        <div>
+          <span class="label">Completed Today</span>
+          <strong id="completedCount">0</strong>
+        </div>
+        <div>
+          <span class="label">Focus Minutes</span>
+          <strong id="focusMinutes">0</strong>
+        </div>
+      </section>
+
+      <section class="tasks glass-inner">
+        <div class="tasks-head">
+          <h2>Tasks</h2>
+          <form id="taskForm">
+            <input id="taskInput" type="text" placeholder="What are you studying?" maxlength="90" required />
+            <button type="submit">Add</button>
+          </form>
+        </div>
+        <ul id="taskList"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
