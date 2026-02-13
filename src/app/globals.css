@@ -90,6 +90,14 @@ button {
   transition: 0.18s ease;
 }
 button:hover { border-color: #52525b; background: #1f1f23; }
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+button:disabled:hover {
+  border-color: var(--line-strong);
+  background: #18181b;
+}
 button.primary {
   background: var(--accent);
   color: var(--accent-text);
@@ -266,6 +274,11 @@ button.ghost { background: transparent; }
   gap: 8px;
 }
 
+.preset-card.active {
+  border-color: #c4b5fd;
+  box-shadow: inset 0 0 0 1px rgba(196, 181, 253, 0.32);
+}
+
 .preset-card h3 {
   margin: 0;
   font-size: 0.95rem;
@@ -280,6 +293,10 @@ button.ghost { background: transparent; }
 .preset-card small {
   color: #d4d4d8;
   font-size: 0.78rem;
+}
+
+.preset-card small + small {
+  color: var(--muted);
 }
 
 .preset-card button {
