@@ -626,6 +626,33 @@ export function PomodoroApp() {
         </div>
       </section>
 
+      <section className="launch-paths" aria-label="Quick launch paths">
+        <div className="launch-paths-head">
+          <h2>Pick a launch path for today</h2>
+          <span>One tap to run a proven rhythm for your available {planningMinutes} minutes.</span>
+        </div>
+        <div className="launch-paths-grid">
+          {topPresetScoreboard.map((plan) => (
+            <article key={`launch-${plan.preset.id}`} className="launch-path-card">
+              <div className="launch-path-card-head">
+                <strong>{plan.preset.icon} {plan.preset.name}</strong>
+                <span>{Math.round(plan.focusRatio * 100)}% focus density</span>
+              </div>
+              <p>{plan.preset.outcome}</p>
+              <ul>
+                <li><span>Rhythm</span><strong>{plan.preset.settings.focus}/{plan.preset.settings.shortBreak}/{plan.preset.settings.longBreak}</strong></li>
+                <li><span>Sessions/day</span><strong>{plan.sessions}</strong></li>
+                <li><span>Projected XP/hour</span><strong>{plan.xpPerHour}</strong></li>
+              </ul>
+              <div className="preset-actions">
+                <button type="button" onClick={() => applyPreset(plan.preset)}>Apply path</button>
+                <button type="button" className="ghost" onClick={() => applyPresetAndStart(plan.preset)}>Run now</button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="landing-social-proof" aria-label="Real use-case momentum wins">
         <div className="landing-social-proof-head">
           <h2>Outcome-first wins from real focus routines</h2>
