@@ -2,8 +2,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Pomodoro Glass',
-  description: 'Focus beautifully.',
+  title: 'Loose',
+  description: 'Productivity system for students and workers.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -1,6 +1,6 @@
-# ✨ Pomodoro Glass (Next.js App Router)
+# ✨ Loose (Next.js App Router)
 
-Pomodoro Glass has been migrated from static modular JavaScript to a **Next.js foundation** using the **App Router** while preserving the original layered architecture and core feature set.
+Loose is a productivity app for students and workers, built on a **Next.js foundation** using the **App Router** while preserving layered SOLID-style architecture and core feature depth.
 
 ## ✅ What’s preserved
 

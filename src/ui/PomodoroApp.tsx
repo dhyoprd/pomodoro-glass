@@ -25,7 +25,7 @@ export function PomodoroApp() {
   }, [state.settings]);
 
   useEffect(() => {
-    document.title = `${formatTime(state.timer.remaining)} • Pomodoro Black`;
+    document.title = `${formatTime(state.timer.remaining)} • Loose`;
   }, [state.timer.remaining]);
 
   useEffect(() => {
@@ -50,8 +50,8 @@ export function PomodoroApp() {
   return (
     <main className="app">
       <header>
-        <h1>Pomodoro Black</h1>
-        <p>Focus. Ship. Repeat.</p>
+        <h1>Loose</h1>
+        <p>Your productivity OS for study and work.</p>
       </header>
 
       <section className="timer-card">
