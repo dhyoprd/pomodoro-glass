@@ -1,72 +1,70 @@
-# ✨ Pomodoro Glass
+# ✨ Pomodoro Glass (Next.js App Router)
 
-A **clean, liquid-glass Pomodoro web app** built for focused deep work.
+Pomodoro Glass has been migrated from static modular JavaScript to a **Next.js foundation** using the **App Router** while preserving the original layered architecture and core feature set.
 
-> Focus beautifully. Study intentionally. Repeat consistently.
-
-![Pomodoro Glass Tutorial](docs/tutorial.gif)
-
-## ⚡ Why this app
-
-Most timers are either too plain or too noisy.
-**Pomodoro Glass** aims for the middle:
-- calming visual design
-- simple controls
-- fast keyboard flow
-- local persistence (no account needed)
-
-## 🧠 Features
+## ✅ What’s preserved
 
 - Focus / Short Break / Long Break modes
-- Start / Pause / Reset controls
-- Progress bar + document title timer
-- Completed sessions + focus minutes stats
-- Session history analytics (today, weekly, streaks)
+- Start / Pause / Reset timer controls
+- Progress bar + dynamic document title timer
+- Completed sessions + all-time focus minutes
+- Session analytics (today, streak, last 7 day bars)
 - Task list (add / done / delete)
-- Browser notifications when a session ends
+- Browser notifications on session completion
 - Keyboard shortcuts:
   - `Space` → Start/Pause
   - `R` → Reset
+- Local persistence with `localStorage`
 
-## 🏗️ Architecture (SOLID-leaning)
-
-The app is modularized for maintainability:
+## 🧱 Architecture (SOLID-leaning, layered)
 
 ```text
-js/
-  main.js                 # composition root
-  appController.js        # app orchestration
-  constants.js            # static config
-  utils.js                # generic helpers
+src/
+  app/
+    layout.tsx
+    page.tsx
+    globals.css
+  application/
+    AppController.ts          # orchestration / use-case layer
+  constants/
+    index.ts
   domain/
-    timer.js              # timer domain logic
-  services/
-    storageService.js     # localStorage abstraction
-    notificationService.js# browser notification abstraction
+    Timer.ts
+  hooks/
+    usePomodoroController.ts
   repositories/
-    statsRepository.js
-    tasksRepository.js
+    SettingsRepository.ts
+    SessionHistoryRepository.ts
+    StatsRepository.ts
+    TasksRepository.ts
+  services/
+    AnalyticsService.ts
+    NotificationService.ts
+    StorageService.ts
   ui/
-    domRefs.js            # DOM lookup
-    uiRenderer.js         # all rendering
+    PomodoroApp.tsx           # React UI rendering layer
 ```
 
 ## 🚀 Run locally
 
-No build step required.
+```bash
+npm install
+npm run dev
+```
 
-1. Clone/download this folder
-2. Open `index.html` in your browser
+Open `http://localhost:3000`.
 
-That’s it.
+## 🧪 Quality checks
 
-## 📌 Roadmap
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm run check
+```
 
-- custom durations (user settings)
-- deeper trend insights (weekly/monthly trends)
-- soundscapes / ambient audio
-- dark/light accent themes
+## 📝 Migration notes
 
----
-
-If this helps your study sessions, star it and ship your goals. 🔥
+- Legacy static files (`index.html`, `styles.css`, `js/`) are retained in repo for reference.
+- New implementation is TypeScript-first and client-component driven where browser APIs are required.
+- Persistence behavior intentionally keeps previous storage keys to preserve existing user data.
