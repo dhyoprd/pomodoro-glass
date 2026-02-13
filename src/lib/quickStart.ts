@@ -10,7 +10,7 @@ export type LaunchSourceBadge = {
   detail: string;
 };
 
-const PLANNING_MINUTES_MIN = 60;
+const PLANNING_MINUTES_MIN = 30;
 const PLANNING_MINUTES_MAX = 360;
 const PLANNING_MINUTES_STEP = 15;
 

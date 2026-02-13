@@ -32,6 +32,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Weekly momentum forecast translates a single daily plan into 5-day outcomes (focus hours, sessions, XP, level ETA) so users can choose rhythms by expected result.
 - Blueprint quick-start links now carry context (`preset`, `minutes`, optional `task`) so users can share a ready-to-run focus setup that opens preconfigured on any device.
 - Mobile users have an explicit commute blueprint optimized for short, interruption-prone windows.
+- Planner and share links now support 30–360 minute budgets (15-minute steps), so commute users can model realistic 30/45-minute focus windows instead of being forced into 60+ minute plans.
 - Mobile quick bar includes a one-tap **Rescue** action that auto-runs the best momentum-recovery preset when the user needs to restart fast.
 - Mobile install CTA now gracefully handles iOS Safari (`Add to Home`) instead of disabling install in browsers without `beforeinstallprompt`.
 - PWA shortcuts now include a dedicated **Momentum Rescue** entry (high-energy autostart) plus source-tagged deep-work/commute/planner launches for cleaner attribution and faster one-tap re-entry.

@@ -67,7 +67,7 @@ const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
   { id: 'reset', label: 'Momentum reset' },
 ] as const;
 
-const PLANNING_MINUTE_PRESETS = [60, 90, 120, 180, 240] as const;
+const PLANNING_MINUTE_PRESETS = [30, 45, 60, 90, 120, 180, 240] as const;
 
 const SECTION_NAV_ITEMS = [
   { id: 'outcome-blueprints', label: '🧭 Outcome', mobileLabel: 'Wins' },
@@ -829,7 +829,7 @@ export function PomodoroApp() {
 
     try {
       const storedPlanningMinutes = Number(window.localStorage.getItem('loose.planningMinutes'));
-      if (Number.isFinite(storedPlanningMinutes) && storedPlanningMinutes >= 60) {
+      if (Number.isFinite(storedPlanningMinutes) && storedPlanningMinutes >= 30) {
         setPlanningMinutes(normalizePlanningMinutes(storedPlanningMinutes));
       }
 
@@ -909,7 +909,7 @@ export function PomodoroApp() {
     }
 
     const planningMinutesParam = Number(params.get('minutes'));
-    if (Number.isFinite(planningMinutesParam) && planningMinutesParam >= 60) {
+    if (Number.isFinite(planningMinutesParam) && planningMinutesParam >= 30) {
       setPlanningMinutes(normalizePlanningMinutes(planningMinutesParam));
     }
 
@@ -1503,7 +1503,7 @@ export function PomodoroApp() {
           <input
             id="planningMinutes"
             type="range"
-            min={60}
+            min={30}
             max={360}
             step={15}
             value={planningMinutes}
