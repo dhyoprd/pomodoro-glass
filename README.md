@@ -29,6 +29,7 @@ src/
     globals.css
   application/
     AppController.ts          # orchestration / use-case layer
+    SessionPlannerEngine.ts   # planner recommendation/ranking use-cases
   constants/
     index.ts
     useCases.ts              # presets + outcome blueprints source of truth

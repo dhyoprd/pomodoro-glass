@@ -18,6 +18,10 @@ import {
   buildGamificationProgress,
   buildNextMilestone,
 } from '@/application/GamificationEngine';
+import {
+  buildSessionPlannerSummary,
+  rankPresetPlans,
+} from '@/application/SessionPlannerEngine';
 
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
@@ -128,43 +132,13 @@ export function PomodoroApp() {
 
   const sessionPlanner = useMemo(() => {
     const settings = activePreset?.settings ?? state.settings;
-    const cycleMinutes = settings.focus + settings.shortBreak;
-    const estimatedSessions = Math.max(1, Math.floor(planningMinutes / cycleMinutes));
-    const estimatedFocusMinutes = estimatedSessions * settings.focus;
-    const estimatedXp = estimatedSessions * XP_PER_SESSION + estimatedFocusMinutes * XP_PER_FOCUS_MINUTE;
-    const estimatedWeeklyXp = estimatedXp * 5;
-
-    return {
-      estimatedSessions,
-      estimatedFocusMinutes,
-      estimatedXp,
-      estimatedWeeklyXp,
-      cycleMinutes,
-    };
+    return buildSessionPlannerSummary(settings, planningMinutes);
   }, [activePreset?.settings, planningMinutes, state.settings]);
 
-  const rankedPresetPlans = useMemo(() =>
-    USE_CASE_PRESETS.map((preset) => {
-      const cycleMinutes = preset.settings.focus + preset.settings.shortBreak;
-      const sessions = Math.max(1, Math.floor(planningMinutes / cycleMinutes));
-      const focusMinutes = sessions * preset.settings.focus;
-      const remainder = planningMinutes - sessions * cycleMinutes;
-      const focusRatio = focusMinutes / planningMinutes;
-      const estimatedXp = sessions * XP_PER_SESSION + focusMinutes * XP_PER_FOCUS_MINUTE;
-      const xpPerHour = Math.round((estimatedXp / planningMinutes) * 60);
-      const score = focusRatio * 100 - remainder;
-
-      return {
-        preset,
-        sessions,
-        focusMinutes,
-        remainder,
-        score,
-        focusRatio,
-        xpPerHour,
-      };
-    }).sort((a, b) => b.score - a.score),
-  [planningMinutes]);
+  const rankedPresetPlans = useMemo(
+    () => rankPresetPlans(USE_CASE_PRESETS, planningMinutes),
+    [planningMinutes],
+  );
 
   const recommendedPreset = rankedPresetPlans[0];
 
