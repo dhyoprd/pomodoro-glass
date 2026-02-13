@@ -2,11 +2,18 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    id: '/?source=pwa',
     name: 'Loose',
     short_name: 'Loose',
-    description: 'Productivity system for students and workers.',
-    start_url: '/',
+    description: 'Use-case-first productivity OS for students and workers.',
+    lang: 'en',
+    dir: 'ltr',
+    categories: ['productivity', 'education', 'utilities'],
+    start_url: '/?source=pwa',
+    scope: '/',
     display: 'standalone',
+    display_override: ['standalone', 'window-controls-overlay'],
+    orientation: 'portrait',
     background_color: '#09090b',
     theme_color: '#7c3aed',
     icons: [
@@ -27,6 +34,22 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: 'any',
         type: 'image/svg+xml',
         purpose: 'any',
+      },
+    ],
+    screenshots: [
+      {
+        src: '/pomodoro-screenshot.png',
+        sizes: '1368x813',
+        type: 'image/png',
+        label: 'Loose dashboard with timer, planner, and gamification widgets.',
+        form_factor: 'wide',
+      },
+      {
+        src: '/pomodoro-screenshot.png',
+        sizes: '1368x813',
+        type: 'image/png',
+        label: 'Loose mobile quick-start flow with timer and section shortcuts.',
+        form_factor: 'narrow',
       },
     ],
     shortcuts: [
