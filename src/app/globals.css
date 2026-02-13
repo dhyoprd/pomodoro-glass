@@ -1183,6 +1183,27 @@ section {
   accent-color: #c4b5fd;
 }
 
+.planner-minute-presets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.planner-minute-presets button {
+  border-radius: 999px;
+  font-size: 0.75rem;
+  padding: 5px 10px;
+  background: #0f1116;
+  border-color: #313244;
+  color: #cbd5e1;
+}
+
+.planner-minute-presets button.active {
+  border-color: #22d3ee;
+  background: rgba(34, 211, 238, 0.16);
+  color: #cffafe;
+}
+
 .planner-metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

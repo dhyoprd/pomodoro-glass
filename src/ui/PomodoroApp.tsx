@@ -67,6 +67,8 @@ const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
   { id: 'reset', label: 'Momentum reset' },
 ] as const;
 
+const PLANNING_MINUTE_PRESETS = [60, 90, 120, 180, 240] as const;
+
 const SECTION_NAV_ITEMS = [
   { id: 'outcome-blueprints', label: '🧭 Outcome', mobileLabel: 'Wins' },
   { id: 'session-planner', label: '🗓️ Planner', mobileLabel: 'Plan' },
@@ -1507,6 +1509,22 @@ export function PomodoroApp() {
             value={planningMinutes}
             onChange={(e) => setPlanningMinutes(Number(e.target.value))}
           />
+          <div className="planner-minute-presets" role="group" aria-label="Quick daily planning duration presets">
+            {PLANNING_MINUTE_PRESETS.map((minutes) => {
+              const isActive = planningMinutes === minutes;
+              return (
+                <button
+                  key={`planning-preset-${minutes}`}
+                  type="button"
+                  className={isActive ? 'active' : ''}
+                  aria-pressed={isActive}
+                  onClick={() => setPlanningMinutes(minutes)}
+                >
+                  {minutes}m
+                </button>
+              );
+            })}
+          </div>
           <div className="planner-metrics">
             <article>
               <strong>{sessionPlanner.estimatedSessions}</strong>
