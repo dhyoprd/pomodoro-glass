@@ -24,7 +24,7 @@ export function PomodoroApp() {
   }, [state.settings]);
 
   useEffect(() => {
-    document.title = `${formatTime(state.timer.remaining)} • Pomodoro Glass`;
+    document.title = `${formatTime(state.timer.remaining)} • Pomodoro Black`;
   }, [state.timer.remaining]);
 
   useEffect(() => {
@@ -47,15 +47,13 @@ export function PomodoroApp() {
   );
 
   return (
-    <>
-      <div className="bg" />
-      <main className="app glass">
-        <header>
-          <h1>Pomodoro Glass</h1>
-          <p>Focus beautifully.</p>
-        </header>
+    <main className="app">
+      <header>
+        <h1>Pomodoro Black</h1>
+        <p>Focus. Ship. Repeat.</p>
+      </header>
 
-        <section className="timer-card glass-inner">
+      <section className="timer-card">
           <div className="mode-row">
             {MODES.map((mode) => (
               <button
@@ -84,7 +82,7 @@ export function PomodoroApp() {
           </div>
         </section>
 
-        <section className="stats glass-inner">
+      <section className="stats">
           <div>
             <span className="label">Completed (All Time)</span>
             <strong>{state.stats.completed}</strong>
@@ -95,7 +93,7 @@ export function PomodoroApp() {
           </div>
         </section>
 
-        <section className="analytics glass-inner">
+      <section className="analytics">
           <div className="analytics-grid">
             <div><span className="label">Today Sessions</span><strong>{state.analytics.today.sessions}</strong></div>
             <div><span className="label">Today Minutes</span><strong>{state.analytics.today.focusMinutes}</strong></div>
@@ -120,7 +118,7 @@ export function PomodoroApp() {
           </div>
         </section>
 
-        <section className="settings glass-inner">
+      <section className="settings">
           <div className="settings-head"><h2>Timer Settings</h2></div>
           <form
             className="settings-form"
@@ -138,7 +136,7 @@ export function PomodoroApp() {
           <p className={`settings-status ${state.settingsStatus?.kind ?? ''}`} aria-live="polite">{state.settingsStatus?.message ?? ''}</p>
         </section>
 
-        <section className="tasks glass-inner">
+      <section className="tasks">
           <div className="tasks-head">
             <h2>Tasks</h2>
             <form
@@ -157,7 +155,7 @@ export function PomodoroApp() {
           </div>
           <ul id="taskList">
             {!state.tasks.length ? (
-              <li><span>No tasks yet. Add one above ?</span></li>
+              <li><span>No tasks yet. Add one above ✨</span></li>
             ) : (
               state.tasks.map((task) => (
                 <li key={task.id} className={task.done ? 'done' : ''}>
@@ -170,9 +168,8 @@ export function PomodoroApp() {
               ))
             )}
           </ul>
-        </section>
-      </main>
-    </>
+      </section>
+    </main>
   );
 }
 
