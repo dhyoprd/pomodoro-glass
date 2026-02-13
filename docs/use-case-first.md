@@ -25,6 +25,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Returning users can still use full preset/settings controls.
 - Each blueprint can be applied and started in one tap.
 - Session planner now recommends the best-fit preset for the user’s available deep-work window, with one-tap apply/start.
+- Matchmaker now includes one-tap persona cards (Deep Desk Shipper, Steady Consistency Builder, Commute Rescue Runner) so mobile and desk users can declare intent before tweaking raw fields.
 - Startup-proof metrics strip communicates activation speed, weekly focus return, gamification loop, and mobile rescue readiness in one glance.
 - Launch-path and planner recommendation cards now expose each preset’s "ideal for" chips so users pick by scenario (exam prep, writing drafts, transit, etc.) instead of only timer numbers.
 - Weekly momentum forecast translates a single daily plan into 5-day outcomes (focus hours, sessions, XP, level ETA) so users can choose rhythms by expected result.

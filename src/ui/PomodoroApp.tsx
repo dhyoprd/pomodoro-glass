@@ -69,6 +69,36 @@ const SECTION_NAV_ITEMS = [
   { id: 'task-capture', label: '✅ Tasks', mobileLabel: 'Tasks' },
 ] as const;
 
+const MATCHMAKER_PERSONAS: ReadonlyArray<{
+  id: string;
+  label: string;
+  blurb: string;
+  profile: {
+    energy: MatchmakerEnergy;
+    context: MatchmakerContext;
+    goal: MatchmakerGoal;
+  };
+}> = [
+  {
+    id: 'deep-desk-shipper',
+    label: '💻 Deep Desk Shipper',
+    blurb: 'High energy + deep work output at your desk.',
+    profile: { energy: 'high', context: 'desk', goal: 'depth' },
+  },
+  {
+    id: 'steady-consistency-builder',
+    label: '📈 Steady Consistency Builder',
+    blurb: 'Reliable daily progress with balanced energy.',
+    profile: { energy: 'steady', context: 'desk', goal: 'consistency' },
+  },
+  {
+    id: 'commute-rescue-runner',
+    label: '🚌 Commute Rescue Runner',
+    blurb: 'Low-friction momentum restart while mobile.',
+    profile: { energy: 'low', context: 'mobile', goal: 'restart' },
+  },
+] as const;
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -432,6 +462,14 @@ export function PomodoroApp() {
     [matchmaker],
   );
 
+  const activeMatchmakerPersonaId = useMemo(
+    () => MATCHMAKER_PERSONAS.find((persona) =>
+      persona.profile.energy === matchmaker.energy &&
+      persona.profile.context === matchmaker.context &&
+      persona.profile.goal === matchmaker.goal)?.id ?? null,
+    [matchmaker.context, matchmaker.energy, matchmaker.goal],
+  );
+
   const rescuePreset = profileRecommendation?.preset ?? recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
 
   const streakRescue = useMemo(() => {
@@ -524,6 +562,13 @@ export function PomodoroApp() {
   const applyPresetAndStart = (preset: UseCasePreset) => {
     applyPreset(preset);
     controller.beginFocusSession();
+  };
+
+  const applyMatchmakerPersona = (personaId: string) => {
+    const persona = MATCHMAKER_PERSONAS.find((item) => item.id === personaId);
+    if (!persona) return;
+
+    setMatchmaker(persona.profile);
   };
 
   const startRecommendedFocusNow = () => {
@@ -1313,6 +1358,24 @@ export function PomodoroApp() {
             <div className="planner-headline">
               <strong>Preset Matchmaker</strong>
               <span>Tell Loose your context and get a fit recommendation.</span>
+            </div>
+            <div className="matchmaker-personas" role="group" aria-label="Matchmaker quick personas">
+              {MATCHMAKER_PERSONAS.map((persona) => {
+                const isActive = persona.id === activeMatchmakerPersonaId;
+
+                return (
+                  <button
+                    key={persona.id}
+                    type="button"
+                    className={isActive ? 'active' : ''}
+                    aria-pressed={isActive}
+                    onClick={() => applyMatchmakerPersona(persona.id)}
+                  >
+                    <strong>{persona.label}</strong>
+                    <small>{persona.blurb}</small>
+                  </button>
+                );
+              })}
             </div>
             <div className="matchmaker-grid">
               <label>
