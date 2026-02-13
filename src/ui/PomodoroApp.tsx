@@ -69,6 +69,12 @@ const SECTION_NAV_ITEMS = [
   { id: 'task-capture', label: '✅ Tasks', mobileLabel: 'Tasks' },
 ] as const;
 
+type SectionId = (typeof SECTION_NAV_ITEMS)[number]['id'];
+
+const SECTION_IDS: ReadonlySet<SectionId> = new Set(SECTION_NAV_ITEMS.map((item) => item.id));
+
+const isSectionId = (value: string): value is SectionId => SECTION_IDS.has(value as SectionId);
+
 const MATCHMAKER_PERSONAS: ReadonlyArray<{
   id: string;
   label: string;
@@ -116,14 +122,14 @@ export function PomodoroApp() {
   const [quickStartLinkStatus, setQuickStartLinkStatus] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
   const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [installContext, setInstallContext] = useState({ isIosSafari: false, isStandalone: false });
-  const [activeSectionId, setActiveSectionId] = useState('focus-timer');
+  const [activeSectionId, setActiveSectionId] = useState<SectionId>('focus-timer');
   const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
   const [launchPathSortMode, setLaunchPathSortMode] = useState<PresetPlanSortMode>('best-fit');
   const [launchPathAudienceFilter, setLaunchPathAudienceFilter] = useState<LaunchPathAudienceFilter>('all');
   const hasHydratedQuickStart = useRef(false);
   const hasHydratedPlannerPreferences = useRef(false);
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = (sectionId: string, options?: { behavior?: ScrollBehavior; syncHash?: boolean }) => {
     if (typeof document === 'undefined') return;
 
     const section = document.getElementById(sectionId);
@@ -132,7 +138,12 @@ export function PomodoroApp() {
     const prefersReducedMotion =
       typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    section.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    const behavior = options?.behavior ?? (prefersReducedMotion ? 'auto' : 'smooth');
+    section.scrollIntoView({ behavior, block: 'start' });
+
+    if (options?.syncHash !== false && typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `#${sectionId}`);
+    }
   };
 
   useEffect(() => {
@@ -214,7 +225,27 @@ export function PomodoroApp() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const sections = ['session-planner', 'focus-timer', 'task-capture', 'outcome-blueprints']
+    const syncFromHash = () => {
+      const hashId = window.location.hash.replace('#', '').trim();
+      if (!hashId || !isSectionId(hashId)) return;
+
+      setActiveSectionId(hashId);
+      window.requestAnimationFrame(() => {
+        const target = document.getElementById(hashId);
+        target?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      });
+    };
+
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const sections = [...SECTION_IDS]
       .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => Boolean(section));
 
@@ -226,7 +257,7 @@ export function PomodoroApp() {
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-        if (visible?.target.id) {
+        if (visible?.target.id && isSectionId(visible.target.id)) {
           setActiveSectionId(visible.target.id);
         }
       },
@@ -241,6 +272,16 @@ export function PomodoroApp() {
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!isSectionId(activeSectionId)) return;
+
+    const currentHash = window.location.hash.replace('#', '').trim();
+    if (currentHash === activeSectionId) return;
+
+    window.history.replaceState(null, '', `#${activeSectionId}`);
+  }, [activeSectionId]);
 
   const progress = useMemo(
     () => clamp(((state.timer.total - state.timer.remaining) / state.timer.total) * 100 || 0, 0, 100),
