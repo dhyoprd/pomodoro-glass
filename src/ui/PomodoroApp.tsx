@@ -14,6 +14,33 @@ const XP_PER_SESSION = 100;
 const XP_PER_FOCUS_MINUTE = 2;
 const XP_PER_LEVEL = 500;
 
+const DAILY_QUESTS = [
+  {
+    id: 'quest-focus-minutes',
+    icon: '⚡',
+    title: 'Focus Momentum',
+    target: 120,
+    description: 'Accumulate 120 focused minutes today.',
+    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.analytics.today.focusMinutes,
+  },
+  {
+    id: 'quest-sessions',
+    icon: '🍅',
+    title: 'Pomodoro Finisher',
+    target: 4,
+    description: 'Complete 4 sessions in a day.',
+    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.analytics.today.sessions,
+  },
+  {
+    id: 'quest-task-clear',
+    icon: '✅',
+    title: 'Task Clarity',
+    target: 3,
+    description: 'Close out 3 tasks from your queue.',
+    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.tasks.filter((task) => task.done).length,
+  },
+] as const;
+
 const USE_CASE_PRESETS = [
   {
     id: 'student-revision',
@@ -87,6 +114,23 @@ export function PomodoroApp() {
 
     return { xp, level, xpToNextLevel, levelProgress };
   }, [state.stats.completed, state.stats.focusMinutes]);
+
+  const questProgress = useMemo(
+    () =>
+      DAILY_QUESTS.map((quest) => {
+        const progressValue = quest.getProgress(state);
+        const progress = clamp((progressValue / quest.target) * 100, 0, 100);
+        const complete = progressValue >= quest.target;
+
+        return {
+          ...quest,
+          progressValue,
+          progress,
+          complete,
+        };
+      }),
+    [state],
+  );
 
   return (
     <main className="app">
@@ -167,6 +211,27 @@ export function PomodoroApp() {
           <p>{gamification.xpToNextLevel} XP to unlock Level {gamification.level + 1}</p>
           <div className="progress-wrap level-progress-wrap" aria-hidden="true">
             <div className="progress-bar level-progress-bar" style={{ width: `${gamification.levelProgress}%` }} />
+          </div>
+        </section>
+
+      <section className="quests" aria-label="Daily quests">
+          <div className="quests-head">
+            <h2>Daily Quests</h2>
+            <span>{questProgress.filter((quest) => quest.complete).length}/{questProgress.length} complete</span>
+          </div>
+          <div className="quest-grid">
+            {questProgress.map((quest) => (
+              <article className={`quest-card ${quest.complete ? 'complete' : ''}`} key={quest.id}>
+                <div className="quest-top">
+                  <strong>{quest.icon} {quest.title}</strong>
+                  <span>{quest.progressValue}/{quest.target}</span>
+                </div>
+                <p>{quest.description}</p>
+                <div className="progress-wrap" aria-hidden="true">
+                  <div className="progress-bar quest-progress-bar" style={{ width: `${quest.progress}%` }} />
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 
