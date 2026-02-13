@@ -10,6 +10,10 @@ const MODES = [
   { key: 'longBreak', label: 'Long Break' },
 ] as const;
 
+const XP_PER_SESSION = 100;
+const XP_PER_FOCUS_MINUTE = 2;
+const XP_PER_LEVEL = 500;
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -46,6 +50,22 @@ export function PomodoroApp() {
     () => clamp(((state.timer.total - state.timer.remaining) / state.timer.total) * 100 || 0, 0, 100),
     [state.timer.remaining, state.timer.total],
   );
+
+  const weekMaxSessions = useMemo(
+    () => Math.max(...state.analytics.week.map((day) => day.sessions), 1),
+    [state.analytics.week],
+  );
+
+  const gamification = useMemo(() => {
+    const xp = state.stats.completed * XP_PER_SESSION + state.stats.focusMinutes * XP_PER_FOCUS_MINUTE;
+    const level = Math.floor(xp / XP_PER_LEVEL) + 1;
+    const levelBaseXp = (level - 1) * XP_PER_LEVEL;
+    const xpIntoLevel = xp - levelBaseXp;
+    const xpToNextLevel = XP_PER_LEVEL - xpIntoLevel;
+    const levelProgress = clamp((xpIntoLevel / XP_PER_LEVEL) * 100, 0, 100);
+
+    return { xp, level, xpToNextLevel, levelProgress };
+  }, [state.stats.completed, state.stats.focusMinutes]);
 
   return (
     <main className="app">
@@ -103,8 +123,7 @@ export function PomodoroApp() {
           </div>
           <div className="week-bars" aria-label="Last 7 days session activity">
             {state.analytics.week.map((day) => {
-              const max = Math.max(...state.analytics.week.map((w) => w.sessions), 1);
-              const h = Math.max((day.sessions / max) * 100, day.sessions ? 12 : 4);
+              const h = Math.max((day.sessions / weekMaxSessions) * 100, day.sessions ? 12 : 4);
               return (
                 <div className="week-bar-item" key={day.day}>
                   <div
@@ -116,6 +135,17 @@ export function PomodoroApp() {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+      <section className="level-card" aria-label="Gamification progress">
+          <div className="level-head">
+            <h2>Level {gamification.level}</h2>
+            <strong>{gamification.xp.toLocaleString()} XP</strong>
+          </div>
+          <p>{gamification.xpToNextLevel} XP to unlock Level {gamification.level + 1}</p>
+          <div className="progress-wrap level-progress-wrap" aria-hidden="true">
+            <div className="progress-bar level-progress-bar" style={{ width: `${gamification.levelProgress}%` }} />
           </div>
         </section>
 
