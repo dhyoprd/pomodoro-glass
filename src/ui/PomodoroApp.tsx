@@ -62,6 +62,13 @@ const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
   { id: 'reset', label: 'Momentum reset' },
 ] as const;
 
+const SECTION_NAV_ITEMS = [
+  { id: 'outcome-blueprints', label: '🧭 Outcome', mobileLabel: 'Wins' },
+  { id: 'session-planner', label: '🗓️ Planner', mobileLabel: 'Plan' },
+  { id: 'focus-timer', label: '⏱️ Timer', mobileLabel: 'Timer' },
+  { id: 'task-capture', label: '✅ Tasks', mobileLabel: 'Tasks' },
+] as const;
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -770,38 +777,21 @@ export function PomodoroApp() {
       </header>
 
       <nav className="section-dock" aria-label="Page sections">
-        <button
-          type="button"
-          className={activeSectionId === 'outcome-blueprints' ? 'active' : ''}
-          aria-current={activeSectionId === 'outcome-blueprints' ? 'true' : undefined}
-          onClick={() => scrollToSection('outcome-blueprints')}
-        >
-          🧭 Outcome
-        </button>
-        <button
-          type="button"
-          className={activeSectionId === 'session-planner' ? 'active' : ''}
-          aria-current={activeSectionId === 'session-planner' ? 'true' : undefined}
-          onClick={() => scrollToSection('session-planner')}
-        >
-          🗓️ Planner
-        </button>
-        <button
-          type="button"
-          className={activeSectionId === 'focus-timer' ? 'active' : ''}
-          aria-current={activeSectionId === 'focus-timer' ? 'true' : undefined}
-          onClick={() => scrollToSection('focus-timer')}
-        >
-          ⏱️ Timer
-        </button>
-        <button
-          type="button"
-          className={activeSectionId === 'task-capture' ? 'active' : ''}
-          aria-current={activeSectionId === 'task-capture' ? 'true' : undefined}
-          onClick={() => scrollToSection('task-capture')}
-        >
-          ✅ Tasks
-        </button>
+        {SECTION_NAV_ITEMS.map((item) => {
+          const isActive = activeSectionId === item.id;
+
+          return (
+            <button
+              key={`section-dock-${item.id}`}
+              type="button"
+              className={isActive ? 'active' : ''}
+              aria-current={isActive ? 'true' : undefined}
+              onClick={() => scrollToSection(item.id)}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </nav>
 
       <aside className="mobile-command-bar" aria-label="Mobile quick actions">
@@ -1729,38 +1719,21 @@ export function PomodoroApp() {
             {state.timer.running ? 'Pause' : 'Start Focus'}
           </button>
           <div className="mobile-shortcuts" role="group" aria-label="Quick section shortcuts">
-            <button
-              type="button"
-              className={`ghost ${activeSectionId === 'session-planner' ? 'active-shortcut' : ''}`}
-              aria-current={activeSectionId === 'session-planner' ? 'true' : undefined}
-              onClick={() => scrollToSection('session-planner')}
-            >
-              Plan
-            </button>
-            <button
-              type="button"
-              className={`ghost ${activeSectionId === 'task-capture' ? 'active-shortcut' : ''}`}
-              aria-current={activeSectionId === 'task-capture' ? 'true' : undefined}
-              onClick={() => scrollToSection('task-capture')}
-            >
-              Tasks
-            </button>
-            <button
-              type="button"
-              className={`ghost ${activeSectionId === 'focus-timer' ? 'active-shortcut' : ''}`}
-              aria-current={activeSectionId === 'focus-timer' ? 'true' : undefined}
-              onClick={() => scrollToSection('focus-timer')}
-            >
-              Timer
-            </button>
-            <button
-              type="button"
-              className={`ghost ${activeSectionId === 'outcome-blueprints' ? 'active-shortcut' : ''}`}
-              aria-current={activeSectionId === 'outcome-blueprints' ? 'true' : undefined}
-              onClick={() => scrollToSection('outcome-blueprints')}
-            >
-              Wins
-            </button>
+            {SECTION_NAV_ITEMS.map((item) => {
+              const isActive = activeSectionId === item.id;
+
+              return (
+                <button
+                  key={`mobile-shortcut-${item.id}`}
+                  type="button"
+                  className={`ghost ${isActive ? 'active-shortcut' : ''}`}
+                  aria-current={isActive ? 'true' : undefined}
+                  onClick={() => scrollToSection(item.id)}
+                >
+                  {item.mobileLabel}
+                </button>
+              );
+            })}
           </div>
           <div className="mobile-mode-actions" role="group" aria-label="Quick mode actions">
             <button type="button" className="ghost" onClick={() => controller.setMode('focus')}>
