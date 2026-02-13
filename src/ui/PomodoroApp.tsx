@@ -10,6 +10,7 @@ import {
   type UseCasePreset,
 } from '@/constants/useCases';
 import { LANDING_SOCIAL_PROOF } from '@/constants/landingProof';
+import { LANDING_METRICS } from '@/constants/landingMetrics';
 import { LANDING_FAQ } from '@/constants/landingFaq';
 import {
   XP_PER_FOCUS_MINUTE,
@@ -730,6 +731,18 @@ export function PomodoroApp() {
             {deferredInstallPrompt ? 'Install Loose app' : 'Install unavailable'}
           </button>
         </div>
+      </section>
+
+      <section className="landing-metrics-strip" aria-label="Loose startup proof metrics">
+        {LANDING_METRICS.map((metric) => (
+          <article key={metric.id}>
+            <div className="landing-metric-head">
+              <strong>{metric.icon} {metric.label}</strong>
+              <span>{metric.value}</span>
+            </div>
+            <p>{metric.detail}</p>
+          </article>
+        ))}
       </section>
 
       <section className="launch-paths" aria-label="Quick launch paths">
