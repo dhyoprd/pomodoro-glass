@@ -745,6 +745,11 @@ export function PomodoroApp() {
                 <span>{Math.round(plan.focusRatio * 100)}% focus density</span>
               </div>
               <p>{plan.preset.outcome}</p>
+              <div className="preset-tags" aria-label={`${plan.preset.name} ideal for`}>
+                {plan.preset.idealFor.map((item) => (
+                  <span key={`${plan.preset.id}-${item}`}>{item}</span>
+                ))}
+              </div>
               <ul>
                 <li><span>Rhythm</span><strong>{plan.preset.settings.focus}/{plan.preset.settings.shortBreak}/{plan.preset.settings.longBreak}</strong></li>
                 <li><span>Sessions/day</span><strong>{plan.sessions}</strong></li>
@@ -1121,6 +1126,11 @@ export function PomodoroApp() {
                 </small>
                 <small>Start now → wraps around {formatFinishBy(plannerRunMinutes)}</small>
                 <small>{recommendedPreset.preset.momentumTip}</small>
+                <div className="preset-tags" aria-label={`${recommendedPreset.preset.name} ideal for`}>
+                  {recommendedPreset.preset.idealFor.map((item) => (
+                    <span key={`planner-rec-${recommendedPreset.preset.id}-${item}`}>{item}</span>
+                  ))}
+                </div>
               </div>
               <div className="preset-actions">
                 <button type="button" onClick={() => applyPreset(recommendedPreset.preset)}>Apply</button>
