@@ -22,6 +22,7 @@ import {
 import {
   buildSessionPlannerSummary,
   buildSessionTimeline,
+  buildWeeklyMomentumForecast,
   rankPresetPlans,
   recommendPresetByProfile,
   type MatchmakerContext,
@@ -227,6 +228,11 @@ export function PomodoroApp() {
   const sessionTimeline = useMemo(
     () => buildSessionTimeline(plannerSettings, planningMinutes),
     [plannerSettings, planningMinutes],
+  );
+
+  const weeklyMomentumForecast = useMemo(
+    () => buildWeeklyMomentumForecast(plannerSettings, planningMinutes, gamification.xpToNextLevel),
+    [plannerSettings, planningMinutes, gamification.xpToNextLevel],
   );
 
   const rankedPresetPlans = useMemo(
@@ -779,6 +785,18 @@ export function PomodoroApp() {
               <span>5-day XP runway</span>
             </article>
           </div>
+          <article className="planner-forecast" aria-label="Weekly momentum forecast">
+            <div className="planner-headline">
+              <strong>Weekly Momentum Forecast</strong>
+              <span>If you repeat this daily plan for 5 workdays.</span>
+            </div>
+            <ul>
+              <li><span>Focus time</span><strong>{weeklyMomentumForecast.focusHours}h</strong></li>
+              <li><span>Sessions</span><strong>{weeklyMomentumForecast.sessions}</strong></li>
+              <li><span>XP gain</span><strong>{weeklyMomentumForecast.xp}</strong></li>
+              <li><span>Next level ETA</span><strong>{weeklyMomentumForecast.milestoneEtaDays} day{weeklyMomentumForecast.milestoneEtaDays === 1 ? '' : 's'}</strong></li>
+            </ul>
+          </article>
           <article className="matchmaker-card" aria-label="Use-case matchmaker">
             <div className="planner-headline">
               <strong>Preset Matchmaker</strong>

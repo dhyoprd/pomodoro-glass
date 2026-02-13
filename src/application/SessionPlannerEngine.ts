@@ -28,6 +28,13 @@ export type SessionTimelineBlock = {
   endsAtMinute: number;
 };
 
+export type WeeklyMomentumForecast = {
+  focusHours: number;
+  sessions: number;
+  xp: number;
+  milestoneEtaDays: number;
+};
+
 export type MatchmakerEnergy = 'low' | 'steady' | 'high';
 export type MatchmakerContext = 'mobile' | 'desk';
 export type MatchmakerGoal = 'consistency' | 'depth' | 'restart';
@@ -98,6 +105,26 @@ export function buildSessionTimeline(settings: TimerSettings, planningMinutes: n
   }
 
   return blocks;
+}
+
+export function buildWeeklyMomentumForecast(
+  settings: TimerSettings,
+  planningMinutes: number,
+  xpToNextLevel: number,
+): WeeklyMomentumForecast {
+  const summary = buildSessionPlannerSummary(settings, planningMinutes);
+  const sessions = summary.estimatedSessions * 5;
+  const focusHours = Number((summary.estimatedFocusMinutes * 5 / 60).toFixed(1));
+  const xp = summary.estimatedWeeklyXp;
+  const dailyXp = Math.max(summary.estimatedXp, 1);
+  const milestoneEtaDays = Math.max(1, Math.ceil(Math.max(xpToNextLevel, 0) / dailyXp));
+
+  return {
+    focusHours,
+    sessions,
+    xp,
+    milestoneEtaDays,
+  };
 }
 
 export function rankPresetPlans(presets: ReadonlyArray<UseCasePreset>, planningMinutes: number): RankedPresetPlan[] {

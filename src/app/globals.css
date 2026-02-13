@@ -778,6 +778,7 @@ section {
   justify-self: start;
 }
 
+.planner-forecast,
 .matchmaker-card {
   background: #0f0f12;
   border: 1px solid var(--line);
@@ -785,6 +786,27 @@ section {
   padding: 12px;
   display: grid;
   gap: 10px;
+}
+
+.planner-forecast ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.planner-forecast li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.planner-forecast li strong {
+  color: var(--text);
+  font-size: 0.88rem;
 }
 
 .planner-headline {
