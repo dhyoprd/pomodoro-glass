@@ -116,6 +116,28 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     },
     settings: { focus: 10, shortBreak: 2, longBreak: 8, longBreakInterval: 5 },
   },
+  {
+    id: 'meeting-buffer',
+    icon: '🗓️',
+    name: 'Meeting Buffer Flow',
+    description: 'Structured blocks for days split by meetings and context switching.',
+    outcome: 'Protect maker time between calls while staying responsive.',
+    idealFor: ['Meeting-heavy days', 'Context switching', 'Office or hybrid schedules'],
+    audience: ['desk', 'mobile'],
+    momentumTip: 'Anchor one must-ship output in every 2 focus blocks to avoid meeting-day drift.',
+    taskTemplates: [
+      { icon: '📦', text: 'Ship one scoped deliverable before your next meeting starts' },
+      { icon: '📝', text: 'Write agenda + decisions for the next meeting in one draft' },
+      { icon: '📬', text: 'Process follow-ups from your last meeting and close top 3 actions' },
+    ],
+    playbook: {
+      objective: 'Create reliable output windows during a fragmented meeting schedule.',
+      kickoff: 'Pick one deliverable to complete before the next meeting checkpoint.',
+      loop: 'Run 20-minute build bursts with short recovery to reset context quickly.',
+      review: 'End each cycle by capturing decisions and the next concrete handoff.',
+    },
+    settings: { focus: 20, shortBreak: 5, longBreak: 12, longBreakInterval: 3 },
+  },
 ] as const;
 
 export type OutcomeBlueprint = {
@@ -154,5 +176,12 @@ export const OUTCOME_BLUEPRINTS: ReadonlyArray<OutcomeBlueprint> = [
     title: 'Make Commute Time Count',
     summary: 'Ship bite-sized wins from your phone during transit.',
     presetId: 'mobile-commute',
+  },
+  {
+    id: 'meeting-day-ship',
+    icon: '🗓️',
+    title: 'Ship Between Meetings',
+    summary: 'Protect delivery windows across a call-heavy day.',
+    presetId: 'meeting-buffer',
   },
 ] as const;
