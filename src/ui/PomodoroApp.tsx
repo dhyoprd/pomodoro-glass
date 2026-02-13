@@ -92,13 +92,27 @@ export function PomodoroApp() {
   }, [state.timer.remaining]);
 
   useEffect(() => {
+    const shouldIgnoreHotkeys = (active: HTMLElement | null) => {
+      if (!active) return false;
+      if (active.isContentEditable) return true;
+
+      const tag = active.tagName.toLowerCase();
+      return tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button';
+    };
+
     const onKeyDown = (e: KeyboardEvent) => {
       const active = document.activeElement as HTMLElement | null;
-      if (e.code === 'Space' && active?.id !== 'taskInput') {
+      if (shouldIgnoreHotkeys(active)) return;
+
+      if (e.code === 'Space') {
         e.preventDefault();
         controller.toggleTimer();
       }
-      if (e.key.toLowerCase() === 'r') controller.resetTimer();
+
+      if (e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        controller.resetTimer();
+      }
     };
 
     window.addEventListener('keydown', onKeyDown);
