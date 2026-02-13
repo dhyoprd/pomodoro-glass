@@ -121,7 +121,8 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   gap: 10px;
 }
 
-.hero-actions a {
+.hero-actions a,
+.hero-actions .install-cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -135,14 +136,21 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   font-size: 0.86rem;
 }
 
-.hero-actions a.ghost-link {
+.hero-actions a.ghost-link,
+.hero-actions .install-cta {
   border-color: #52525b;
   background: transparent;
   color: var(--text);
 }
 
-.hero-actions a:hover {
+.hero-actions a:hover,
+.hero-actions .install-cta:hover {
   filter: brightness(0.95);
+}
+
+.hero-actions .install-cta:disabled {
+  opacity: 0.55;
+  filter: none;
 }
 
 .startup-proof {

@@ -28,6 +28,11 @@ import {
   type MatchmakerGoal,
 } from '@/application/SessionPlannerEngine';
 
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+};
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -43,6 +48,7 @@ export function PomodoroApp() {
   });
   const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '', longBreakInterval: '' });
   const [quickStartLinkStatus, setQuickStartLinkStatus] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [activeSectionId, setActiveSectionId] = useState('focus-timer');
   const hasHydratedQuickStart = useRef(false);
 
@@ -79,6 +85,31 @@ export function PomodoroApp() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [controller]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const onBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setDeferredInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+
+    const onAppInstalled = () => {
+      setDeferredInstallPrompt(null);
+      setQuickStartLinkStatus({
+        kind: 'success',
+        message: 'Loose installed. You can now launch it from your home screen.',
+      });
+    };
+
+    window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt);
+    window.addEventListener('appinstalled', onAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', onAppInstalled);
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -272,6 +303,33 @@ export function PomodoroApp() {
     controller.beginFocusSession();
   };
 
+  const installLooseApp = async () => {
+    if (!deferredInstallPrompt) {
+      setQuickStartLinkStatus({
+        kind: 'error',
+        message: 'Install option is not available in this browser yet.',
+      });
+      return;
+    }
+
+    await deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+
+    if (choice.outcome === 'accepted') {
+      setQuickStartLinkStatus({
+        kind: 'success',
+        message: 'Install accepted. Loose is being added to your device.',
+      });
+    } else {
+      setQuickStartLinkStatus({
+        kind: 'error',
+        message: 'Install dismissed. You can retry anytime from this button.',
+      });
+    }
+
+    setDeferredInstallPrompt(null);
+  };
+
   const copyPresetQuickStartLink = async (preset: UseCasePreset) => {
     if (typeof window === 'undefined') return;
 
@@ -447,6 +505,14 @@ export function PomodoroApp() {
         <div className="hero-actions">
           <a href="#outcome-blueprints">Start with an outcome</a>
           <a href="#session-planner" className="ghost-link">Plan my day</a>
+          <button
+            type="button"
+            className="ghost install-cta"
+            onClick={() => void installLooseApp()}
+            disabled={!deferredInstallPrompt}
+          >
+            {deferredInstallPrompt ? 'Install Loose app' : 'Install unavailable'}
+          </button>
         </div>
       </section>
 
@@ -1060,6 +1126,14 @@ export function PomodoroApp() {
             </button>
             <button type="button" className="ghost" onClick={() => controller.setMode('shortBreak')}>
               Break
+            </button>
+            <button
+              type="button"
+              className="ghost"
+              onClick={() => void installLooseApp()}
+              disabled={!deferredInstallPrompt}
+            >
+              Install
             </button>
           </div>
         </div>
