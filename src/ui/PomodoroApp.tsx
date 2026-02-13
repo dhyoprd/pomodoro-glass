@@ -144,6 +144,39 @@ export function PomodoroApp() {
 
   const showQuickOnboarding = state.stats.completed === 0 && state.tasks.length === 0;
 
+  const onboardingChecklist = useMemo(() => {
+    const items = [
+      {
+        id: 'outcome',
+        label: activePreset
+          ? `Outcome selected: ${activePreset.name}`
+          : 'Pick a use-case blueprint',
+        done: Boolean(activePreset),
+      },
+      {
+        id: 'task',
+        label: state.tasks.length
+          ? `Task captured: ${state.tasks[0]?.text ?? 'Ready'}`
+          : 'Add your first task',
+        done: state.tasks.length > 0,
+      },
+      {
+        id: 'focus',
+        label: state.stats.completed
+          ? `First focus win complete (${state.stats.completed} total)`
+          : 'Complete one focus session',
+        done: state.stats.completed > 0,
+      },
+    ];
+
+    const completed = items.filter((item) => item.done).length;
+    return {
+      items,
+      completed,
+      percent: Math.round((completed / items.length) * 100),
+    };
+  }, [activePreset, state.stats.completed, state.tasks]);
+
   const applyPreset = (preset: UseCasePreset) => {
     controller.updateSettings(preset.settings);
     setSettingsForm({
@@ -212,6 +245,24 @@ export function PomodoroApp() {
           </div>
         </section>
       ) : null}
+
+      <section className="onboarding-progress" aria-label="First-win onboarding progress">
+        <div className="onboarding-progress-head">
+          <h2>First-Win Checklist</h2>
+          <span>{onboardingChecklist.completed}/{onboardingChecklist.items.length} complete</span>
+        </div>
+        <div className="progress-wrap" aria-hidden="true">
+          <div className="progress-bar onboarding-progress-bar" style={{ width: `${onboardingChecklist.percent}%` }} />
+        </div>
+        <ul>
+          {onboardingChecklist.items.map((item) => (
+            <li key={item.id} className={item.done ? 'done' : ''}>
+              <strong>{item.done ? '✅' : '⬜'}</strong>
+              <span>{item.label}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section className="momentum" aria-label="Momentum snapshot">
         <div className="momentum-head">
