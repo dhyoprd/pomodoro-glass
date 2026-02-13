@@ -45,6 +45,79 @@ body {
 header h1 { margin: 0; font-size: 1.45rem; letter-spacing: -0.015em; }
 header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
 
+.startup-hero {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  border-color: #3f3f46;
+  background: linear-gradient(145deg, #12131c 0%, #1a1330 55%, #101115 100%);
+}
+
+.hero-eyebrow {
+  color: #c4b5fd;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.startup-hero h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.8vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.startup-hero p {
+  margin: 0;
+  color: #d4d4d8;
+  max-width: 60ch;
+  font-size: 0.92rem;
+}
+
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-pills span {
+  font-size: 0.79rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #3f3f46;
+  background: rgba(15, 15, 22, 0.7);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hero-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid #e4e4e7;
+  background: #fafafa;
+  color: #09090b;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.86rem;
+}
+
+.hero-actions a.ghost-link {
+  border-color: #52525b;
+  background: transparent;
+  color: var(--text);
+}
+
+.hero-actions a:hover {
+  filter: brightness(0.95);
+}
+
 section {
   background: var(--panel-2);
   border: 1px solid var(--line);

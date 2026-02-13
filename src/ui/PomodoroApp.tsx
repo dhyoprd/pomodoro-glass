@@ -158,6 +158,23 @@ export function PomodoroApp() {
         <p>Your productivity OS for study and work.</p>
       </header>
 
+      <section className="startup-hero" aria-label="Loose value proposition">
+        <div className="hero-eyebrow">Built for real outcomes, not random timer streaks</div>
+        <h2>Turn every study block into measurable momentum.</h2>
+        <p>
+          Pick a goal, get a battle-tested focus rhythm, and watch your XP, streak, and weekly consistency compound.
+        </p>
+        <div className="hero-pills">
+          <span>⚡ Use-case-first presets</span>
+          <span>🎮 Gamified focus loop</span>
+          <span>📱 Mobile-ready quick controls</span>
+        </div>
+        <div className="hero-actions">
+          <a href="#outcome-blueprints">Start with an outcome</a>
+          <a href="#session-planner" className="ghost-link">Plan my day</a>
+        </div>
+      </section>
+
       {showQuickOnboarding ? (
         <section className="quick-onboarding" aria-label="Quick onboarding">
           <div className="quick-onboarding-head">
@@ -209,7 +226,7 @@ export function PomodoroApp() {
         </div>
       </section>
 
-      <section className="session-planner" aria-label="Daily session planner">
+      <section id="session-planner" className="session-planner" aria-label="Daily session planner">
         <div className="planner-head">
           <h2>Daily Session Planner</h2>
           <span>Model your day before you start.</span>
@@ -400,7 +417,7 @@ export function PomodoroApp() {
           </div>
         </section>
 
-      <section className="blueprints" aria-label="Outcome blueprints">
+      <section id="outcome-blueprints" className="blueprints" aria-label="Outcome blueprints">
           <div className="presets-head">
             <h2>Plan by Outcome</h2>
             <span>Pick the result you want. Loose maps it to a timer rhythm.</span>
