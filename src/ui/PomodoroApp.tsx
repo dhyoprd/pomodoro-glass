@@ -422,6 +422,12 @@ export function PomodoroApp() {
     [state.mode],
   );
 
+  const mobileModeIcon = useMemo(() => {
+    if (state.mode === 'shortBreak') return '☕';
+    if (state.mode === 'longBreak') return '🌿';
+    return '🎯';
+  }, [state.mode]);
+
   const plannerSettings = activePreset?.settings ?? state.settings;
 
   const sessionPlanner = useMemo(
@@ -1079,6 +1085,10 @@ export function PomodoroApp() {
       </nav>
 
       <aside className="mobile-command-bar" aria-label="Mobile quick actions">
+        <div className="mobile-command-status" aria-live="polite">
+          <strong>{mobileModeIcon} {activeModeLabel}</strong>
+          <span>{formatTime(state.timer.remaining)} · {Math.round(progress)}% run</span>
+        </div>
         <button type="button" onClick={() => controller.toggleTimer()}>
           {state.timer.running ? 'Pause' : 'Start'}
         </button>
@@ -1093,7 +1103,7 @@ export function PomodoroApp() {
             scrollToSection('focus-timer');
           }}
         >
-Rescue
+          Rescue
         </button>
         <button
           type="button"
@@ -1101,7 +1111,7 @@ Rescue
           onClick={() => nextSectionNavItem && scrollToSection(nextSectionNavItem.id)}
           disabled={!nextSectionNavItem}
         >
-{nextSectionNavItem ? `Next: ${nextSectionNavItem.mobileLabel}` : 'Sections'}
+          {nextSectionNavItem ? `Next: ${nextSectionNavItem.mobileLabel}` : 'Sections'}
         </button>
         <button
           type="button"
@@ -1109,7 +1119,7 @@ Rescue
           onClick={() => void installLooseApp()}
           disabled={!canTriggerInstall}
         >
-{installActionLabel}
+          {installActionLabel}
         </button>
       </aside>
 

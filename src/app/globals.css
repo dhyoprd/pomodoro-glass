@@ -2295,6 +2295,29 @@ input:focus { border-color: #71717a; }
     z-index: 24;
   }
 
+  .mobile-command-status {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+    padding: 2px 2px 0;
+  }
+
+  .mobile-command-status strong {
+    font-size: 0.72rem;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .mobile-command-status span {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-align: right;
+    white-space: nowrap;
+  }
+
   .mobile-command-bar button {
     min-height: 36px;
     font-size: 0.69rem;
