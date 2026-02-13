@@ -221,6 +221,63 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   color: #bfdbfe;
 }
 
+.hero-briefing {
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  border-radius: 14px;
+  padding: 14px;
+  background: linear-gradient(170deg, rgba(17, 24, 39, 0.65), rgba(30, 41, 59, 0.48));
+  display: grid;
+  gap: 10px;
+  max-width: 520px;
+}
+
+.hero-briefing-head {
+  display: grid;
+  gap: 4px;
+}
+
+.hero-briefing-head strong {
+  color: #67e8f9;
+  font-size: 0.83rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.hero-briefing-head span {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.hero-briefing ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.hero-briefing li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 0.84rem;
+}
+
+.hero-briefing li span {
+  color: #a1a1aa;
+}
+
+.hero-briefing li strong {
+  text-align: right;
+}
+
+.hero-briefing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .landing-metrics-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

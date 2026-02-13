@@ -481,6 +481,9 @@ export function PomodoroApp() {
 
   const recommendedPreset = sortedLaunchPathPlans[0] ?? rankedPresetPlans[0];
 
+  const heroRecommendedPath = recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
+  const heroRecommendedTiming = launchPathTimings.get(heroRecommendedPath.id);
+
   const roiProjection = useMemo(() => {
     const dailyFocusHours = Number((sessionPlanner.estimatedFocusMinutes / 60).toFixed(1));
     const weeklyFocusHours = Number((dailyFocusHours * 5).toFixed(1));
@@ -1085,6 +1088,36 @@ export function PomodoroApp() {
         {installContext.isIosSafari && !installContext.isStandalone ? (
           <p className="install-hint" role="status">iOS install: Share → Add to Home Screen.</p>
         ) : null}
+        <aside className="hero-briefing" aria-label="Recommended launch briefing">
+          <div className="hero-briefing-head">
+            <strong>🧠 Today&apos;s best-fit launch</strong>
+            <span>{heroRecommendedPath.icon} {heroRecommendedPath.name}</span>
+          </div>
+          <ul>
+            <li>
+              <span>Rhythm</span>
+              <strong>
+                {heroRecommendedPath.settings.focus}/{heroRecommendedPath.settings.shortBreak}/{heroRecommendedPath.settings.longBreak}
+              </strong>
+            </li>
+            <li>
+              <span>Projected XP/hour</span>
+              <strong>{recommendedPreset?.xpPerHour ?? activePlanPerformance.xpPerHour}</strong>
+            </li>
+            <li>
+              <span>Finish first run by</span>
+              <strong>{heroRecommendedTiming?.finishByLabel ?? formatFinishBy(heroRecommendedPath.settings.focus)}</strong>
+            </li>
+          </ul>
+          <div className="hero-briefing-actions">
+            <button type="button" onClick={() => applyPresetAndStart(heroRecommendedPath)}>
+              Run this path now
+            </button>
+            <button type="button" className="ghost" onClick={() => void sharePresetQuickStartLink(heroRecommendedPath)}>
+              Share launch link
+            </button>
+          </div>
+        </aside>
       </section>
 
       <section className="landing-metrics-strip" aria-label="Loose startup proof metrics">
