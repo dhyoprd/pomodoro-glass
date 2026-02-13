@@ -28,6 +28,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Weekly momentum forecast translates a single daily plan into 5-day outcomes (focus hours, sessions, XP, level ETA) so users can choose rhythms by expected result.
 - Blueprint quick-start links now carry context (`preset`, `minutes`, optional `task`) so users can share a ready-to-run focus setup that opens preconfigured on any device.
 - Mobile users have an explicit commute blueprint optimized for short, interruption-prone windows.
+- Mobile quick bar includes a one-tap **Rescue** action that auto-runs the best momentum-recovery preset when the user needs to restart fast.
 
 ## V1 guardrails
 

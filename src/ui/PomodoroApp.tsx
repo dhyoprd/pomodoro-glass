@@ -1517,8 +1517,16 @@ export function PomodoroApp() {
             <button type="button" className="ghost" onClick={() => controller.setMode('focus')}>
               Focus
             </button>
-            <button type="button" className="ghost" onClick={() => controller.setMode('shortBreak')}>
-              Break
+            <button
+              type="button"
+              className="ghost"
+              title={`Run rescue preset: ${rescuePreset.name}`}
+              onClick={() => {
+                applyPresetAndStart(rescuePreset);
+                scrollToSection('focus-timer');
+              }}
+            >
+              Rescue
             </button>
             <button
               type="button"
