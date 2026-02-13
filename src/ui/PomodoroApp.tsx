@@ -391,6 +391,12 @@ export function PomodoroApp() {
   }, [state.analytics.today.sessions, state.analytics.week]);
 
   const showQuickOnboarding = state.stats.completed === 0 && state.tasks.length === 0;
+  const canTriggerInstall = Boolean(deferredInstallPrompt) || (installContext.isIosSafari && !installContext.isStandalone);
+  const installActionLabel = deferredInstallPrompt
+    ? 'Install'
+    : installContext.isIosSafari && !installContext.isStandalone
+      ? 'Add to Home'
+      : 'Install';
 
   const onboardingChecklist = useMemo(() => {
     const items = [
@@ -1725,9 +1731,9 @@ export function PomodoroApp() {
               type="button"
               className="ghost"
               onClick={() => void installLooseApp()}
-              disabled={!deferredInstallPrompt}
+              disabled={!canTriggerInstall}
             >
-              Install
+              {installActionLabel}
             </button>
           </div>
         </div>

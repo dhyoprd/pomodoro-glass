@@ -31,6 +31,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Blueprint quick-start links now carry context (`preset`, `minutes`, optional `task`) so users can share a ready-to-run focus setup that opens preconfigured on any device.
 - Mobile users have an explicit commute blueprint optimized for short, interruption-prone windows.
 - Mobile quick bar includes a one-tap **Rescue** action that auto-runs the best momentum-recovery preset when the user needs to restart fast.
+- Mobile install CTA now gracefully handles iOS Safari (`Add to Home`) instead of disabling install in browsers without `beforeinstallprompt`.
 
 ## V1 guardrails
 
