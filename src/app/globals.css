@@ -2024,7 +2024,7 @@ input:focus { border-color: #71717a; }
     right: 12px;
     bottom: calc(10px + env(safe-area-inset-bottom));
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 8px;
     padding: 8px;
     background: color-mix(in srgb, var(--panel) 92%, black 8%);
@@ -2037,9 +2037,9 @@ input:focus { border-color: #71717a; }
 
   .mobile-command-bar button {
     min-height: 36px;
-    font-size: 0.73rem;
+    font-size: 0.69rem;
     border-radius: 9px;
-    padding: 6px 8px;
+    padding: 6px 6px;
     white-space: nowrap;
   }
 

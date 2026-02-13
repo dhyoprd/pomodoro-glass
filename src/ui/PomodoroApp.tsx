@@ -938,6 +938,16 @@ export function PomodoroApp() {
         <button
           type="button"
           className="ghost"
+          onClick={() => {
+            applyPresetAndStart(rescuePreset);
+            scrollToSection('focus-timer');
+          }}
+        >
+          🚑 Rescue
+        </button>
+        <button
+          type="button"
+          className="ghost"
           onClick={() => nextSectionNavItem && scrollToSection(nextSectionNavItem.id)}
           disabled={!nextSectionNavItem}
         >
