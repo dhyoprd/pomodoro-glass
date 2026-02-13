@@ -71,6 +71,7 @@ const DAILY_QUESTS = [
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
+  const [planningMinutes, setPlanningMinutes] = useState(120);
   const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '', longBreakInterval: '' });
 
   useEffect(() => {
@@ -185,6 +186,23 @@ export function PomodoroApp() {
     [state.mode],
   );
 
+  const sessionPlanner = useMemo(() => {
+    const settings = activePreset?.settings ?? state.settings;
+    const cycleMinutes = settings.focus + settings.shortBreak;
+    const estimatedSessions = Math.max(1, Math.floor(planningMinutes / cycleMinutes));
+    const estimatedFocusMinutes = estimatedSessions * settings.focus;
+    const estimatedXp = estimatedSessions * XP_PER_SESSION + estimatedFocusMinutes * XP_PER_FOCUS_MINUTE;
+    const estimatedWeeklyXp = estimatedXp * 5;
+
+    return {
+      estimatedSessions,
+      estimatedFocusMinutes,
+      estimatedXp,
+      estimatedWeeklyXp,
+      cycleMinutes,
+    };
+  }, [activePreset?.settings, planningMinutes, state.settings]);
+
   const showQuickOnboarding = state.stats.completed === 0 && state.tasks.length === 0;
 
   const applyPreset = (preset: UseCasePreset) => {
@@ -257,6 +275,46 @@ export function PomodoroApp() {
             <strong>📈 {momentumStats.activeDays}/7</strong>
             <p>Active days this week</p>
           </article>
+        </div>
+      </section>
+
+      <section className="session-planner" aria-label="Daily session planner">
+        <div className="planner-head">
+          <h2>Daily Session Planner</h2>
+          <span>Model your day before you start.</span>
+        </div>
+        <div className="planner-body">
+          <label htmlFor="planningMinutes">Available deep-work time: {planningMinutes} min</label>
+          <input
+            id="planningMinutes"
+            type="range"
+            min={60}
+            max={360}
+            step={15}
+            value={planningMinutes}
+            onChange={(e) => setPlanningMinutes(Number(e.target.value))}
+          />
+          <div className="planner-metrics">
+            <article>
+              <strong>{sessionPlanner.estimatedSessions}</strong>
+              <span>Estimated sessions</span>
+            </article>
+            <article>
+              <strong>{sessionPlanner.estimatedFocusMinutes}m</strong>
+              <span>Focused minutes</span>
+            </article>
+            <article>
+              <strong>{sessionPlanner.estimatedXp}</strong>
+              <span>Projected daily XP</span>
+            </article>
+            <article>
+              <strong>{sessionPlanner.estimatedWeeklyXp}</strong>
+              <span>5-day XP runway</span>
+            </article>
+          </div>
+          <p>
+            Based on {activePreset?.name ?? 'current settings'} ({sessionPlanner.cycleMinutes} min per focus cycle).
+          </p>
         </div>
       </section>
 
