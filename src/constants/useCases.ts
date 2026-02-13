@@ -40,6 +40,14 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     outcome: 'Fast momentum when energy is scattered.',
     settings: { focus: 15, shortBreak: 3, longBreak: 10, longBreakInterval: 4 },
   },
+  {
+    id: 'mobile-commute',
+    icon: '🚇',
+    name: 'Commute Micro-Sprints',
+    description: 'Phone-friendly loops for trains, buses, and waiting windows.',
+    outcome: 'Turn fragmented travel time into measurable progress.',
+    settings: { focus: 10, shortBreak: 2, longBreak: 8, longBreakInterval: 5 },
+  },
 ] as const;
 
 export type OutcomeBlueprint = {
@@ -71,5 +79,12 @@ export const OUTCOME_BLUEPRINTS: ReadonlyArray<OutcomeBlueprint> = [
     title: 'Recover Momentum',
     summary: 'Use shorter loops to rebuild consistency.',
     presetId: 'high-energy',
+  },
+  {
+    id: 'commute-bites',
+    icon: '📱',
+    title: 'Make Commute Time Count',
+    summary: 'Ship bite-sized wins from your phone during transit.',
+    presetId: 'mobile-commute',
   },
 ] as const;
