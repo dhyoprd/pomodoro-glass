@@ -14,6 +14,27 @@ const XP_PER_SESSION = 100;
 const XP_PER_FOCUS_MINUTE = 2;
 const XP_PER_LEVEL = 500;
 
+const USE_CASE_PRESETS = [
+  {
+    id: 'student-revision',
+    name: 'Student Revision',
+    description: 'Steady pace for lectures, homework, and exam prep.',
+    settings: { focus: 25, shortBreak: 5, longBreak: 15, longBreakInterval: 4 },
+  },
+  {
+    id: 'deep-work',
+    name: 'Deep Work Sprint',
+    description: 'Longer focus windows for coding or writing sessions.',
+    settings: { focus: 50, shortBreak: 10, longBreak: 20, longBreakInterval: 3 },
+  },
+  {
+    id: 'high-energy',
+    name: 'High-Energy Loop',
+    description: 'Short cycles for quick wins when motivation is low.',
+    settings: { focus: 15, shortBreak: 3, longBreak: 10, longBreakInterval: 4 },
+  },
+] as const;
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -146,6 +167,38 @@ export function PomodoroApp() {
           <p>{gamification.xpToNextLevel} XP to unlock Level {gamification.level + 1}</p>
           <div className="progress-wrap level-progress-wrap" aria-hidden="true">
             <div className="progress-bar level-progress-bar" style={{ width: `${gamification.levelProgress}%` }} />
+          </div>
+        </section>
+
+      <section className="presets" aria-label="Use-case presets">
+          <div className="presets-head">
+            <h2>Start from a Use Case</h2>
+            <span>One tap to load balanced timer defaults.</span>
+          </div>
+          <div className="preset-grid">
+            {USE_CASE_PRESETS.map((preset) => (
+              <article className="preset-card" key={preset.id}>
+                <h3>{preset.name}</h3>
+                <p>{preset.description}</p>
+                <small>
+                  {preset.settings.focus}/{preset.settings.shortBreak}/{preset.settings.longBreak} min · every {preset.settings.longBreakInterval} sessions
+                </small>
+                <button
+                  type="button"
+                  onClick={() => {
+                    controller.updateSettings(preset.settings);
+                    setSettingsForm({
+                      focus: String(preset.settings.focus),
+                      shortBreak: String(preset.settings.shortBreak),
+                      longBreak: String(preset.settings.longBreak),
+                      longBreakInterval: String(preset.settings.longBreakInterval),
+                    });
+                  }}
+                >
+                  Apply preset
+                </button>
+              </article>
+            ))}
           </div>
         </section>
 

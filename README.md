@@ -11,6 +11,7 @@ Loose is a productivity app for students and workers, built on a **Next.js found
 - Session analytics (today, streak, last 7 day bars)
 - Task list (add / done / delete)
 - Browser notifications on session completion
+- Use-case presets (Student Revision, Deep Work Sprint, High-Energy Loop)
 - Keyboard shortcuts:
   - `Space` → Start/Pause
   - `R` → Reset

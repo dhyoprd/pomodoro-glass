@@ -159,6 +159,64 @@ button.ghost { background: transparent; }
   background: linear-gradient(90deg, #f5d0fe, #c4b5fd);
 }
 
+.presets {
+  display: grid;
+  gap: 12px;
+}
+
+.presets-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.presets-head h2 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.presets-head span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.preset-card {
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.preset-card h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.preset-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.preset-card small {
+  color: #d4d4d8;
+  font-size: 0.78rem;
+}
+
+.preset-card button {
+  justify-self: start;
+}
+
 .week-bars {
   margin-top: 12px;
   display: grid;
@@ -244,6 +302,7 @@ input:focus { border-color: #71717a; }
 @media (max-width: 820px) {
   .settings-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .analytics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .preset-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
