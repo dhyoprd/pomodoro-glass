@@ -450,6 +450,27 @@ export function PomodoroApp() {
         </div>
       </section>
 
+      <section className="startup-proof" aria-label="How Loose works">
+        <div className="startup-proof-head">
+          <h2>How teams and solo builders use Loose in under 60 seconds</h2>
+          <span>Use-case-first flow designed for quick activation.</span>
+        </div>
+        <div className="startup-proof-grid">
+          <article>
+            <strong>1) Pick your outcome</strong>
+            <p>Choose exam prep, deep-work sprint, or momentum restart. Loose auto-maps to the best rhythm.</p>
+          </article>
+          <article>
+            <strong>2) Run the session engine</strong>
+            <p>Start instantly with one tap. Timer mode, XP, streaks, and breaks stay synchronized in one loop.</p>
+          </article>
+          <article>
+            <strong>3) Compound visible wins</strong>
+            <p>Track weekly consistency, unlock milestones, and ship real progress instead of random timer noise.</p>
+          </article>
+        </div>
+      </section>
+
       {showQuickOnboarding ? (
         <section className="quick-onboarding" aria-label="Quick onboarding">
           <div className="quick-onboarding-head">
