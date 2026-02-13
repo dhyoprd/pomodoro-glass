@@ -819,13 +819,26 @@ export function PomodoroApp() {
       </section>
 
       <aside className="mobile-quick-start" aria-label="Mobile quick start">
-        <div>
+        <div className="mobile-quick-summary">
           <strong>{activePreset?.name ?? `${activeModeLabel} Session`}</strong>
           <span>{formatTime(state.timer.remaining)} left</span>
+          <small>
+            {state.tasks.find((task) => !task.done)?.text ?? 'No active task yet — add one above.'}
+          </small>
         </div>
-        <button className="primary" type="button" onClick={() => controller.toggleTimer()}>
-          {state.timer.running ? 'Pause' : 'Start Focus'}
-        </button>
+        <div className="mobile-quick-actions">
+          <button className="primary" type="button" onClick={() => controller.toggleTimer()}>
+            {state.timer.running ? 'Pause' : 'Start Focus'}
+          </button>
+          <div className="mobile-mode-actions" role="group" aria-label="Quick mode actions">
+            <button type="button" className="ghost" onClick={() => controller.setMode('focus')}>
+              Focus
+            </button>
+            <button type="button" className="ghost" onClick={() => controller.setMode('shortBreak')}>
+              Break
+            </button>
+          </div>
+        </div>
       </aside>
     </main>
   );

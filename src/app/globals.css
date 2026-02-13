@@ -1164,9 +1164,10 @@ input:focus { border-color: #71717a; }
     z-index: 20;
   }
 
-  .mobile-quick-start > div {
+  .mobile-quick-summary {
     display: grid;
     gap: 2px;
+    min-width: 0;
   }
 
   .mobile-quick-start strong {
@@ -1178,8 +1179,35 @@ input:focus { border-color: #71717a; }
     font-size: 0.78rem;
   }
 
+  .mobile-quick-summary small {
+    color: #d4d4d8;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 42vw;
+  }
+
+  .mobile-quick-actions {
+    display: grid;
+    gap: 6px;
+    justify-items: end;
+  }
+
   .mobile-quick-start .primary {
     white-space: nowrap;
     padding-inline: 12px;
+    min-height: 36px;
+  }
+
+  .mobile-mode-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .mobile-mode-actions button {
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 0.74rem;
   }
 }
