@@ -66,6 +66,7 @@ export function PomodoroApp() {
   const [activeSectionId, setActiveSectionId] = useState('focus-timer');
   const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
   const hasHydratedQuickStart = useRef(false);
+  const hasHydratedPlannerPreferences = useRef(false);
 
   const scrollToSection = (sectionId: string) => {
     if (typeof document === 'undefined') return;
@@ -564,6 +565,45 @@ export function PomodoroApp() {
       'Shared matchmaker profile link.',
     );
   };
+
+  useEffect(() => {
+    if (hasHydratedPlannerPreferences.current || typeof window === 'undefined') return;
+
+    hasHydratedPlannerPreferences.current = true;
+
+    try {
+      const storedPlanningMinutes = Number(window.localStorage.getItem('loose.planningMinutes'));
+      if (Number.isFinite(storedPlanningMinutes) && storedPlanningMinutes >= 60) {
+        setPlanningMinutes(normalizePlanningMinutes(storedPlanningMinutes));
+      }
+
+      const storedMatchmaker = window.localStorage.getItem('loose.matchmakerProfile');
+      if (storedMatchmaker) {
+        const parsed = JSON.parse(storedMatchmaker) as Partial<{
+          energy: MatchmakerEnergy;
+          context: MatchmakerContext;
+          goal: MatchmakerGoal;
+        }>;
+
+        const energy = parseMatchmakerEnergy(parsed.energy ?? null);
+        const context = parseMatchmakerContext(parsed.context ?? null);
+        const goal = parseMatchmakerGoal(parsed.goal ?? null);
+
+        if (energy && context && goal) {
+          setMatchmaker({ energy, context, goal });
+        }
+      }
+    } catch {
+      // Ignore malformed local preferences.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydratedPlannerPreferences.current || typeof window === 'undefined') return;
+
+    window.localStorage.setItem('loose.planningMinutes', String(planningMinutes));
+    window.localStorage.setItem('loose.matchmakerProfile', JSON.stringify(matchmaker));
+  }, [matchmaker, planningMinutes]);
 
   useEffect(() => {
     if (hasHydratedQuickStart.current || typeof window === 'undefined') return;
