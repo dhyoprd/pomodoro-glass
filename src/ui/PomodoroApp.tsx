@@ -14,6 +14,7 @@ import {
   XP_PER_SESSION,
   buildAchievementProgress,
   buildDailyQuestProgress,
+  buildFocusHealthScore,
   buildGamificationProgress,
 } from '@/application/GamificationEngine';
 
@@ -65,6 +66,8 @@ export function PomodoroApp() {
   const achievementProgress = useMemo(() => buildAchievementProgress(state), [state]);
 
   const questProgress = useMemo(() => buildDailyQuestProgress(state), [state]);
+
+  const focusHealth = useMemo(() => buildFocusHealthScore(state), [state]);
 
   const momentumStats = useMemo(() => {
     const totalHours = (state.stats.focusMinutes / 60).toFixed(1);
@@ -226,6 +229,11 @@ export function PomodoroApp() {
           <article className="momentum-card">
             <strong>📈 {momentumStats.activeDays}/7</strong>
             <p>Active days this week</p>
+          </article>
+          <article className="momentum-card">
+            <strong>🧭 {focusHealth.score} · {focusHealth.tier}</strong>
+            <p>Focus Health Score ({focusHealth.metrics.weeklySessions} sessions, {focusHealth.metrics.streak}d streak)</p>
+            <small>{focusHealth.recommendation}</small>
           </article>
         </div>
       </section>

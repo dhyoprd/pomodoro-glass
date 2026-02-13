@@ -99,3 +99,36 @@ export function buildDailyQuestProgress(state: AppState) {
     };
   });
 }
+
+export function buildFocusHealthScore(state: AppState) {
+  const weeklySessions = state.analytics.week.reduce((sum, day) => sum + day.sessions, 0);
+  const activeDays = state.analytics.week.filter((day) => day.sessions > 0).length;
+  const sessionDensity = clamp((weeklySessions / 28) * 100, 0, 100);
+  const dayConsistency = clamp((activeDays / 7) * 100, 0, 100);
+  const streakStrength = clamp((state.analytics.streak.current / 14) * 100, 0, 100);
+
+  const score = Math.round(sessionDensity * 0.4 + dayConsistency * 0.35 + streakStrength * 0.25);
+
+  const tier =
+    score >= 80 ? 'Locked In' :
+    score >= 60 ? 'On Track' :
+    score >= 40 ? 'Warming Up' :
+    'Reboot';
+
+  const recommendation =
+    score >= 80 ? 'Keep your cadence and protect recovery breaks.' :
+    score >= 60 ? 'Add one extra focus block on low-volume days.' :
+    score >= 40 ? 'Aim for 4 active days this week to stabilize momentum.' :
+    'Start small: 2 focus sessions today to restart momentum.';
+
+  return {
+    score,
+    tier,
+    recommendation,
+    metrics: {
+      weeklySessions,
+      activeDays,
+      streak: state.analytics.streak.current,
+    },
+  };
+}
