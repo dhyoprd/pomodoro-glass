@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePomodoroController } from '@/hooks/usePomodoroController';
 import { clamp, formatTime } from '@/lib/utils';
 import {
@@ -42,6 +42,7 @@ export function PomodoroApp() {
     goal: 'consistency',
   });
   const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '', longBreakInterval: '' });
+  const hasHydratedQuickStart = useRef(false);
 
   useEffect(() => {
     setSettingsForm({
@@ -217,6 +218,32 @@ export function PomodoroApp() {
     applyPreset(preset);
     controller.beginFocusSession();
   };
+
+  useEffect(() => {
+    if (hasHydratedQuickStart.current || typeof window === 'undefined') return;
+
+    hasHydratedQuickStart.current = true;
+
+    const params = new URLSearchParams(window.location.search);
+    const presetId = params.get('preset');
+
+    if (!presetId) return;
+
+    const preset = USE_CASE_PRESETS.find((item) => item.id === presetId);
+    if (!preset) return;
+
+    controller.updateSettings(preset.settings);
+    setSettingsForm({
+      focus: String(preset.settings.focus),
+      shortBreak: String(preset.settings.shortBreak),
+      longBreak: String(preset.settings.longBreak),
+      longBreakInterval: String(preset.settings.longBreakInterval),
+    });
+
+    if (params.get('autostart') === '1') {
+      controller.beginFocusSession();
+    }
+  }, [controller]);
 
   return (
     <main className="app">
