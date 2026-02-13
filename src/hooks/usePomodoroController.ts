@@ -23,6 +23,7 @@ const initialState: AppState = {
     streak: { current: 0, best: 0 },
     week: Array.from({ length: 7 }, (_, i) => ({ day: `D${i + 1}`, sessions: 0, focusMinutes: 0 })),
   },
+  recentSessions: [],
 };
 
 export function usePomodoroController() {

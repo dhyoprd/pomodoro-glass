@@ -25,6 +25,7 @@ export type AppState = {
   tasks: Task[];
   timer: { remaining: number; total: number; running: boolean };
   analytics: Analytics;
+  recentSessions: SessionHistoryEntry[];
   settingsStatus?: { kind: 'success' | 'error'; message: string };
 };
 
@@ -168,6 +169,7 @@ export class AppController {
         running: this.timer.running,
       },
       analytics: this.deps.analyticsService.build(this.sessionHistory),
+      recentSessions: this.sessionHistory.slice(0, 6),
       settingsStatus,
     });
   }

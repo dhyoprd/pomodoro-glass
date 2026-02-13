@@ -292,6 +292,24 @@ export function PomodoroApp() {
               );
             })}
           </div>
+          <div className="recent-sessions" aria-label="Recent focus wins">
+            <div className="recent-sessions-head">
+              <h3>Recent Wins</h3>
+              <span>{state.recentSessions.length} logged</span>
+            </div>
+            {!state.recentSessions.length ? (
+              <p>No completed focus sessions yet — your first win starts now.</p>
+            ) : (
+              <ul>
+                {state.recentSessions.map((session) => (
+                  <li key={session.id}>
+                    <strong>🍅 {session.focusMinutes}m focus</strong>
+                    <span>{formatSessionDate(session.completedAt)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </section>
 
       <section className="level-card" aria-label="Gamification progress">
@@ -446,5 +464,16 @@ export function PomodoroApp() {
 
 function formatAverageMinutes(value: number): string {
   return value > 0 ? String(value) : '—';
+}
+
+function formatSessionDate(isoDate: string): string {
+  const date = new Date(isoDate);
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(date);
 }
 

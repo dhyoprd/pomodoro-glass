@@ -416,6 +416,66 @@ button.ghost { background: transparent; }
 }
 .week-bar-label { font-size: 0.73rem; color: var(--muted); text-align: center; }
 
+.recent-sessions {
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.recent-sessions-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recent-sessions-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.recent-sessions-head span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.recent-sessions p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.recent-sessions ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.recent-sessions li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 10px;
+}
+
+.recent-sessions li strong {
+  font-size: 0.86rem;
+}
+
+.recent-sessions li span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
 .settings-head, .tasks-head {
   display: flex;
   justify-content: space-between;
@@ -494,4 +554,8 @@ input:focus { border-color: #71717a; }
   #taskInput { min-width: 140px; width: 100%; }
   #taskForm { width: 100%; }
   .settings-form { grid-template-columns: 1fr; }
+  .recent-sessions li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
