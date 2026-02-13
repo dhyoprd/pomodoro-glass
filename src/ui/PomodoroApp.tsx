@@ -267,9 +267,19 @@ export function PomodoroApp() {
       longBreakInterval: String(preset.settings.longBreakInterval),
     });
 
-    if (params.get('autostart') === '1') {
+    const shouldAutostart = params.get('autostart') === '1';
+    if (shouldAutostart) {
       controller.beginFocusSession();
     }
+
+    setQuickStartLinkStatus({
+      kind: 'success',
+      message: shouldAutostart
+        ? `Quick start loaded: ${preset.name} and timer started.`
+        : `Quick start loaded: ${preset.name}.`,
+    });
+
+    consumeQuickStartParamsFromUrl(window.location.href);
   }, [controller]);
 
   useEffect(() => {
@@ -850,6 +860,21 @@ function buildPresetQuickStartUrl(currentUrl: string, presetId: string): string 
   url.searchParams.set('autostart', '1');
 
   return url.toString();
+}
+
+function consumeQuickStartParamsFromUrl(currentUrl: string): void {
+  if (typeof window === 'undefined') return;
+
+  const url = new URL(currentUrl);
+  const hadQuickStartParams = url.searchParams.has('preset') || url.searchParams.has('autostart');
+
+  if (!hadQuickStartParams) return;
+
+  url.searchParams.delete('preset');
+  url.searchParams.delete('autostart');
+
+  const nextPath = `${url.pathname}${url.search}${url.hash}`;
+  window.history.replaceState(window.history.state, '', nextPath);
 }
 
 function formatAverageMinutes(value: number): string {
