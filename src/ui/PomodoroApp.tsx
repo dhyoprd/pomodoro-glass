@@ -219,6 +219,17 @@ export function PomodoroApp() {
     controller.beginFocusSession();
   };
 
+  const copyPresetQuickStartLink = async (preset: UseCasePreset) => {
+    if (typeof window === 'undefined' || !navigator.clipboard) return;
+
+    try {
+      const quickStartUrl = buildPresetQuickStartUrl(window.location.href, preset.id);
+      await navigator.clipboard.writeText(quickStartUrl);
+    } catch {
+      // no-op: clipboard access can fail in restricted contexts
+    }
+  };
+
   useEffect(() => {
     if (hasHydratedQuickStart.current || typeof window === 'undefined') return;
 
@@ -673,6 +684,9 @@ export function PomodoroApp() {
                     <button type="button" className="ghost" onClick={() => applyPresetAndStart(preset)}>
                       Use & start focus
                     </button>
+                    <button type="button" className="ghost" onClick={() => void copyPresetQuickStartLink(preset)}>
+                      Copy quick-start link
+                    </button>
                   </div>
                 </article>
               );
@@ -709,6 +723,9 @@ export function PomodoroApp() {
                     </button>
                     <button type="button" className="ghost" onClick={() => applyPresetAndStart(preset)}>
                       Apply & start focus
+                    </button>
+                    <button type="button" className="ghost" onClick={() => void copyPresetQuickStartLink(preset)}>
+                      Copy quick-start link
                     </button>
                   </div>
                 </article>
@@ -781,6 +798,14 @@ export function PomodoroApp() {
       </aside>
     </main>
   );
+}
+
+function buildPresetQuickStartUrl(currentUrl: string, presetId: string): string {
+  const url = new URL(currentUrl);
+  url.searchParams.set('preset', presetId);
+  url.searchParams.set('autostart', '1');
+
+  return url.toString();
 }
 
 function formatAverageMinutes(value: number): string {
