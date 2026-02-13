@@ -52,6 +52,63 @@ section {
   padding: 14px;
 }
 
+.quick-onboarding {
+  display: grid;
+  gap: 10px;
+  border-color: #3f3f46;
+  background: linear-gradient(165deg, #121217 0%, #151520 100%);
+}
+
+.quick-onboarding-head {
+  display: grid;
+  gap: 4px;
+}
+
+.quick-onboarding-head h2 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.quick-onboarding-head span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.quick-onboarding-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.quick-onboarding-card {
+  text-align: left;
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.quick-onboarding-card strong {
+  font-size: 0.88rem;
+}
+
+.quick-onboarding-card span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.quick-onboarding-card small {
+  color: #d4d4d8;
+  font-size: 0.76rem;
+}
+
+.quick-onboarding-card:hover {
+  border-color: #71717a;
+  background: #18181f;
+}
+
 .momentum {
   display: grid;
   gap: 10px;
@@ -593,6 +650,7 @@ input:focus { border-color: #71717a; }
   .blueprint-grid { grid-template-columns: 1fr; }
   .preset-grid { grid-template-columns: 1fr; }
   .momentum-grid { grid-template-columns: 1fr; }
+  .quick-onboarding-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {

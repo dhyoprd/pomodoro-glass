@@ -236,6 +236,8 @@ export function PomodoroApp() {
     [state.mode],
   );
 
+  const showQuickOnboarding = state.stats.completed === 0 && state.tasks.length === 0;
+
   const applyPreset = (preset: (typeof USE_CASE_PRESETS)[number]) => {
     controller.updateSettings(preset.settings);
     setSettingsForm({
@@ -257,6 +259,36 @@ export function PomodoroApp() {
         <h1>Loose</h1>
         <p>Your productivity OS for study and work.</p>
       </header>
+
+      {showQuickOnboarding ? (
+        <section className="quick-onboarding" aria-label="Quick onboarding">
+          <div className="quick-onboarding-head">
+            <h2>Choose your first win</h2>
+            <span>Pick an outcome, auto-apply the rhythm, and start your first focus block.</span>
+          </div>
+          <div className="quick-onboarding-grid">
+            {OUTCOME_BLUEPRINTS.map((blueprint) => {
+              const preset = USE_CASE_PRESETS.find((item) => item.id === blueprint.presetId);
+              if (!preset) return null;
+
+              return (
+                <button
+                  type="button"
+                  className="quick-onboarding-card"
+                  key={`quick-${blueprint.id}`}
+                  onClick={() => applyPresetAndStart(preset)}
+                >
+                  <strong>{blueprint.icon} {blueprint.title}</strong>
+                  <span>{blueprint.summary}</span>
+                  <small>
+                    {preset.settings.focus}/{preset.settings.shortBreak}/{preset.settings.longBreak} min • every {preset.settings.longBreakInterval} sessions
+                  </small>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       <section className="momentum" aria-label="Momentum snapshot">
         <div className="momentum-head">
