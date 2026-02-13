@@ -33,18 +33,29 @@ refs.taskForm.addEventListener('submit', (e) => {
   refs.taskInput.value = '';
 });
 
+const collectSettingsInput = () => ({
+  focus: refs.focusMinutesInput.value,
+  shortBreak: refs.shortBreakMinutesInput.value,
+  longBreak: refs.longBreakMinutesInput.value,
+});
+
+const applySettingsFromForm = () => {
+  const result = app.updateSettings(collectSettingsInput());
+  ui.renderSettingsValidation(result);
+};
+
 refs.settingsForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  applySettingsFromForm();
+});
 
-  const result = app.updateSettings({
-    focus: refs.focusMinutesInput.value,
-    shortBreak: refs.shortBreakMinutesInput.value,
-    longBreak: refs.longBreakMinutesInput.value,
-  });
+[refs.focusMinutesInput, refs.shortBreakMinutesInput, refs.longBreakMinutesInput].forEach((input) => {
+  input.addEventListener('change', applySettingsFromForm);
+});
 
-  if (!result.ok) {
-    alert(result.error);
-  }
+refs.resetSettingsBtn.addEventListener('click', () => {
+  const result = app.resetSettingsToDefaults();
+  ui.renderSettingsValidation(result);
 });
 
 window.addEventListener('keydown', (e) => {

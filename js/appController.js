@@ -1,3 +1,4 @@
+import { DEFAULT_SETTINGS_MINUTES } from './constants.js';
 import { Timer } from './domain/timer.js';
 
 export class AppController {
@@ -43,7 +44,15 @@ export class AppController {
     this.settingsRepo.save(this.settings);
     this.setMode(this.mode);
     this.ui.renderSettings(this.settings);
-    return { ok: true };
+    return { ok: true, message: 'Settings saved.' };
+  }
+
+  resetSettingsToDefaults() {
+    this.settings = { ...DEFAULT_SETTINGS_MINUTES };
+    this.settingsRepo.save(this.settings);
+    this.setMode(this.mode);
+    this.ui.renderSettings(this.settings);
+    return { ok: true, message: 'Default settings restored.' };
   }
 
   validateSettings(raw) {
@@ -54,15 +63,15 @@ export class AppController {
     };
 
     if (!Number.isFinite(next.focus) || next.focus < 10 || next.focus > 90) {
-      return { ok: false, error: 'Focus must be between 10 and 90 minutes.' };
+      return { ok: false, field: 'focus', error: 'Focus must be between 10 and 90 minutes.' };
     }
 
     if (!Number.isFinite(next.shortBreak) || next.shortBreak < 1 || next.shortBreak > 30) {
-      return { ok: false, error: 'Short break must be between 1 and 30 minutes.' };
+      return { ok: false, field: 'shortBreak', error: 'Short break must be between 1 and 30 minutes.' };
     }
 
     if (!Number.isFinite(next.longBreak) || next.longBreak < 5 || next.longBreak > 60) {
-      return { ok: false, error: 'Long break must be between 5 and 60 minutes.' };
+      return { ok: false, field: 'longBreak', error: 'Long break must be between 5 and 60 minutes.' };
     }
 
     return { ok: true, value: next };

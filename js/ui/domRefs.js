@@ -10,6 +10,8 @@ export function getDomRefs() {
     taskInput: document.getElementById('taskInput'),
     taskList: document.getElementById('taskList'),
     settingsForm: document.getElementById('settingsForm'),
+    resetSettingsBtn: document.getElementById('resetSettingsBtn'),
+    settingsStatus: document.getElementById('settingsStatus'),
     focusMinutesInput: document.getElementById('focusMinutesInput'),
     shortBreakMinutesInput: document.getElementById('shortBreakMinutesInput'),
     longBreakMinutesInput: document.getElementById('longBreakMinutesInput'),

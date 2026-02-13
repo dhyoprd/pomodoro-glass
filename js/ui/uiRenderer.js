@@ -30,6 +30,33 @@ export class UIRenderer {
     this.refs.longBreakMinutesInput.value = settings.longBreak;
   }
 
+  clearSettingsValidation() {
+    [
+      this.refs.focusMinutesInput,
+      this.refs.shortBreakMinutesInput,
+      this.refs.longBreakMinutesInput,
+    ].forEach((input) => input.classList.remove('invalid'));
+  }
+
+  renderSettingsValidation(result) {
+    this.clearSettingsValidation();
+
+    if (result.ok) {
+      this.refs.settingsStatus.textContent = result.message || 'Settings saved.';
+      this.refs.settingsStatus.classList.remove('error');
+      this.refs.settingsStatus.classList.add('success');
+      return;
+    }
+
+    this.refs.settingsStatus.textContent = result.error;
+    this.refs.settingsStatus.classList.remove('success');
+    this.refs.settingsStatus.classList.add('error');
+
+    if (result.field === 'focus') this.refs.focusMinutesInput.classList.add('invalid');
+    if (result.field === 'shortBreak') this.refs.shortBreakMinutesInput.classList.add('invalid');
+    if (result.field === 'longBreak') this.refs.longBreakMinutesInput.classList.add('invalid');
+  }
+
   renderTasks(tasks, { onToggle, onDelete }) {
     this.refs.taskList.innerHTML = '';
 
