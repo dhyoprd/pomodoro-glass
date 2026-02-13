@@ -215,9 +215,50 @@ button.ghost { background: transparent; }
   background: linear-gradient(90deg, #f5d0fe, #c4b5fd);
 }
 
+.achievements,
 .quests {
   display: grid;
   gap: 12px;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.achievement-card {
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.achievement-card.unlocked {
+  border-color: #facc15;
+  box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.32);
+}
+
+.achievement-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.achievement-top strong {
+  font-size: 0.9rem;
+}
+
+.achievement-top span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.achievement-progress-bar {
+  background: linear-gradient(90deg, #facc15, #fb923c);
 }
 
 .quests-head {
@@ -548,6 +589,7 @@ input:focus { border-color: #71717a; }
   .settings-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .analytics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .quest-grid { grid-template-columns: 1fr; }
+  .achievement-grid { grid-template-columns: 1fr; }
   .blueprint-grid { grid-template-columns: 1fr; }
   .preset-grid { grid-template-columns: 1fr; }
   .momentum-grid { grid-template-columns: 1fr; }

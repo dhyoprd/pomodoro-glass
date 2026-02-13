@@ -14,6 +14,33 @@ const XP_PER_SESSION = 100;
 const XP_PER_FOCUS_MINUTE = 2;
 const XP_PER_LEVEL = 500;
 
+const ACHIEVEMENTS = [
+  {
+    id: 'ach-first-session',
+    icon: '🥉',
+    title: 'First Win',
+    target: 1,
+    unit: 'session',
+    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.stats.completed,
+  },
+  {
+    id: 'ach-focus-1000',
+    icon: '🥈',
+    title: '1,000 Focus Minutes',
+    target: 1000,
+    unit: 'minutes',
+    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.stats.focusMinutes,
+  },
+  {
+    id: 'ach-streak-7',
+    icon: '🥇',
+    title: '7-Day Streak',
+    target: 7,
+    unit: 'days',
+    getProgress: (state: ReturnType<typeof usePomodoroController>['state']) => state.analytics.streak.current,
+  },
+] as const;
+
 const DAILY_QUESTS = [
   {
     id: 'quest-focus-minutes',
@@ -144,6 +171,23 @@ export function PomodoroApp() {
 
     return { xp, level, xpToNextLevel, levelProgress };
   }, [state.stats.completed, state.stats.focusMinutes]);
+
+  const achievementProgress = useMemo(
+    () =>
+      ACHIEVEMENTS.map((achievement) => {
+        const progressValue = achievement.getProgress(state);
+        const progress = clamp((progressValue / achievement.target) * 100, 0, 100);
+        const unlocked = progressValue >= achievement.target;
+
+        return {
+          ...achievement,
+          progressValue,
+          progress,
+          unlocked,
+        };
+      }),
+    [state],
+  );
 
   const questProgress = useMemo(
     () =>
@@ -325,6 +369,26 @@ export function PomodoroApp() {
           <p>{gamification.xpToNextLevel} XP to unlock Level {gamification.level + 1}</p>
           <div className="progress-wrap level-progress-wrap" aria-hidden="true">
             <div className="progress-bar level-progress-bar" style={{ width: `${gamification.levelProgress}%` }} />
+          </div>
+        </section>
+
+      <section className="achievements" aria-label="Milestones">
+          <div className="quests-head">
+            <h2>Milestones</h2>
+            <span>{achievementProgress.filter((item) => item.unlocked).length}/{achievementProgress.length} unlocked</span>
+          </div>
+          <div className="achievement-grid">
+            {achievementProgress.map((achievement) => (
+              <article className={`achievement-card ${achievement.unlocked ? 'unlocked' : ''}`} key={achievement.id}>
+                <div className="achievement-top">
+                  <strong>{achievement.icon} {achievement.title}</strong>
+                  <span>{achievement.progressValue}/{achievement.target} {achievement.unit}</span>
+                </div>
+                <div className="progress-wrap" aria-hidden="true">
+                  <div className="progress-bar achievement-progress-bar" style={{ width: `${achievement.progress}%` }} />
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 
