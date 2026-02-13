@@ -14,7 +14,7 @@ Loose is a productivity app for students and workers, built on a **Next.js found
 - Use-case presets (Student Revision, Deep Work Sprint, High-Energy Loop, Commute Micro-Sprints, Meeting Buffer Flow)
 - Preset fit tags + momentum tips to choose rhythms by real-world context
 - Installable web-app metadata (manifest + brand icon + mobile theme color)
-- Home-screen quick actions (Deep Work, Commute, Planner) via manifest shortcuts + preset deep links
+- Home-screen quick actions (Deep Work, Momentum Rescue, Commute, Planner) via manifest shortcuts + preset deep links
 - Keyboard shortcuts:
   - `Space` → Start/Pause
   - `R` → Reset

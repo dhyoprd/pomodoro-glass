@@ -19,6 +19,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 2. **Ship a Feature Fast** → Deep Work Sprint preset (`50/10/20`, long break every 3)
 3. **Recover Momentum** → High-Energy Loop preset (`15/3/10`, long break every 4)
 4. **Make Commute Time Count** → Commute Micro-Sprints preset (`10/2/8`, long break every 5)
+5. **Ship Between Meetings** → Meeting Buffer Flow preset (`20/5/12`, long break every 3)
 
 ### Product behavior
 - New users see quick onboarding with outcome cards first.
@@ -39,6 +40,26 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Mobile install CTA now gracefully handles iOS Safari (`Add to Home`) instead of disabling install in browsers without `beforeinstallprompt`.
 - PWA shortcuts now include a dedicated **Momentum Rescue** entry (high-energy autostart) plus source-tagged deep-work/commute/planner launches for cleaner attribution and faster one-tap re-entry.
 - Hero proof KPIs now include a **Today plan progress** tile (`% complete` or `minutes remaining`) tied to planner-estimated focus minutes, so users see if they are on track before starting the next block.
+
+## Decision matrix (V1)
+
+| Situation | Best launch path | Why it wins | Mobile fit |
+| --- | --- | --- | --- |
+| 2-4h desk window, high clarity | Deep Work Sprint | Maximizes uninterrupted maker output per session | Medium |
+| Exam prep / lecture backlog | Student Revision | Predictable recall loop without burnout | Medium |
+| Low-energy / restart day | High-Energy Loop | Fast visible wins rebuild confidence quickly | High |
+| Transit / waiting pockets | Commute Micro-Sprints | Designed for interruptions + short windows | Very high |
+| Meeting-heavy calendar | Meeting Buffer Flow | Protects deliverables between calls | High |
+
+## V1 acceptance checklist
+
+A V1-ready use-case-first experience should satisfy all of the following:
+- User can pick an outcome and start a fitting rhythm in **≤2 taps**.
+- Every launch path card explains **who it is for**, not only timer numbers.
+- Planner can model realistic windows from **30 to 360 minutes**.
+- Mobile users can recover momentum from the command bar in one tap.
+- Shared links preserve enough context (`preset`, `minutes`, optional `task`) to resume intent on another device.
+- PWA install path includes practical affordances for both Android (`Install`) and iOS (`Add to Home Screen`).
 
 ## V1 guardrails
 
