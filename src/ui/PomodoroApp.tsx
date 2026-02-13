@@ -71,6 +71,12 @@ const SECTION_NAV_ITEMS = [
 
 type SectionId = (typeof SECTION_NAV_ITEMS)[number]['id'];
 
+type LaunchSourceBadge = {
+  icon: string;
+  label: string;
+  detail: string;
+};
+
 const SECTION_IDS: ReadonlySet<SectionId> = new Set(SECTION_NAV_ITEMS.map((item) => item.id));
 
 const isSectionId = (value: string): value is SectionId => SECTION_IDS.has(value as SectionId);
@@ -126,6 +132,7 @@ export function PomodoroApp() {
   const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
   const [launchPathSortMode, setLaunchPathSortMode] = useState<PresetPlanSortMode>('best-fit');
   const [launchPathAudienceFilter, setLaunchPathAudienceFilter] = useState<LaunchPathAudienceFilter>('all');
+  const [launchSourceBadge, setLaunchSourceBadge] = useState<LaunchSourceBadge | null>(null);
   const hasHydratedQuickStart = useRef(false);
   const hasHydratedPlannerPreferences = useRef(false);
 
@@ -826,14 +833,27 @@ export function PomodoroApp() {
 
     const params = new URLSearchParams(window.location.search);
     const presetId = params.get('preset');
+    const sourceBadge = buildLaunchSourceBadge(params.get('source'));
     const profileEnergy = parseMatchmakerEnergy(params.get('profileEnergy'));
     const profileContext = parseMatchmakerContext(params.get('profileContext'));
     const profileGoal = parseMatchmakerGoal(params.get('profileGoal'));
 
+    if (sourceBadge) {
+      setLaunchSourceBadge(sourceBadge);
+    }
+
     const hasQuickStartPreset = Boolean(presetId);
     const hasProfileSeed = Boolean(profileEnergy && profileContext && profileGoal);
 
-    if (!hasQuickStartPreset && !hasProfileSeed) return;
+    if (!hasQuickStartPreset && !hasProfileSeed) {
+      if (sourceBadge) {
+        setQuickStartLinkStatus({
+          kind: 'success',
+          message: `Launched from ${sourceBadge.label}.`,
+        });
+      }
+      return;
+    }
 
     const planningMinutesParam = Number(params.get('minutes'));
     if (Number.isFinite(planningMinutesParam) && planningMinutesParam >= 60) {
@@ -875,6 +895,7 @@ export function PomodoroApp() {
         if (params.get('minutes')) hydrationNotes.push('planner synced');
         if (seededTask) hydrationNotes.push('task imported');
         if (hasProfileSeed) hydrationNotes.push('matchmaker synced');
+        if (sourceBadge) hydrationNotes.push(`via ${sourceBadge.label}`);
 
         setQuickStartLinkStatus({
           kind: 'success',
@@ -974,6 +995,12 @@ export function PomodoroApp() {
           <span>🎮 Gamified focus loop</span>
           <span>📱 Mobile-ready quick controls</span>
         </div>
+        {launchSourceBadge ? (
+          <p className="launch-source-badge" role="status" aria-live="polite">
+            <strong>{launchSourceBadge.icon} {launchSourceBadge.label}</strong>
+            <span>{launchSourceBadge.detail}</span>
+          </p>
+        ) : null}
         <div className="hero-kpis" aria-label="Proof of momentum">
           <article>
             <strong>{gamification.xp.toLocaleString()}</strong>
@@ -1973,6 +2000,52 @@ function buildMatchmakerProfileUrl(
 
 function consumeQuickStartParamsFromUrl(currentUrl: string): void {
   consumeQuickStartParamsFromUrlFromLib(currentUrl);
+}
+
+function buildLaunchSourceBadge(source: string | null): LaunchSourceBadge | null {
+  if (!source) return null;
+
+  if (source === 'shortcut-deep-work') {
+    return {
+      icon: '🚀',
+      label: 'Deep Work shortcut',
+      detail: 'Jumped in from your home-screen deep work launcher.',
+    };
+  }
+
+  if (source === 'shortcut-rescue') {
+    return {
+      icon: '🚑',
+      label: 'Momentum Rescue shortcut',
+      detail: 'Fast restart path activated from your shortcut.',
+    };
+  }
+
+  if (source === 'shortcut-commute') {
+    return {
+      icon: '🚌',
+      label: 'Commute shortcut',
+      detail: 'Mobile sprint mode launched for short focus windows.',
+    };
+  }
+
+  if (source === 'shortcut-planner') {
+    return {
+      icon: '🗓️',
+      label: 'Planner shortcut',
+      detail: 'Opened straight into planning so you can pick the best rhythm.',
+    };
+  }
+
+  if (source === 'pwa') {
+    return {
+      icon: '📲',
+      label: 'Installed app',
+      detail: 'Running in app mode for faster one-tap focus launches.',
+    };
+  }
+
+  return null;
 }
 
 function parseMatchmakerEnergy(value: string | null): MatchmakerEnergy | null {

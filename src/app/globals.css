@@ -125,6 +125,31 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   background: rgba(15, 15, 22, 0.7);
 }
 
+.launch-source-badge {
+  margin: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  border-radius: 12px;
+  padding: 8px 12px;
+  background: rgba(15, 23, 42, 0.52);
+}
+
+.launch-source-badge strong {
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+  color: #67e8f9;
+}
+
+.launch-source-badge span {
+  font-size: 0.78rem;
+  color: #bfdbfe;
+}
+
 .hero-kpis {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
