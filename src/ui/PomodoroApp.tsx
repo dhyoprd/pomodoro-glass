@@ -52,6 +52,8 @@ type BeforeInstallPromptEvent = Event & {
 
 type LaunchPathAudienceFilter = LaunchPathAudience | 'all';
 
+const LAUNCH_PATH_SORT_MODES: ReadonlyArray<PresetPlanSortMode> = ['best-fit', 'xp-hour', 'fast-finish'];
+
 const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
   id: LaunchPathAudienceFilter;
   label: string;
@@ -845,6 +847,16 @@ export function PomodoroApp() {
           setMatchmaker({ energy, context, goal });
         }
       }
+
+      const storedLaunchPathSortMode = window.localStorage.getItem('loose.launchPathSortMode');
+      if (storedLaunchPathSortMode && LAUNCH_PATH_SORT_MODES.includes(storedLaunchPathSortMode as PresetPlanSortMode)) {
+        setLaunchPathSortMode(storedLaunchPathSortMode as PresetPlanSortMode);
+      }
+
+      const storedLaunchPathAudience = window.localStorage.getItem('loose.launchPathAudience');
+      if (storedLaunchPathAudience && ['all', 'desk', 'mobile', 'reset'].includes(storedLaunchPathAudience)) {
+        setLaunchPathAudienceFilter(storedLaunchPathAudience as LaunchPathAudienceFilter);
+      }
     } catch {
       // Ignore malformed local preferences.
     }
@@ -856,7 +868,9 @@ export function PomodoroApp() {
     window.localStorage.setItem('loose.planningMinutes', String(planningMinutes));
     window.localStorage.setItem('loose.quickStartAutostart', quickStartAutostart ? '1' : '0');
     window.localStorage.setItem('loose.matchmakerProfile', JSON.stringify(matchmaker));
-  }, [matchmaker, planningMinutes, quickStartAutostart]);
+    window.localStorage.setItem('loose.launchPathSortMode', launchPathSortMode);
+    window.localStorage.setItem('loose.launchPathAudience', launchPathAudienceFilter);
+  }, [launchPathAudienceFilter, launchPathSortMode, matchmaker, planningMinutes, quickStartAutostart]);
 
   useEffect(() => {
     if (hasHydratedQuickStart.current || typeof window === 'undefined') return;
