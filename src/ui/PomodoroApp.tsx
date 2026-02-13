@@ -684,6 +684,7 @@ export function PomodoroApp() {
       const quickStartUrl = buildPresetQuickStartUrl(window.location.href, preset.id, {
         planningMinutes,
         task: seededTask,
+        source: 'quickstart-copy',
       });
       await navigator.clipboard.writeText(quickStartUrl);
       setQuickStartLinkStatus({
@@ -710,7 +711,9 @@ export function PomodoroApp() {
     }
 
     try {
-      const profileUrl = buildMatchmakerProfileUrl(window.location.href, matchmaker, planningMinutes);
+      const profileUrl = buildMatchmakerProfileUrl(window.location.href, matchmaker, planningMinutes, {
+        source: 'profile-copy',
+      });
       await navigator.clipboard.writeText(profileUrl);
       setQuickStartLinkStatus({
         kind: 'success',
@@ -764,6 +767,7 @@ export function PomodoroApp() {
     const quickStartUrl = buildPresetQuickStartUrl(window.location.href, preset.id, {
       planningMinutes,
       task: seededTask,
+      source: 'quickstart-share',
     });
 
     await shareLink(
@@ -777,7 +781,9 @@ export function PomodoroApp() {
   const shareMatchmakerProfileLink = async () => {
     if (typeof window === 'undefined') return;
 
-    const profileUrl = buildMatchmakerProfileUrl(window.location.href, matchmaker, planningMinutes);
+    const profileUrl = buildMatchmakerProfileUrl(window.location.href, matchmaker, planningMinutes, {
+      source: 'profile-share',
+    });
 
     await shareLink(
       profileUrl,
@@ -1991,7 +1997,7 @@ export function PomodoroApp() {
 function buildPresetQuickStartUrl(
   currentUrl: string,
   presetId: string,
-  options?: { task?: string; planningMinutes?: number },
+  options?: { task?: string; planningMinutes?: number; source?: string },
 ): string {
   return buildPresetQuickStartUrlFromLib(currentUrl, presetId, options);
 }
@@ -2000,8 +2006,9 @@ function buildMatchmakerProfileUrl(
   currentUrl: string,
   profile: { energy: MatchmakerEnergy; context: MatchmakerContext; goal: MatchmakerGoal },
   planningMinutes: number,
+  options?: { source?: string },
 ): string {
-  return buildMatchmakerProfileUrlFromLib(currentUrl, profile, planningMinutes);
+  return buildMatchmakerProfileUrlFromLib(currentUrl, profile, planningMinutes, options);
 }
 
 function consumeQuickStartParamsFromUrl(currentUrl: string): void {
@@ -2040,6 +2047,22 @@ function buildLaunchSourceBadge(source: string | null): LaunchSourceBadge | null
       icon: '🗓️',
       label: 'Planner shortcut',
       detail: 'Opened straight into planning so you can pick the best rhythm.',
+    };
+  }
+
+  if (source === 'quickstart-copy' || source === 'quickstart-share') {
+    return {
+      icon: '🔗',
+      label: 'Quick-start link',
+      detail: 'Loaded from a shared preset launch link.',
+    };
+  }
+
+  if (source === 'profile-copy' || source === 'profile-share') {
+    return {
+      icon: '🧬',
+      label: 'Matchmaker profile link',
+      detail: 'Loaded from a shared profile recommendation link.',
     };
   }
 

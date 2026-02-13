@@ -11,7 +11,7 @@ const PLANNING_MINUTES_STEP = 15;
 export function buildPresetQuickStartUrl(
   currentUrl: string,
   presetId: string,
-  options?: { task?: string; planningMinutes?: number },
+  options?: { task?: string; planningMinutes?: number; source?: string },
 ): string {
   const url = new URL(currentUrl);
   url.searchParams.set('preset', presetId);
@@ -25,6 +25,10 @@ export function buildPresetQuickStartUrl(
     url.searchParams.set('minutes', String(normalizePlanningMinutes(options.planningMinutes)));
   }
 
+  if (options?.source) {
+    url.searchParams.set('source', options.source);
+  }
+
   return url.toString();
 }
 
@@ -36,12 +40,18 @@ export function buildMatchmakerProfileUrl(
     goal: QuickStartMatchmakerGoal;
   },
   planningMinutes: number,
+  options?: { source?: string },
 ): string {
   const url = new URL(currentUrl);
   url.searchParams.set('profileEnergy', profile.energy);
   url.searchParams.set('profileContext', profile.context);
   url.searchParams.set('profileGoal', profile.goal);
   url.searchParams.set('minutes', String(normalizePlanningMinutes(planningMinutes)));
+
+  if (options?.source) {
+    url.searchParams.set('source', options.source);
+  }
+
   return url.toString();
 }
 
@@ -56,7 +66,8 @@ export function consumeQuickStartParamsFromUrl(currentUrl: string): void {
     url.searchParams.has('minutes') ||
     url.searchParams.has('profileEnergy') ||
     url.searchParams.has('profileContext') ||
-    url.searchParams.has('profileGoal');
+    url.searchParams.has('profileGoal') ||
+    url.searchParams.has('source');
 
   if (!hadQuickStartParams) return;
 
@@ -67,6 +78,7 @@ export function consumeQuickStartParamsFromUrl(currentUrl: string): void {
   url.searchParams.delete('profileEnergy');
   url.searchParams.delete('profileContext');
   url.searchParams.delete('profileGoal');
+  url.searchParams.delete('source');
 
   const nextPath = `${url.pathname}${url.search}${url.hash}`;
   window.history.replaceState(window.history.state, '', nextPath);
