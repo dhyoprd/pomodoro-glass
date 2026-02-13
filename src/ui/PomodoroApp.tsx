@@ -71,10 +71,11 @@ const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
 const PLANNING_MINUTE_PRESETS = [30, 45, 60, 90, 120, 180, 240] as const;
 
 const SECTION_NAV_ITEMS = [
-  { id: 'outcome-blueprints', label: '🧭 Outcome', mobileLabel: 'Wins' },
-  { id: 'session-planner', label: '🗓️ Planner', mobileLabel: 'Plan' },
-  { id: 'focus-timer', label: '⏱️ Timer', mobileLabel: 'Timer' },
-  { id: 'task-capture', label: '✅ Tasks', mobileLabel: 'Tasks' },
+  { id: 'startup-hero', label: 'Overview', mobileLabel: 'Home' },
+  { id: 'launch-paths', label: 'Launch Path', mobileLabel: 'Path' },
+  { id: 'focus-timer', label: 'Timer', mobileLabel: 'Timer' },
+  { id: 'session-planner', label: 'Planner', mobileLabel: 'Plan' },
+  { id: 'task-capture', label: 'Tasks', mobileLabel: 'Tasks' },
 ] as const;
 
 type SectionId = (typeof SECTION_NAV_ITEMS)[number]['id'];
@@ -95,19 +96,19 @@ const MATCHMAKER_PERSONAS: ReadonlyArray<{
 }> = [
   {
     id: 'deep-desk-shipper',
-    label: '💻 Deep Desk Shipper',
+    label: 'Deep Desk Shipper',
     blurb: 'High energy + deep work output at your desk.',
     profile: { energy: 'high', context: 'desk', goal: 'depth' },
   },
   {
     id: 'steady-consistency-builder',
-    label: '📈 Steady Consistency Builder',
+    label: 'Steady Consistency Builder',
     blurb: 'Reliable daily progress with balanced energy.',
     profile: { energy: 'steady', context: 'desk', goal: 'consistency' },
   },
   {
     id: 'commute-rescue-runner',
-    label: '🚌 Commute Rescue Runner',
+    label: 'Commute Rescue Runner',
     blurb: 'Low-friction momentum restart while mobile.',
     profile: { energy: 'low', context: 'mobile', goal: 'restart' },
   },
@@ -131,7 +132,7 @@ export function PomodoroApp() {
   const [quickStartLinkStatus, setQuickStartLinkStatus] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
   const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [installContext, setInstallContext] = useState({ isIosSafari: false, isStandalone: false });
-  const [activeSectionId, setActiveSectionId] = useState<SectionId>('focus-timer');
+  const [activeSectionId, setActiveSectionId] = useState<SectionId>('startup-hero');
   const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
   const [launchPathSortMode, setLaunchPathSortMode] = useState<PresetPlanSortMode>('best-fit');
   const [launchPathAudienceFilter, setLaunchPathAudienceFilter] = useState<LaunchPathAudienceFilter>('all');
@@ -1020,7 +1021,7 @@ export function PomodoroApp() {
 
       <aside className="mobile-command-bar" aria-label="Mobile quick actions">
         <button type="button" onClick={() => controller.toggleTimer()}>
-          {state.timer.running ? '⏸ Pause' : '▶️ Start'}
+          {state.timer.running ? 'Pause' : 'Start'}
         </button>
         <button type="button" className="ghost" onClick={() => controller.resetTimer()}>
           ↺ Reset
@@ -1033,7 +1034,7 @@ export function PomodoroApp() {
             scrollToSection('focus-timer');
           }}
         >
-          🚑 Rescue
+Rescue
         </button>
         <button
           type="button"
@@ -1041,7 +1042,7 @@ export function PomodoroApp() {
           onClick={() => nextSectionNavItem && scrollToSection(nextSectionNavItem.id)}
           disabled={!nextSectionNavItem}
         >
-          🧭 {nextSectionNavItem ? `Next: ${nextSectionNavItem.mobileLabel}` : 'Sections'}
+{nextSectionNavItem ? `Next: ${nextSectionNavItem.mobileLabel}` : 'Sections'}
         </button>
         <button
           type="button"
@@ -1049,24 +1050,24 @@ export function PomodoroApp() {
           onClick={() => void installLooseApp()}
           disabled={!canTriggerInstall}
         >
-          📲 {installActionLabel}
+{installActionLabel}
         </button>
       </aside>
 
-      <section className="startup-hero" aria-label="Loose value proposition">
+      <section id="startup-hero" className="startup-hero" aria-label="Loose value proposition">
         <div className="hero-eyebrow">Built for real outcomes, not random timer streaks</div>
         <h2>Turn every study block into measurable momentum.</h2>
         <p>
           Pick a goal, get a battle-tested focus rhythm, and watch your XP, streak, and weekly consistency compound.
         </p>
         <div className="hero-pills">
-          <span>⚡ Use-case-first presets</span>
-          <span>🎮 Gamified focus loop</span>
-          <span>📱 Mobile-ready quick controls</span>
+          <span>Use-case-first presets</span>
+          <span>Structured focus loop</span>
+          <span>Mobile-ready controls</span>
         </div>
         {launchSourceBadge ? (
           <p className="launch-source-badge" role="status" aria-live="polite">
-            <strong>{launchSourceBadge.icon} {launchSourceBadge.label}</strong>
+            <strong>{launchSourceBadge.label}</strong>
             <span>{launchSourceBadge.detail}</span>
           </p>
         ) : null}
@@ -1085,10 +1086,10 @@ export function PomodoroApp() {
           </article>
         </div>
         <div className="hero-actions">
-          <a href="#outcome-blueprints">Start with an outcome</a>
-          <button type="button" className="ghost" onClick={startRecommendedFocusNow}>
-            Run best-fit focus now
+          <button type="button" className="primary-cta" onClick={startRecommendedFocusNow}>
+            Start focus session
           </button>
+          <a href="#launch-paths" className="ghost-link">Review launch paths</a>
           <a href="#session-planner" className="ghost-link">Plan my day</a>
           <button
             type="button"
@@ -1138,6 +1139,9 @@ export function PomodoroApp() {
         </aside>
       </section>
 
+      <details className="secondary-insights">
+        <summary>Additional insights and setup</summary>
+
       <section className="landing-metrics-strip" aria-label="Loose startup proof metrics">
         {LANDING_METRICS.map((metric) => (
           <article key={metric.id}>
@@ -1150,7 +1154,7 @@ export function PomodoroApp() {
         ))}
       </section>
 
-      <section className="launch-paths" aria-label="Quick launch paths">
+      <section id="launch-paths" className="launch-paths" aria-label="Quick launch paths">
         <div className="launch-paths-head">
           <h2>Pick a launch path for today</h2>
           <span>One tap to run a proven rhythm for your available {planningMinutes} minutes.</span>
@@ -1529,6 +1533,8 @@ export function PomodoroApp() {
         </section>
       ) : null}
 
+      </details>
+
       <section id="session-planner" className="session-planner" aria-label="Daily session planner">
         <div className="planner-head">
           <h2>Daily Session Planner</h2>
@@ -1574,10 +1580,7 @@ export function PomodoroApp() {
               <strong>{sessionPlanner.estimatedXp}</strong>
               <span>Projected daily XP</span>
             </article>
-            <article>
-              <strong>{sessionPlanner.estimatedWeeklyXp}</strong>
-              <span>5-day XP runway</span>
-            </article>
+            {/* Additional weekly runway metric is available in forecast below. */}
           </div>
           <article className="planner-forecast" aria-label="Weekly momentum forecast">
             <div className="planner-headline">
@@ -2181,9 +2184,9 @@ function formatSessionDate(isoDate: string): string {
 }
 
 function formatTimelineLabel(kind: 'focus' | 'shortBreak' | 'longBreak'): string {
-  if (kind === 'focus') return '🎯 Focus';
-  if (kind === 'shortBreak') return '☕ Short break';
-  return '🛋️ Long break';
+  if (kind === 'focus') return 'Focus';
+  if (kind === 'shortBreak') return 'Short break';
+  return 'Long break';
 }
 
 
