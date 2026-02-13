@@ -114,6 +114,32 @@ const MATCHMAKER_PERSONAS: ReadonlyArray<{
   },
 ] as const;
 
+const HERO_QUICK_SCENARIOS: ReadonlyArray<{
+  id: string;
+  label: string;
+  description: string;
+  personaId: string;
+}> = [
+  {
+    id: 'hero-scenario-deep-desk',
+    label: 'Deep desk ship',
+    description: 'High-energy desk sprint for shipping output fast.',
+    personaId: 'deep-desk-shipper',
+  },
+  {
+    id: 'hero-scenario-steady-consistency',
+    label: 'Steady consistency',
+    description: 'Balanced daily loop for predictable progress.',
+    personaId: 'steady-consistency-builder',
+  },
+  {
+    id: 'hero-scenario-commute-rescue',
+    label: 'Commute rescue',
+    description: 'Low-friction mobile reset when momentum is slipping.',
+    personaId: 'commute-rescue-runner',
+  },
+] as const;
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -657,6 +683,19 @@ export function PomodoroApp() {
     setMatchmaker(persona.profile);
   };
 
+  const launchHeroScenario = (personaId: string) => {
+    const persona = MATCHMAKER_PERSONAS.find((item) => item.id === personaId);
+    if (!persona) return;
+
+    setMatchmaker(persona.profile);
+
+    const recommendation = recommendPresetByProfile(USE_CASE_PRESETS, persona.profile);
+    const preset = recommendation?.preset ?? recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
+
+    applyPresetAndStart(preset);
+    scrollToSection('focus-timer');
+  };
+
   const startRecommendedFocusNow = () => {
     const preset = recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
     applyPresetAndStart(preset);
@@ -1131,6 +1170,19 @@ Rescue
                 ? 'Install on iPhone'
                 : 'Install unavailable'}
           </button>
+        </div>
+        <div className="hero-scenario-strip" aria-label="One-tap outcome scenarios">
+          {HERO_QUICK_SCENARIOS.map((scenario) => (
+            <button
+              key={scenario.id}
+              type="button"
+              className="hero-scenario-chip"
+              onClick={() => launchHeroScenario(scenario.personaId)}
+            >
+              <strong>{scenario.label}</strong>
+              <span>{scenario.description}</span>
+            </button>
+          ))}
         </div>
         {installContext.isIosSafari && !installContext.isStandalone ? (
           <p className="install-hint" role="status">iOS install: Share → Add to Home Screen.</p>

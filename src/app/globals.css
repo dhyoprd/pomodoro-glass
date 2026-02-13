@@ -218,6 +218,39 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   filter: none;
 }
 
+.hero-scenario-strip {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.hero-scenario-chip {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(30, 41, 59, 0.35);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.hero-scenario-chip strong {
+  font-size: 0.82rem;
+}
+
+.hero-scenario-chip span {
+  font-size: 0.75rem;
+  color: #c4b5fd;
+  line-height: 1.35;
+}
+
+.hero-scenario-chip:hover {
+  border-color: rgba(129, 140, 248, 0.75);
+  background: rgba(49, 46, 129, 0.35);
+}
+
 .install-hint {
   margin: 0;
   font-size: 0.8rem;
