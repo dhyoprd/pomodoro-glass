@@ -42,6 +42,7 @@ export function PomodoroApp() {
     goal: 'consistency',
   });
   const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '', longBreakInterval: '' });
+  const [quickStartLinkStatus, setQuickStartLinkStatus] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
   const hasHydratedQuickStart = useRef(false);
 
   useEffect(() => {
@@ -220,13 +221,28 @@ export function PomodoroApp() {
   };
 
   const copyPresetQuickStartLink = async (preset: UseCasePreset) => {
-    if (typeof window === 'undefined' || !navigator.clipboard) return;
+    if (typeof window === 'undefined') return;
+
+    if (!navigator.clipboard) {
+      setQuickStartLinkStatus({
+        kind: 'error',
+        message: 'Clipboard unavailable in this browser context.',
+      });
+      return;
+    }
 
     try {
       const quickStartUrl = buildPresetQuickStartUrl(window.location.href, preset.id);
       await navigator.clipboard.writeText(quickStartUrl);
+      setQuickStartLinkStatus({
+        kind: 'success',
+        message: `Copied ${preset.name} quick-start link.`,
+      });
     } catch {
-      // no-op: clipboard access can fail in restricted contexts
+      setQuickStartLinkStatus({
+        kind: 'error',
+        message: 'Could not copy quick-start link. Try again.',
+      });
     }
   };
 
@@ -255,6 +271,16 @@ export function PomodoroApp() {
       controller.beginFocusSession();
     }
   }, [controller]);
+
+  useEffect(() => {
+    if (!quickStartLinkStatus) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setQuickStartLinkStatus(null);
+    }, 2400);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [quickStartLinkStatus]);
 
   return (
     <main className="app">
@@ -659,6 +685,11 @@ export function PomodoroApp() {
             <h2>Plan by Outcome</h2>
             <span>Pick the result you want. Loose maps it to a timer rhythm.</span>
           </div>
+          {quickStartLinkStatus ? (
+            <p className={`quick-start-link-status ${quickStartLinkStatus.kind}`} aria-live="polite">
+              {quickStartLinkStatus.message}
+            </p>
+          ) : null}
           <div className="blueprint-grid">
             {OUTCOME_BLUEPRINTS.map((blueprint) => {
               const preset = USE_CASE_PRESETS.find((item) => item.id === blueprint.presetId);

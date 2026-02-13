@@ -1082,6 +1082,14 @@ input:focus { border-color: #71717a; }
 .settings-status.error { color: var(--err); }
 .settings-status.success { color: var(--ok); }
 
+.quick-start-link-status {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.quick-start-link-status.success { color: var(--ok); }
+.quick-start-link-status.error { color: var(--err); }
+
 #taskForm { display: flex; gap: 8px; }
 #taskInput { min-width: 240px; }
 #taskInput::placeholder { color: #71717a; }
