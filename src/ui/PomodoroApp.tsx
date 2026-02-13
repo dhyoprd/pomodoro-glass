@@ -7,6 +7,7 @@ import {
   MODES,
   OUTCOME_BLUEPRINTS,
   USE_CASE_PRESETS,
+  type LaunchPathAudience,
   type UseCasePreset,
 } from '@/constants/useCases';
 import { LANDING_SOCIAL_PROOF } from '@/constants/landingProof';
@@ -49,6 +50,18 @@ type BeforeInstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 };
 
+type LaunchPathAudienceFilter = LaunchPathAudience | 'all';
+
+const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
+  id: LaunchPathAudienceFilter;
+  label: string;
+}> = [
+  { id: 'all', label: 'All paths' },
+  { id: 'desk', label: 'Desk setup' },
+  { id: 'mobile', label: 'Mobile / commute' },
+  { id: 'reset', label: 'Momentum reset' },
+] as const;
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -68,6 +81,7 @@ export function PomodoroApp() {
   const [activeSectionId, setActiveSectionId] = useState('focus-timer');
   const [openFaqId, setOpenFaqId] = useState<string | null>(LANDING_FAQ[0]?.id ?? null);
   const [launchPathSortMode, setLaunchPathSortMode] = useState<PresetPlanSortMode>('best-fit');
+  const [launchPathAudienceFilter, setLaunchPathAudienceFilter] = useState<LaunchPathAudienceFilter>('all');
   const hasHydratedQuickStart = useRef(false);
   const hasHydratedPlannerPreferences = useRef(false);
 
@@ -285,9 +299,16 @@ export function PomodoroApp() {
     [planningMinutes],
   );
 
+  const filteredLaunchPathPlans = useMemo(
+    () => (launchPathAudienceFilter === 'all'
+      ? rankedPresetPlans
+      : rankedPresetPlans.filter((plan) => plan.preset.audience.includes(launchPathAudienceFilter))),
+    [launchPathAudienceFilter, rankedPresetPlans],
+  );
+
   const sortedLaunchPathPlans = useMemo(
-    () => sortPresetPlans(rankedPresetPlans, launchPathSortMode),
-    [launchPathSortMode, rankedPresetPlans],
+    () => sortPresetPlans(filteredLaunchPathPlans, launchPathSortMode),
+    [filteredLaunchPathPlans, launchPathSortMode],
   );
 
   const topPresetScoreboard = sortedLaunchPathPlans.slice(0, 3);
@@ -797,6 +818,22 @@ export function PomodoroApp() {
         <div className="launch-paths-head">
           <h2>Pick a launch path for today</h2>
           <span>One tap to run a proven rhythm for your available {planningMinutes} minutes.</span>
+          <div className="launch-path-audience" role="group" aria-label="Launch path audience filter">
+            {LAUNCH_PATH_AUDIENCE_OPTIONS.map((option) => {
+              const isActive = launchPathAudienceFilter === option.id;
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  className={isActive ? 'active' : ''}
+                  aria-pressed={isActive}
+                  onClick={() => setLaunchPathAudienceFilter(option.id)}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
           <label className="launch-path-sort" htmlFor="launch-path-sort-mode">
             Sort by
             <select
@@ -810,35 +847,39 @@ export function PomodoroApp() {
             </select>
           </label>
         </div>
-        <div className="launch-paths-grid">
-          {topPresetScoreboard.map((plan) => (
-            <article key={`launch-${plan.preset.id}`} className="launch-path-card">
-              <div className="launch-path-card-head">
-                <strong>{plan.preset.icon} {plan.preset.name}</strong>
-                <span>{Math.round(plan.focusRatio * 100)}% focus density</span>
-              </div>
-              <p>{plan.preset.outcome}</p>
-              <div className="preset-tags" aria-label={`${plan.preset.name} ideal for`}>
-                {plan.preset.idealFor.map((item) => (
-                  <span key={`${plan.preset.id}-${item}`}>{item}</span>
-                ))}
-              </div>
-              <ul>
-                <li><span>Rhythm</span><strong>{plan.preset.settings.focus}/{plan.preset.settings.shortBreak}/{plan.preset.settings.longBreak}</strong></li>
-                <li><span>Sessions/day</span><strong>{plan.sessions}</strong></li>
-                <li><span>Projected XP/hour</span><strong>{plan.xpPerHour}</strong></li>
-                <li>
-                  <span>Finish by (if started now)</span>
-                  <strong>{launchPathTimings.get(plan.preset.id)?.finishByLabel ?? formatFinishBy(plan.preset.settings.focus)}</strong>
-                </li>
-              </ul>
-              <div className="preset-actions">
-                <button type="button" onClick={() => applyPreset(plan.preset)}>Apply path</button>
-                <button type="button" className="ghost" onClick={() => applyPresetAndStart(plan.preset)}>Run now</button>
-              </div>
-            </article>
-          ))}
-        </div>
+        {topPresetScoreboard.length ? (
+          <div className="launch-paths-grid">
+            {topPresetScoreboard.map((plan) => (
+              <article key={`launch-${plan.preset.id}`} className="launch-path-card">
+                <div className="launch-path-card-head">
+                  <strong>{plan.preset.icon} {plan.preset.name}</strong>
+                  <span>{Math.round(plan.focusRatio * 100)}% focus density</span>
+                </div>
+                <p>{plan.preset.outcome}</p>
+                <div className="preset-tags" aria-label={`${plan.preset.name} ideal for`}>
+                  {plan.preset.idealFor.map((item) => (
+                    <span key={`${plan.preset.id}-${item}`}>{item}</span>
+                  ))}
+                </div>
+                <ul>
+                  <li><span>Rhythm</span><strong>{plan.preset.settings.focus}/{plan.preset.settings.shortBreak}/{plan.preset.settings.longBreak}</strong></li>
+                  <li><span>Sessions/day</span><strong>{plan.sessions}</strong></li>
+                  <li><span>Projected XP/hour</span><strong>{plan.xpPerHour}</strong></li>
+                  <li>
+                    <span>Finish by (if started now)</span>
+                    <strong>{launchPathTimings.get(plan.preset.id)?.finishByLabel ?? formatFinishBy(plan.preset.settings.focus)}</strong>
+                  </li>
+                </ul>
+                <div className="preset-actions">
+                  <button type="button" onClick={() => applyPreset(plan.preset)}>Apply path</button>
+                  <button type="button" className="ghost" onClick={() => applyPresetAndStart(plan.preset)}>Run now</button>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="launch-path-empty">No paths match this audience yet. Try “All paths”.</p>
+        )}
       </section>
 
       <section className="landing-social-proof" aria-label="Real use-case momentum wins">

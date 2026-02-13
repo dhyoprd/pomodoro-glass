@@ -6,6 +6,8 @@ export const MODES: ReadonlyArray<{ key: Mode; label: string }> = [
   { key: 'longBreak', label: 'Long Break' },
 ] as const;
 
+export type LaunchPathAudience = 'desk' | 'mobile' | 'reset';
+
 export type UseCasePreset = {
   id: string;
   icon: string;
@@ -13,6 +15,7 @@ export type UseCasePreset = {
   description: string;
   outcome: string;
   idealFor: ReadonlyArray<string>;
+  audience: ReadonlyArray<LaunchPathAudience>;
   momentumTip: string;
   taskTemplates: ReadonlyArray<{ icon: string; text: string }>;
   playbook: {
@@ -32,6 +35,7 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     description: 'Steady pace for lectures, homework, and exam prep.',
     outcome: 'Best for consistency over long study days.',
     idealFor: ['Exam prep', 'Lecture backlog', 'Balanced energy'],
+    audience: ['desk'],
     momentumTip: 'Batch 2-3 related chapters per cycle to avoid context switching.',
     taskTemplates: [
       { icon: '🧠', text: 'Summarize one chapter into 10 active-recall prompts' },
@@ -53,6 +57,7 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     description: 'Longer focus windows for coding or writing sessions.',
     outcome: 'Fewer switches, more deep concentration.',
     idealFor: ['Feature shipping', 'Writing drafts', 'High clarity windows'],
+    audience: ['desk'],
     momentumTip: 'Define one hard outcome before pressing start to protect the block.',
     taskTemplates: [
       { icon: '🛠️', text: 'Ship one feature slice end-to-end (build + test + commit)' },
@@ -74,6 +79,7 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     description: 'Short cycles for quick wins when motivation is low.',
     outcome: 'Fast momentum when energy is scattered.',
     idealFor: ['Low motivation', 'Task anxiety', 'Quick restart days'],
+    audience: ['desk', 'reset'],
     momentumTip: 'Aim for 3 fast wins first; confidence usually rebounds by session 2.',
     taskTemplates: [
       { icon: '✅', text: 'Finish one avoided 15-minute starter task' },
@@ -95,6 +101,7 @@ export const USE_CASE_PRESETS: ReadonlyArray<UseCasePreset> = [
     description: 'Phone-friendly loops for trains, buses, and waiting windows.',
     outcome: 'Turn fragmented travel time into measurable progress.',
     idealFor: ['Transit sessions', 'Errand gaps', 'On-the-go planning'],
+    audience: ['mobile', 'reset'],
     momentumTip: 'Queue bite-sized tasks before leaving home so you can start instantly.',
     taskTemplates: [
       { icon: '📱', text: 'Process and archive one quick message triage batch' },
