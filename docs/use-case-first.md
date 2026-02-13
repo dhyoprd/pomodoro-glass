@@ -29,6 +29,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Startup-proof metrics strip communicates activation speed, weekly focus return, gamification loop, and mobile rescue readiness in one glance.
 - Launch-path and planner recommendation cards now expose each preset’s "ideal for" chips so users pick by scenario (exam prep, writing drafts, transit, etc.) instead of only timer numbers.
 - Launch-path cards now show XP/hour and focus-density deltas against the user’s current rhythm so switching presets is a measurable decision, not guesswork.
+- Launch-path filters and cards now surface audience icon chips (desk, mobile/commute, momentum reset) to make the right path obvious on small screens before users inspect timer numbers.
 - Every preset now declares a best-fit time budget window (for example `30-75 min commute pockets`), and that budget is surfaced in hero briefings, launch cards, and outcome blueprint cards so users choose by available time before touching timer settings.
 - Weekly momentum forecast translates a single daily plan into 5-day outcomes (focus hours, sessions, XP, level ETA) so users can choose rhythms by expected result.
 - Blueprint quick-start links now carry context (`preset`, `minutes`, optional `task`) so users can share a ready-to-run focus setup that opens preconfigured on any device.

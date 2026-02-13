@@ -8,6 +8,28 @@ export const MODES: ReadonlyArray<{ key: Mode; label: string }> = [
 
 export type LaunchPathAudience = 'desk' | 'mobile' | 'reset';
 
+export const LAUNCH_PATH_AUDIENCE_META: Readonly<Record<LaunchPathAudience, {
+  icon: string;
+  label: string;
+  detail: string;
+}>> = {
+  desk: {
+    icon: '🖥️',
+    label: 'Desk setup',
+    detail: 'Best for focused blocks at your desk.',
+  },
+  mobile: {
+    icon: '📱',
+    label: 'Mobile / commute',
+    detail: 'Optimized for transit and on-the-go sessions.',
+  },
+  reset: {
+    icon: '🔁',
+    label: 'Momentum reset',
+    detail: 'Designed to rebuild traction fast.',
+  },
+} as const;
+
 export type UseCasePreset = {
   id: string;
   icon: string;

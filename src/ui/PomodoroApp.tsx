@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePomodoroController } from '@/hooks/usePomodoroController';
 import { clamp, formatTime } from '@/lib/utils';
 import {
+  LAUNCH_PATH_AUDIENCE_META,
   MODES,
   OUTCOME_BLUEPRINTS,
   USE_CASE_PRESETS,
@@ -60,12 +61,13 @@ const LAUNCH_PATH_SORT_MODES: ReadonlyArray<PresetPlanSortMode> = ['best-fit', '
 
 const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
   id: LaunchPathAudienceFilter;
+  icon: string;
   label: string;
 }> = [
-  { id: 'all', label: 'All paths' },
-  { id: 'desk', label: 'Desk setup' },
-  { id: 'mobile', label: 'Mobile / commute' },
-  { id: 'reset', label: 'Momentum reset' },
+  { id: 'all', icon: '🧭', label: 'All paths' },
+  { id: 'desk', icon: LAUNCH_PATH_AUDIENCE_META.desk.icon, label: LAUNCH_PATH_AUDIENCE_META.desk.label },
+  { id: 'mobile', icon: LAUNCH_PATH_AUDIENCE_META.mobile.icon, label: LAUNCH_PATH_AUDIENCE_META.mobile.label },
+  { id: 'reset', icon: LAUNCH_PATH_AUDIENCE_META.reset.icon, label: LAUNCH_PATH_AUDIENCE_META.reset.label },
 ] as const;
 
 const PLANNING_MINUTE_PRESETS = [30, 45, 60, 90, 120, 180, 240] as const;
@@ -485,7 +487,8 @@ export function PomodoroApp() {
   const launchPathAudienceOptions = useMemo(
     () => LAUNCH_PATH_AUDIENCE_OPTIONS.map((option) => ({
       ...option,
-      label: `${option.label} (${launchPathAudienceCounts[option.id]})`,
+      count: launchPathAudienceCounts[option.id],
+      labelWithCount: `${option.label} (${launchPathAudienceCounts[option.id]})`,
     })),
     [launchPathAudienceCounts],
   );
@@ -1263,7 +1266,8 @@ export function PomodoroApp() {
                   aria-pressed={isActive}
                   onClick={() => setLaunchPathAudienceFilter(option.id)}
                 >
-                  {option.label}
+                  <span aria-hidden="true">{option.icon}</span>
+                  <span>{option.labelWithCount}</span>
                 </button>
               );
             })}
@@ -1316,6 +1320,16 @@ export function PomodoroApp() {
                   {plan.preset.idealFor.map((item) => (
                     <span key={`${plan.preset.id}-${item}`}>{item}</span>
                   ))}
+                </div>
+                <div className="preset-audience-tags" aria-label={`${plan.preset.name} audience`}>
+                  {plan.preset.audience.map((audience) => {
+                    const audienceMeta = LAUNCH_PATH_AUDIENCE_META[audience];
+                    return (
+                      <span key={`${plan.preset.id}-${audience}`} title={audienceMeta.detail}>
+                        {audienceMeta.icon} {audienceMeta.label}
+                      </span>
+                    );
+                  })}
                 </div>
                 <ul>
                   <li><span>Rhythm</span><strong>{plan.preset.settings.focus}/{plan.preset.settings.shortBreak}/{plan.preset.settings.longBreak}</strong></li>
