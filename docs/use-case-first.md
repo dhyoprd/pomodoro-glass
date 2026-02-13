@@ -37,6 +37,7 @@ So V1 prioritizes **Outcome → Rhythm → Execution**.
 - Mobile quick bar includes a one-tap **Rescue** action that auto-runs the best momentum-recovery preset when the user needs to restart fast.
 - Mobile install CTA now gracefully handles iOS Safari (`Add to Home`) instead of disabling install in browsers without `beforeinstallprompt`.
 - PWA shortcuts now include a dedicated **Momentum Rescue** entry (high-energy autostart) plus source-tagged deep-work/commute/planner launches for cleaner attribution and faster one-tap re-entry.
+- Hero proof KPIs now include a **Today plan progress** tile (`% complete` or `minutes remaining`) tied to planner-estimated focus minutes, so users see if they are on track before starting the next block.
 
 ## V1 guardrails
 

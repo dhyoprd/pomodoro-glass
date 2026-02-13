@@ -521,6 +521,21 @@ export function PomodoroApp() {
     };
   }, [sessionPlanner.estimatedFocusMinutes, sessionPlanner.estimatedSessions, sessionPlanner.estimatedXp]);
 
+  const todayPlanProgress = useMemo(() => {
+    const targetMinutes = Math.max(sessionPlanner.estimatedFocusMinutes, 1);
+    const completedMinutes = state.analytics.today.focusMinutes;
+    const remainingMinutes = Math.max(targetMinutes - completedMinutes, 0);
+    const progressPercent = clamp(Math.round((completedMinutes / targetMinutes) * 100), 0, 999);
+
+    return {
+      completedMinutes,
+      targetMinutes,
+      remainingMinutes,
+      progressPercent,
+      isAhead: completedMinutes >= targetMinutes,
+    };
+  }, [sessionPlanner.estimatedFocusMinutes, state.analytics.today.focusMinutes]);
+
   const activePlaybookPreset = activePreset ?? recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
 
   const taskTemplates = useMemo(
@@ -1088,6 +1103,14 @@ Rescue
           <article>
             <strong>{state.analytics.streak.best}d</strong>
             <span>Best streak</span>
+          </article>
+          <article>
+            <strong>{todayPlanProgress.progressPercent}%</strong>
+            <span>
+              {todayPlanProgress.isAhead
+                ? 'Today plan done'
+                : `${todayPlanProgress.remainingMinutes}m to plan target`}
+            </span>
           </article>
         </div>
         <div className="hero-actions">
