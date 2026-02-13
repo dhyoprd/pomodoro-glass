@@ -251,6 +251,11 @@ export function PomodoroApp() {
     [plannerSettings, planningMinutes],
   );
 
+  const plannerRunMinutes = useMemo(
+    () => sessionTimeline[sessionTimeline.length - 1]?.endsAtMinute ?? plannerSettings.focus,
+    [plannerSettings.focus, sessionTimeline],
+  );
+
   const weeklyMomentumForecast = useMemo(
     () => buildWeeklyMomentumForecast(plannerSettings, planningMinutes, gamification.xpToNextLevel),
     [plannerSettings, planningMinutes, gamification.xpToNextLevel],
@@ -262,6 +267,23 @@ export function PomodoroApp() {
   );
 
   const topPresetScoreboard = rankedPresetPlans.slice(0, 3);
+
+  const launchPathTimings = useMemo(() => {
+    const entries = topPresetScoreboard.map((plan) => {
+      const timeline = buildSessionTimeline(plan.preset.settings, planningMinutes);
+      const totalMinutes = timeline[timeline.length - 1]?.endsAtMinute ?? plan.preset.settings.focus;
+
+      return [
+        plan.preset.id,
+        {
+          totalMinutes,
+          finishByLabel: formatFinishBy(totalMinutes),
+        },
+      ] as const;
+    });
+
+    return new Map(entries);
+  }, [planningMinutes, topPresetScoreboard]);
 
   const recommendedPreset = rankedPresetPlans[0];
 
@@ -678,6 +700,10 @@ export function PomodoroApp() {
                 <li><span>Rhythm</span><strong>{plan.preset.settings.focus}/{plan.preset.settings.shortBreak}/{plan.preset.settings.longBreak}</strong></li>
                 <li><span>Sessions/day</span><strong>{plan.sessions}</strong></li>
                 <li><span>Projected XP/hour</span><strong>{plan.xpPerHour}</strong></li>
+                <li>
+                  <span>Finish by (if started now)</span>
+                  <strong>{launchPathTimings.get(plan.preset.id)?.finishByLabel ?? formatFinishBy(plan.preset.settings.focus)}</strong>
+                </li>
               </ul>
               <div className="preset-actions">
                 <button type="button" onClick={() => applyPreset(plan.preset)}>Apply path</button>
@@ -1044,6 +1070,7 @@ export function PomodoroApp() {
                 <small>
                   {recommendedPreset.sessions} sessions · {recommendedPreset.focusMinutes} focus min · {recommendedPreset.remainder} min buffer
                 </small>
+                <small>Start now → wraps around {formatFinishBy(plannerRunMinutes)}</small>
                 <small>{recommendedPreset.preset.momentumTip}</small>
               </div>
               <div className="preset-actions">
@@ -1542,6 +1569,16 @@ function parseMatchmakerGoal(value: string | null): MatchmakerGoal | null {
 
 function normalizePlanningMinutes(value: number): number {
   return normalizePlanningMinutesFromLib(value);
+}
+
+function formatFinishBy(minutesFromNow: number): string {
+  const safeMinutes = Math.max(0, Math.round(minutesFromNow));
+  const target = new Date(Date.now() + safeMinutes * 60 * 1000);
+
+  return new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(target);
 }
 
 function formatAverageMinutes(value: number): string {
