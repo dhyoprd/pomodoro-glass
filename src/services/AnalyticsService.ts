@@ -50,11 +50,13 @@ export class AnalyticsService {
   }
 
   private getRecentDayKeys(now: Date, count: number) {
+    const startOfToday = new Date(now);
+    startOfToday.setHours(0, 0, 0, 0);
+
     return Array.from({ length: count }, (_, index) => {
-      const date = new Date(now);
-      date.setHours(0, 0, 0, 0);
-      date.setTime(date.getTime() - (count - 1 - index) * DAY_MS);
-      return date.toISOString().slice(0, 10);
+      const date = new Date(startOfToday);
+      date.setDate(startOfToday.getDate() - (count - 1 - index));
+      return this.toLocalDayKey(date);
     });
   }
 
