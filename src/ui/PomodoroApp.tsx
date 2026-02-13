@@ -641,6 +641,41 @@ export function PomodoroApp() {
         <p>Your productivity OS for study and work.</p>
       </header>
 
+      <nav className="section-dock" aria-label="Page sections">
+        <button
+          type="button"
+          className={activeSectionId === 'outcome-blueprints' ? 'active' : ''}
+          aria-current={activeSectionId === 'outcome-blueprints' ? 'true' : undefined}
+          onClick={() => scrollToSection('outcome-blueprints')}
+        >
+          🧭 Outcome
+        </button>
+        <button
+          type="button"
+          className={activeSectionId === 'session-planner' ? 'active' : ''}
+          aria-current={activeSectionId === 'session-planner' ? 'true' : undefined}
+          onClick={() => scrollToSection('session-planner')}
+        >
+          🗓️ Planner
+        </button>
+        <button
+          type="button"
+          className={activeSectionId === 'focus-timer' ? 'active' : ''}
+          aria-current={activeSectionId === 'focus-timer' ? 'true' : undefined}
+          onClick={() => scrollToSection('focus-timer')}
+        >
+          ⏱️ Timer
+        </button>
+        <button
+          type="button"
+          className={activeSectionId === 'task-capture' ? 'active' : ''}
+          aria-current={activeSectionId === 'task-capture' ? 'true' : undefined}
+          onClick={() => scrollToSection('task-capture')}
+        >
+          ✅ Tasks
+        </button>
+      </nav>
+
       <section className="startup-hero" aria-label="Loose value proposition">
         <div className="hero-eyebrow">Built for real outcomes, not random timer streaks</div>
         <h2>Turn every study block into measurable momentum.</h2>
