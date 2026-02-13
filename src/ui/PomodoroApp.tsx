@@ -187,6 +187,11 @@ export function PomodoroApp() {
     [state.settings],
   );
 
+  const activeModeLabel = useMemo(
+    () => MODES.find((mode) => mode.key === state.mode)?.label ?? 'Focus',
+    [state.mode],
+  );
+
   const applyPreset = (preset: (typeof USE_CASE_PRESETS)[number]) => {
     controller.updateSettings(preset.settings);
     setSettingsForm({
@@ -458,6 +463,16 @@ export function PomodoroApp() {
             )}
           </ul>
       </section>
+
+      <aside className="mobile-quick-start" aria-label="Mobile quick start">
+        <div>
+          <strong>{activePreset?.name ?? `${activeModeLabel} Session`}</strong>
+          <span>{formatTime(state.timer.remaining)} left</span>
+        </div>
+        <button className="primary" type="button" onClick={() => controller.toggleTimer()}>
+          {state.timer.running ? 'Pause' : 'Start Focus'}
+        </button>
+      </aside>
     </main>
   );
 }
