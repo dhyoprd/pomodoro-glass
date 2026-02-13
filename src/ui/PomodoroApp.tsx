@@ -20,6 +20,7 @@ import {
 } from '@/application/GamificationEngine';
 import {
   buildSessionPlannerSummary,
+  buildSessionTimeline,
   rankPresetPlans,
 } from '@/application/SessionPlannerEngine';
 
@@ -130,10 +131,17 @@ export function PomodoroApp() {
     [state.mode],
   );
 
-  const sessionPlanner = useMemo(() => {
-    const settings = activePreset?.settings ?? state.settings;
-    return buildSessionPlannerSummary(settings, planningMinutes);
-  }, [activePreset?.settings, planningMinutes, state.settings]);
+  const plannerSettings = activePreset?.settings ?? state.settings;
+
+  const sessionPlanner = useMemo(
+    () => buildSessionPlannerSummary(plannerSettings, planningMinutes),
+    [plannerSettings, planningMinutes],
+  );
+
+  const sessionTimeline = useMemo(
+    () => buildSessionTimeline(plannerSettings, planningMinutes),
+    [plannerSettings, planningMinutes],
+  );
 
   const rankedPresetPlans = useMemo(
     () => rankPresetPlans(USE_CASE_PRESETS, planningMinutes),
@@ -324,6 +332,17 @@ export function PomodoroApp() {
               <span>5-day XP runway</span>
             </article>
           </div>
+          {sessionTimeline.length ? (
+            <div className="timeline-strip" aria-label="Session timeline preview">
+              {sessionTimeline.slice(0, 8).map((block) => (
+                <article className={`timeline-block ${block.kind}`} key={block.id}>
+                  <strong>{formatTimelineLabel(block.kind)}</strong>
+                  <span>{block.minutes}m</span>
+                </article>
+              ))}
+              {sessionTimeline.length > 8 ? <small>+{sessionTimeline.length - 8} more blocks in this plan</small> : null}
+            </div>
+          ) : null}
           {recommendedPreset ? (
             <article className="planner-recommendation" aria-live="polite">
               <div>
@@ -688,6 +707,12 @@ function formatSessionDate(isoDate: string): string {
     hour: 'numeric',
     minute: '2-digit',
   }).format(date);
+}
+
+function formatTimelineLabel(kind: 'focus' | 'shortBreak' | 'longBreak'): string {
+  if (kind === 'focus') return '🎯 Focus';
+  if (kind === 'shortBreak') return '☕ Short break';
+  return '🛋️ Long break';
 }
 
 

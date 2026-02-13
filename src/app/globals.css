@@ -368,6 +368,48 @@ section {
   font-size: 0.82rem;
 }
 
+.timeline-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.timeline-block {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0f0f12;
+  padding: 9px;
+  display: grid;
+  gap: 3px;
+}
+
+.timeline-block strong {
+  font-size: 0.78rem;
+}
+
+.timeline-block span {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.timeline-block.focus {
+  border-color: #6366f1;
+}
+
+.timeline-block.shortBreak {
+  border-color: #22d3ee;
+}
+
+.timeline-block.longBreak {
+  border-color: #c4b5fd;
+}
+
+.timeline-strip small {
+  align-self: center;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
 .planner-recommendation {
   background: linear-gradient(145deg, #171724, #101017);
   border: 1px solid #3f3f46;
