@@ -388,6 +388,25 @@ section {
 }
 
 .timer-card { display: grid; gap: 14px; }
+
+.session-pulse {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #3f3f46;
+  background: linear-gradient(145deg, #141420 0%, #0f1119 100%);
+}
+
+.session-pulse strong {
+  font-size: 0.85rem;
+  color: #ddd6fe;
+}
+
+.session-pulse span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
 .mode-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .mode {
   border: 1px solid var(--line-strong);

@@ -63,6 +63,31 @@ export function PomodoroApp() {
 
   const gamification = useMemo(() => buildGamificationProgress(state), [state]);
 
+  const sessionPulse = useMemo(() => {
+    const completedInCycle = state.stats.completed % state.settings.longBreakInterval;
+    const sessionsUntilLongBreak = state.settings.longBreakInterval - completedInCycle;
+
+    if (state.mode === 'focus') {
+      const nextBreak = sessionsUntilLongBreak <= 1 ? 'Long break unlocked next.' : 'Short break next.';
+      return {
+        title: `+${state.settings.focus * XP_PER_FOCUS_MINUTE + XP_PER_SESSION} XP if you finish this block`,
+        detail: `${nextBreak} ${sessionsUntilLongBreak <= 1 ? '' : `${sessionsUntilLongBreak - 1} more focus win${sessionsUntilLongBreak - 1 === 1 ? '' : 's'} until long break.`}`.trim(),
+      };
+    }
+
+    if (state.mode === 'shortBreak') {
+      return {
+        title: 'Recovery run active',
+        detail: 'Finishing this short break resets your focus engine for the next XP block.',
+      };
+    }
+
+    return {
+      title: 'Deep recovery active',
+      detail: 'Long break complete → fresh cycle starts with maximum focus quality.',
+    };
+  }, [state.mode, state.settings.focus, state.settings.longBreakInterval, state.stats.completed]);
+
   const achievementProgress = useMemo(() => buildAchievementProgress(state), [state]);
 
   const questProgress = useMemo(() => buildDailyQuestProgress(state), [state]);
@@ -346,6 +371,10 @@ export function PomodoroApp() {
 
           <div className="progress-wrap">
             <div className="progress-bar" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="session-pulse" aria-live="polite">
+            <strong>{sessionPulse.title}</strong>
+            <span>{sessionPulse.detail}</span>
           </div>
         </section>
 
