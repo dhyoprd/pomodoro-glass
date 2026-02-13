@@ -45,6 +45,13 @@ export function PomodoroApp() {
   const [quickStartLinkStatus, setQuickStartLinkStatus] = useState<{ kind: 'success' | 'error'; message: string } | null>(null);
   const hasHydratedQuickStart = useRef(false);
 
+  const scrollToSection = (sectionId: string) => {
+    if (typeof document === 'undefined') return;
+
+    const section = document.getElementById(sectionId);
+    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   useEffect(() => {
     setSettingsForm({
       focus: String(state.settings.focus),
@@ -547,7 +554,7 @@ export function PomodoroApp() {
         </div>
       </section>
 
-      <section className="timer-card">
+      <section id="focus-timer" className="timer-card">
           <div className="mode-row">
             {MODES.map((mode) => (
               <button
@@ -814,7 +821,7 @@ export function PomodoroApp() {
           <p className={`settings-status ${state.settingsStatus?.kind ?? ''}`} aria-live="polite">{state.settingsStatus?.message ?? ''}</p>
         </section>
 
-      <section className="tasks">
+      <section id="task-capture" className="tasks">
           <div className="tasks-head">
             <h2>Tasks</h2>
             <form
@@ -860,6 +867,17 @@ export function PomodoroApp() {
           <button className="primary" type="button" onClick={() => controller.toggleTimer()}>
             {state.timer.running ? 'Pause' : 'Start Focus'}
           </button>
+          <div className="mobile-shortcuts" role="group" aria-label="Quick section shortcuts">
+            <button type="button" className="ghost" onClick={() => scrollToSection('session-planner')}>
+              Plan
+            </button>
+            <button type="button" className="ghost" onClick={() => scrollToSection('task-capture')}>
+              Tasks
+            </button>
+            <button type="button" className="ghost" onClick={() => scrollToSection('focus-timer')}>
+              Timer
+            </button>
+          </div>
           <div className="mobile-mode-actions" role="group" aria-label="Quick mode actions">
             <button type="button" className="ghost" onClick={() => controller.setMode('focus')}>
               Focus

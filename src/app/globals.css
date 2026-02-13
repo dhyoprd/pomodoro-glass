@@ -1200,14 +1200,21 @@ input:focus { border-color: #71717a; }
     min-height: 36px;
   }
 
+  .mobile-shortcuts,
   .mobile-mode-actions {
     display: flex;
     gap: 6px;
   }
 
+  .mobile-shortcuts button,
   .mobile-mode-actions button {
     padding: 5px 10px;
     border-radius: 999px;
     font-size: 0.74rem;
+  }
+
+  .mobile-shortcuts button {
+    border-color: #3f3f46;
+    color: #d4d4d8;
   }
 }
