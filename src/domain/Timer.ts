@@ -5,7 +5,9 @@
   remaining = 0;
   total = 0;
   running = false;
+
   private interval: ReturnType<typeof setInterval> | null = null;
+  private targetEndMs: number | null = null;
 
   constructor({
     onTick,
@@ -21,26 +23,38 @@
   setDuration(seconds: number) {
     this.total = seconds;
     this.remaining = seconds;
+    this.targetEndMs = null;
     this.pause();
   }
 
   start() {
-    if (this.running) return;
+    if (this.running || this.remaining <= 0) return;
+
     this.running = true;
+    this.targetEndMs = Date.now() + this.remaining * 1000;
+
     this.interval = setInterval(() => {
-      this.remaining -= 1;
-      this.onTick(this.remaining, this.total);
+      if (!this.targetEndMs) return;
+
+      const nextRemaining = Math.max(0, Math.ceil((this.targetEndMs - Date.now()) / 1000));
+
+      if (nextRemaining !== this.remaining) {
+        this.remaining = nextRemaining;
+        this.onTick(this.remaining, this.total);
+      }
+
       if (this.remaining <= 0) {
         this.pause();
         this.onComplete();
       }
-    }, 1000);
+    }, 250);
   }
 
   pause() {
     this.running = false;
     if (this.interval) clearInterval(this.interval);
     this.interval = null;
+    this.targetEndMs = null;
   }
 
   reset() {
@@ -53,4 +67,3 @@
     this.pause();
   }
 }
-
