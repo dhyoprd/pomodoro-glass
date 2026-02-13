@@ -125,6 +125,45 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   background: rgba(15, 15, 22, 0.7);
 }
 
+.hero-time-budget {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-time-budget > span {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+}
+
+.hero-time-budget button {
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.38);
+  color: #e2e8f0;
+  padding: 7px 10px;
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  min-width: 96px;
+}
+
+.hero-time-budget button strong {
+  font-size: 0.79rem;
+}
+
+.hero-time-budget button small {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.hero-time-budget button.active {
+  border-color: #22d3ee;
+  background: rgba(34, 211, 238, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.2);
+}
+
 .launch-source-badge {
   margin: 0;
   display: inline-flex;
@@ -2293,6 +2332,10 @@ input:focus { border-color: #71717a; }
   }
   .planner-metrics { grid-template-columns: 1fr; }
   .hero-kpis { grid-template-columns: 1fr; }
+  .hero-time-budget button {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+  }
   .landing-metrics-strip { grid-template-columns: 1fr; }
   .landing-social-proof-pulse { grid-template-columns: 1fr; }
 

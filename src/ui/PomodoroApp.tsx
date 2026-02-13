@@ -142,6 +142,13 @@ const HERO_QUICK_SCENARIOS: ReadonlyArray<{
   },
 ] as const;
 
+const HERO_TIME_BUDGET_PRESETS: ReadonlyArray<{ minutes: number; label: string }> = [
+  { minutes: 45, label: 'Quick sprint' },
+  { minutes: 90, label: 'Standard run' },
+  { minutes: 120, label: 'Deep work' },
+  { minutes: 180, label: 'Long game' },
+] as const;
+
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
@@ -711,6 +718,13 @@ export function PomodoroApp() {
     scrollToSection('focus-timer');
   };
 
+  const applyHeroTimeBudget = (minutes: number) => {
+    setPlanningMinutes(normalizePlanningMinutes(minutes));
+    setLaunchPathSortMode('best-fit');
+    setLaunchPathAudienceFilter('all');
+    scrollToSection('launch-paths');
+  };
+
   const importTaskSeed = useCallback((task: string): 'added' | 'duplicate' | null => {
     const normalizedTask = task.trim().slice(0, 90);
     if (!normalizedTask) return null;
@@ -1136,6 +1150,24 @@ export function PomodoroApp() {
           <span>Use-case-first presets</span>
           <span>Structured focus loop</span>
           <span>Mobile-ready controls</span>
+        </div>
+        <div className="hero-time-budget" role="group" aria-label="Pick today's available time budget">
+          <span>Time budget:</span>
+          {HERO_TIME_BUDGET_PRESETS.map((budget) => {
+            const isActive = planningMinutes === budget.minutes;
+            return (
+              <button
+                key={`hero-time-budget-${budget.minutes}`}
+                type="button"
+                className={isActive ? 'active' : ''}
+                aria-pressed={isActive}
+                onClick={() => applyHeroTimeBudget(budget.minutes)}
+              >
+                <strong>{budget.minutes}m</strong>
+                <small>{budget.label}</small>
+              </button>
+            );
+          })}
         </div>
         {launchSourceBadge ? (
           <p className="launch-source-badge" role="status" aria-live="polite">
