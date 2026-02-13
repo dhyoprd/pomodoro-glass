@@ -159,3 +159,20 @@ export function buildFocusHealthScore(state: AppState) {
     },
   };
 }
+
+export function buildFocusCombo(state: AppState) {
+  const todayKey = new Date().toDateString();
+  const todaySessions = state.recentSessions.filter((session) => {
+    const completedAt = new Date(session.completedAt);
+    return completedAt.toDateString() === todayKey;
+  }).length;
+
+  const streak = Math.max(todaySessions, 0);
+  const multiplier = Number((1 + Math.min(Math.max(streak - 1, 0), 4) * 0.1).toFixed(1));
+
+  return {
+    streak,
+    multiplier,
+    nextMilestone: Math.ceil((streak + 1) / 3) * 3,
+  };
+}

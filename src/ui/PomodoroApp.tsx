@@ -15,6 +15,7 @@ import {
   XP_PER_SESSION,
   buildAchievementProgress,
   buildDailyQuestProgress,
+  buildFocusCombo,
   buildFocusHealthScore,
   buildGamificationProgress,
   buildNextMilestone,
@@ -169,6 +170,7 @@ export function PomodoroApp() {
   );
 
   const gamification = useMemo(() => buildGamificationProgress(state), [state]);
+  const focusCombo = useMemo(() => buildFocusCombo(state), [state]);
   const nextMilestone = useMemo(() => buildNextMilestone(state), [state]);
 
   const sessionPulse = useMemo(() => {
@@ -177,8 +179,11 @@ export function PomodoroApp() {
 
     if (state.mode === 'focus') {
       const nextBreak = sessionsUntilLongBreak <= 1 ? 'Long break unlocked next.' : 'Short break next.';
+      const baseXpReward = state.settings.focus * XP_PER_FOCUS_MINUTE + XP_PER_SESSION;
+      const comboReward = Math.round(baseXpReward * focusCombo.multiplier);
+
       return {
-        title: `+${state.settings.focus * XP_PER_FOCUS_MINUTE + XP_PER_SESSION} XP if you finish this block`,
+        title: `+${comboReward} XP if you finish this block (combo x${focusCombo.multiplier.toFixed(1)})`,
         detail: `${nextBreak} ${sessionsUntilLongBreak <= 1 ? '' : `${sessionsUntilLongBreak - 1} more focus win${sessionsUntilLongBreak - 1 === 1 ? '' : 's'} until long break.`}`.trim(),
       };
     }
@@ -194,7 +199,7 @@ export function PomodoroApp() {
       title: 'Deep recovery active',
       detail: 'Long break complete → fresh cycle starts with maximum focus quality.',
     };
-  }, [state.mode, state.settings.focus, state.settings.longBreakInterval, state.stats.completed]);
+  }, [focusCombo.multiplier, state.mode, state.settings.focus, state.settings.longBreakInterval, state.stats.completed]);
 
   const achievementProgress = useMemo(() => buildAchievementProgress(state), [state]);
 
@@ -1114,6 +1119,10 @@ export function PomodoroApp() {
             <strong>{gamification.xp.toLocaleString()} XP</strong>
           </div>
           <p>{gamification.xpToNextLevel} XP to unlock Level {gamification.level + 1}</p>
+          <p>
+            Combo streak today: <strong>{focusCombo.streak}</strong> session{focusCombo.streak === 1 ? '' : 's'} ·
+            reward multiplier <strong>x{focusCombo.multiplier.toFixed(1)}</strong>
+          </p>
           <div className="progress-wrap level-progress-wrap" aria-hidden="true">
             <div className="progress-bar level-progress-bar" style={{ width: `${gamification.levelProgress}%` }} />
           </div>
