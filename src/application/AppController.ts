@@ -94,7 +94,13 @@ export class AppController {
   }
 
   addTask(text: string) {
-    this.tasks.unshift({ id: crypto.randomUUID(), text, done: false });
+    const normalizedText = text.trim().slice(0, 90);
+    if (!normalizedText) return;
+
+    const hasDuplicate = this.tasks.some((task) => task.text.toLowerCase() === normalizedText.toLowerCase());
+    if (hasDuplicate) return;
+
+    this.tasks.unshift({ id: crypto.randomUUID(), text: normalizedText, done: false });
     this.deps.tasksRepo.save(this.tasks);
     this.emit();
   }
