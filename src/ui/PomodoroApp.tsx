@@ -22,12 +22,25 @@ import {
   buildSessionPlannerSummary,
   buildSessionTimeline,
   rankPresetPlans,
+  recommendPresetByProfile,
+  type MatchmakerContext,
+  type MatchmakerEnergy,
+  type MatchmakerGoal,
 } from '@/application/SessionPlannerEngine';
 
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
   const [planningMinutes, setPlanningMinutes] = useState(120);
+  const [matchmaker, setMatchmaker] = useState<{
+    energy: MatchmakerEnergy;
+    context: MatchmakerContext;
+    goal: MatchmakerGoal;
+  }>({
+    energy: 'steady',
+    context: 'desk',
+    goal: 'consistency',
+  });
   const [settingsForm, setSettingsForm] = useState({ focus: '', shortBreak: '', longBreak: '', longBreakInterval: '' });
 
   useEffect(() => {
@@ -149,6 +162,11 @@ export function PomodoroApp() {
   );
 
   const recommendedPreset = rankedPresetPlans[0];
+
+  const profileRecommendation = useMemo(
+    () => recommendPresetByProfile(USE_CASE_PRESETS, matchmaker),
+    [matchmaker],
+  );
 
   const showQuickOnboarding = state.stats.completed === 0 && state.tasks.length === 0;
 
@@ -332,6 +350,50 @@ export function PomodoroApp() {
               <span>5-day XP runway</span>
             </article>
           </div>
+          <article className="matchmaker-card" aria-label="Use-case matchmaker">
+            <div className="planner-headline">
+              <strong>Preset Matchmaker</strong>
+              <span>Tell Loose your context and get a fit recommendation.</span>
+            </div>
+            <div className="matchmaker-grid">
+              <label>
+                <span>Energy</span>
+                <select value={matchmaker.energy} onChange={(e) => setMatchmaker((prev) => ({ ...prev, energy: e.target.value as MatchmakerEnergy }))}>
+                  <option value="low">Low</option>
+                  <option value="steady">Steady</option>
+                  <option value="high">High</option>
+                </select>
+              </label>
+              <label>
+                <span>Context</span>
+                <select value={matchmaker.context} onChange={(e) => setMatchmaker((prev) => ({ ...prev, context: e.target.value as MatchmakerContext }))}>
+                  <option value="desk">Desk</option>
+                  <option value="mobile">Mobile / commute</option>
+                </select>
+              </label>
+              <label>
+                <span>Goal</span>
+                <select value={matchmaker.goal} onChange={(e) => setMatchmaker((prev) => ({ ...prev, goal: e.target.value as MatchmakerGoal }))}>
+                  <option value="consistency">Build consistency</option>
+                  <option value="depth">Go deep</option>
+                  <option value="restart">Restart momentum</option>
+                </select>
+              </label>
+            </div>
+            {profileRecommendation ? (
+              <div className="matchmaker-recommendation">
+                <strong>
+                  {profileRecommendation.preset.icon} {profileRecommendation.preset.name} · {profileRecommendation.confidence}% fit
+                </strong>
+                {profileRecommendation.reasons.map((reason) => (
+                  <small key={reason}>{reason}</small>
+                ))}
+                <button type="button" className="ghost" onClick={() => applyPreset(profileRecommendation.preset)}>
+                  Apply this profile fit
+                </button>
+              </div>
+            ) : null}
+          </article>
           {sessionTimeline.length ? (
             <div className="timeline-strip" aria-label="Session timeline preview">
               {sessionTimeline.slice(0, 8).map((block) => (

@@ -490,6 +490,70 @@ section {
   justify-self: start;
 }
 
+.matchmaker-card {
+  background: #0f0f12;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.planner-headline {
+  display: grid;
+  gap: 4px;
+}
+
+.planner-headline strong {
+  font-size: 0.9rem;
+}
+
+.planner-headline span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.matchmaker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.matchmaker-grid label {
+  display: grid;
+  gap: 6px;
+}
+
+.matchmaker-grid select {
+  background: #101017;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 8px 10px;
+}
+
+.matchmaker-recommendation {
+  border: 1px solid #3f3f46;
+  border-radius: 10px;
+  padding: 10px;
+  display: grid;
+  gap: 6px;
+  background: linear-gradient(160deg, #13141e, #101017);
+}
+
+.matchmaker-recommendation strong {
+  font-size: 0.9rem;
+}
+
+.matchmaker-recommendation small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.matchmaker-recommendation button {
+  justify-self: start;
+}
+
 .timer-card { display: grid; gap: 14px; }
 
 .session-pulse {
@@ -1056,6 +1120,7 @@ input:focus { border-color: #71717a; }
   .quick-onboarding-grid { grid-template-columns: 1fr; }
   .planner-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .planner-fit-grid { grid-template-columns: 1fr; }
+  .matchmaker-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 600px) {
