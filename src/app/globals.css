@@ -323,6 +323,18 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   padding: 5px 9px;
 }
 
+.launch-path-link-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  color: #cbd5e1;
+}
+
+.launch-path-link-mode input {
+  accent-color: #22d3ee;
+}
+
 .launch-paths-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -11,11 +11,16 @@ const PLANNING_MINUTES_STEP = 15;
 export function buildPresetQuickStartUrl(
   currentUrl: string,
   presetId: string,
-  options?: { task?: string; planningMinutes?: number; source?: string },
+  options?: { task?: string; planningMinutes?: number; source?: string; autostart?: boolean },
 ): string {
   const url = new URL(currentUrl);
   url.searchParams.set('preset', presetId);
-  url.searchParams.set('autostart', '1');
+
+  if (options?.autostart ?? true) {
+    url.searchParams.set('autostart', '1');
+  } else {
+    url.searchParams.delete('autostart');
+  }
 
   if (options?.task) {
     url.searchParams.set('task', options.task.slice(0, 90));

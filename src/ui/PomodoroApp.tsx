@@ -115,6 +115,7 @@ export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
   const [taskText, setTaskText] = useState('');
   const [planningMinutes, setPlanningMinutes] = useState(120);
+  const [quickStartAutostart, setQuickStartAutostart] = useState(true);
   const [matchmaker, setMatchmaker] = useState<{
     energy: MatchmakerEnergy;
     context: MatchmakerContext;
@@ -685,6 +686,7 @@ export function PomodoroApp() {
         planningMinutes,
         task: seededTask,
         source: 'quickstart-copy',
+        autostart: quickStartAutostart,
       });
       await navigator.clipboard.writeText(quickStartUrl);
       setQuickStartLinkStatus({
@@ -768,6 +770,7 @@ export function PomodoroApp() {
       planningMinutes,
       task: seededTask,
       source: 'quickstart-share',
+      autostart: quickStartAutostart,
     });
 
     await shareLink(
@@ -804,6 +807,11 @@ export function PomodoroApp() {
         setPlanningMinutes(normalizePlanningMinutes(storedPlanningMinutes));
       }
 
+      const storedQuickStartAutostart = window.localStorage.getItem('loose.quickStartAutostart');
+      if (storedQuickStartAutostart === '0') {
+        setQuickStartAutostart(false);
+      }
+
       const storedMatchmaker = window.localStorage.getItem('loose.matchmakerProfile');
       if (storedMatchmaker) {
         const parsed = JSON.parse(storedMatchmaker) as Partial<{
@@ -829,8 +837,9 @@ export function PomodoroApp() {
     if (!hasHydratedPlannerPreferences.current || typeof window === 'undefined') return;
 
     window.localStorage.setItem('loose.planningMinutes', String(planningMinutes));
+    window.localStorage.setItem('loose.quickStartAutostart', quickStartAutostart ? '1' : '0');
     window.localStorage.setItem('loose.matchmakerProfile', JSON.stringify(matchmaker));
-  }, [matchmaker, planningMinutes]);
+  }, [matchmaker, planningMinutes, quickStartAutostart]);
 
   useEffect(() => {
     if (hasHydratedQuickStart.current || typeof window === 'undefined') return;
@@ -1088,6 +1097,14 @@ export function PomodoroApp() {
               <option value="xp-hour">XP per hour</option>
               <option value="fast-finish">Fast finish cycle</option>
             </select>
+          </label>
+          <label className="launch-path-link-mode">
+            <input
+              type="checkbox"
+              checked={quickStartAutostart}
+              onChange={(event) => setQuickStartAutostart(event.target.checked)}
+            />
+            Quick-start links auto-run timer
           </label>
         </div>
         {topPresetScoreboard.length ? (
@@ -1997,7 +2014,7 @@ export function PomodoroApp() {
 function buildPresetQuickStartUrl(
   currentUrl: string,
   presetId: string,
-  options?: { task?: string; planningMinutes?: number; source?: string },
+  options?: { task?: string; planningMinutes?: number; source?: string; autostart?: boolean },
 ): string {
   return buildPresetQuickStartUrlFromLib(currentUrl, presetId, options);
 }
