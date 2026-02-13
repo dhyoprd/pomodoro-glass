@@ -209,6 +209,19 @@ export function PomodoroApp() {
     [matchmaker],
   );
 
+  const rescuePreset = profileRecommendation?.preset ?? recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
+
+  const streakRescue = useMemo(() => {
+    const weeklyActiveDays = state.analytics.week.filter((day) => day.sessions > 0).length;
+    const hasTodaySession = state.analytics.today.sessions > 0;
+
+    return {
+      show: !hasTodaySession,
+      weeklyActiveDays,
+      nextTarget: Math.min(weeklyActiveDays + 1, 7),
+    };
+  }, [state.analytics.today.sessions, state.analytics.week]);
+
   const showQuickOnboarding = state.stats.completed === 0 && state.tasks.length === 0;
 
   const onboardingChecklist = useMemo(() => {
@@ -496,6 +509,26 @@ export function PomodoroApp() {
           </article>
         </div>
       </section>
+
+      {streakRescue.show ? (
+        <section className="streak-rescue" aria-label="Momentum rescue">
+          <div className="streak-rescue-head">
+            <h2>Keep your streak alive today</h2>
+            <span>{streakRescue.weeklyActiveDays}/7 active days this week</span>
+          </div>
+          <p>
+            One focused block today pushes you to <strong>{streakRescue.nextTarget}/7 active days</strong>. Start with the best-fit rhythm and lock in momentum.
+          </p>
+          <div className="streak-rescue-actions">
+            <button type="button" onClick={() => applyPresetAndStart(rescuePreset)}>
+              {rescuePreset.icon} Rescue with {rescuePreset.name}
+            </button>
+            <button type="button" className="ghost" onClick={() => scrollToSection('session-planner')}>
+              Tune plan first
+            </button>
+          </div>
+        </section>
+      ) : null}
 
       <section id="session-planner" className="session-planner" aria-label="Daily session planner">
         <div className="planner-head">
