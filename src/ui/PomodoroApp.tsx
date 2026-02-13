@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePomodoroController } from '@/hooks/usePomodoroController';
@@ -37,13 +37,15 @@ import {
   type PresetPlanSortMode,
 } from '@/application/SessionPlannerEngine';
 import {
-  buildMatchmakerProfileUrl as buildMatchmakerProfileUrlFromLib,
-  buildPresetQuickStartUrl as buildPresetQuickStartUrlFromLib,
-  consumeQuickStartParamsFromUrl as consumeQuickStartParamsFromUrlFromLib,
-  normalizePlanningMinutes as normalizePlanningMinutesFromLib,
-  parseMatchmakerContext as parseMatchmakerContextFromLib,
-  parseMatchmakerEnergy as parseMatchmakerEnergyFromLib,
-  parseMatchmakerGoal as parseMatchmakerGoalFromLib,
+  buildLaunchSourceBadge,
+  buildMatchmakerProfileUrl,
+  buildPresetQuickStartUrl,
+  consumeQuickStartParamsFromUrl,
+  normalizePlanningMinutes,
+  parseMatchmakerContext,
+  parseMatchmakerEnergy,
+  parseMatchmakerGoal,
+  type LaunchSourceBadge,
 } from '@/lib/quickStart';
 
 type BeforeInstallPromptEvent = Event & {
@@ -73,12 +75,6 @@ const SECTION_NAV_ITEMS = [
 ] as const;
 
 type SectionId = (typeof SECTION_NAV_ITEMS)[number]['id'];
-
-type LaunchSourceBadge = {
-  icon: string;
-  label: string;
-  detail: string;
-};
 
 const SECTION_IDS: ReadonlySet<SectionId> = new Set(SECTION_NAV_ITEMS.map((item) => item.id));
 
@@ -2056,105 +2052,6 @@ export function PomodoroApp() {
       </aside>
     </main>
   );
-}
-
-function buildPresetQuickStartUrl(
-  currentUrl: string,
-  presetId: string,
-  options?: { task?: string; planningMinutes?: number; source?: string; autostart?: boolean },
-): string {
-  return buildPresetQuickStartUrlFromLib(currentUrl, presetId, options);
-}
-
-function buildMatchmakerProfileUrl(
-  currentUrl: string,
-  profile: { energy: MatchmakerEnergy; context: MatchmakerContext; goal: MatchmakerGoal },
-  planningMinutes: number,
-  options?: { source?: string },
-): string {
-  return buildMatchmakerProfileUrlFromLib(currentUrl, profile, planningMinutes, options);
-}
-
-function consumeQuickStartParamsFromUrl(currentUrl: string): void {
-  consumeQuickStartParamsFromUrlFromLib(currentUrl);
-}
-
-function buildLaunchSourceBadge(source: string | null): LaunchSourceBadge | null {
-  if (!source) return null;
-
-  if (source === 'shortcut-deep-work') {
-    return {
-      icon: '🚀',
-      label: 'Deep Work shortcut',
-      detail: 'Jumped in from your home-screen deep work launcher.',
-    };
-  }
-
-  if (source === 'shortcut-rescue') {
-    return {
-      icon: '🚑',
-      label: 'Momentum Rescue shortcut',
-      detail: 'Fast restart path activated from your shortcut.',
-    };
-  }
-
-  if (source === 'shortcut-commute') {
-    return {
-      icon: '🚌',
-      label: 'Commute shortcut',
-      detail: 'Mobile sprint mode launched for short focus windows.',
-    };
-  }
-
-  if (source === 'shortcut-planner') {
-    return {
-      icon: '🗓️',
-      label: 'Planner shortcut',
-      detail: 'Opened straight into planning so you can pick the best rhythm.',
-    };
-  }
-
-  if (source === 'quickstart-copy' || source === 'quickstart-share') {
-    return {
-      icon: '🔗',
-      label: 'Quick-start link',
-      detail: 'Loaded from a shared preset launch link.',
-    };
-  }
-
-  if (source === 'profile-copy' || source === 'profile-share') {
-    return {
-      icon: '🧬',
-      label: 'Matchmaker profile link',
-      detail: 'Loaded from a shared profile recommendation link.',
-    };
-  }
-
-  if (source === 'pwa') {
-    return {
-      icon: '📲',
-      label: 'Installed app',
-      detail: 'Running in app mode for faster one-tap focus launches.',
-    };
-  }
-
-  return null;
-}
-
-function parseMatchmakerEnergy(value: string | null): MatchmakerEnergy | null {
-  return parseMatchmakerEnergyFromLib(value);
-}
-
-function parseMatchmakerContext(value: string | null): MatchmakerContext | null {
-  return parseMatchmakerContextFromLib(value);
-}
-
-function parseMatchmakerGoal(value: string | null): MatchmakerGoal | null {
-  return parseMatchmakerGoalFromLib(value);
-}
-
-function normalizePlanningMinutes(value: number): number {
-  return normalizePlanningMinutesFromLib(value);
 }
 
 function formatFinishBy(minutesFromNow: number): string {

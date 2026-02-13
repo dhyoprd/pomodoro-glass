@@ -4,9 +4,63 @@ export type QuickStartMatchmakerEnergy = 'low' | 'steady' | 'high';
 export type QuickStartMatchmakerContext = 'desk' | 'mobile';
 export type QuickStartMatchmakerGoal = 'consistency' | 'depth' | 'restart';
 
+export type LaunchSourceBadge = {
+  icon: string;
+  label: string;
+  detail: string;
+};
+
 const PLANNING_MINUTES_MIN = 60;
 const PLANNING_MINUTES_MAX = 360;
 const PLANNING_MINUTES_STEP = 15;
+
+const LAUNCH_SOURCE_BADGES: Record<string, LaunchSourceBadge> = {
+  'shortcut-deep-work': {
+    icon: '🚀',
+    label: 'Deep Work shortcut',
+    detail: 'Jumped in from your home-screen deep work launcher.',
+  },
+  'shortcut-rescue': {
+    icon: '🚑',
+    label: 'Momentum Rescue shortcut',
+    detail: 'Fast restart path activated from your shortcut.',
+  },
+  'shortcut-commute': {
+    icon: '🚌',
+    label: 'Commute shortcut',
+    detail: 'Mobile sprint mode launched for short focus windows.',
+  },
+  'shortcut-planner': {
+    icon: '🗓️',
+    label: 'Planner shortcut',
+    detail: 'Opened straight into planning so you can pick the best rhythm.',
+  },
+  'quickstart-copy': {
+    icon: '🔗',
+    label: 'Quick-start link',
+    detail: 'Loaded from a shared preset launch link.',
+  },
+  'quickstart-share': {
+    icon: '🔗',
+    label: 'Quick-start link',
+    detail: 'Loaded from a shared preset launch link.',
+  },
+  'profile-copy': {
+    icon: '🧬',
+    label: 'Matchmaker profile link',
+    detail: 'Loaded from a shared profile recommendation link.',
+  },
+  'profile-share': {
+    icon: '🧬',
+    label: 'Matchmaker profile link',
+    detail: 'Loaded from a shared profile recommendation link.',
+  },
+  pwa: {
+    icon: '📲',
+    label: 'Installed app',
+    detail: 'Running in app mode for faster one-tap focus launches.',
+  },
+};
 
 export function buildPresetQuickStartUrl(
   currentUrl: string,
@@ -107,4 +161,9 @@ export function parseMatchmakerGoal(value: string | null): QuickStartMatchmakerG
 export function normalizePlanningMinutes(value: number): number {
   const steppedValue = Math.round(value / PLANNING_MINUTES_STEP) * PLANNING_MINUTES_STEP;
   return clamp(steppedValue, PLANNING_MINUTES_MIN, PLANNING_MINUTES_MAX);
+}
+
+export function buildLaunchSourceBadge(source: string | null): LaunchSourceBadge | null {
+  if (!source) return null;
+  return LAUNCH_SOURCE_BADGES[source] ?? null;
 }
