@@ -58,7 +58,12 @@ export function PomodoroApp() {
     if (typeof document === 'undefined') return;
 
     const section = document.getElementById(sectionId);
-    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!section) return;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    section.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
   };
 
   useEffect(() => {
