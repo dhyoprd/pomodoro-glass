@@ -453,6 +453,19 @@ export function PomodoroApp() {
       ? 'Add to Home'
       : 'Install';
 
+  const sectionNavIndex = useMemo(
+    () => SECTION_NAV_ITEMS.findIndex((item) => item.id === activeSectionId),
+    [activeSectionId],
+  );
+
+  const nextSectionNavItem = useMemo(() => {
+    if (!SECTION_NAV_ITEMS.length) return null;
+
+    const normalizedIndex = sectionNavIndex >= 0 ? sectionNavIndex : 0;
+    const nextIndex = (normalizedIndex + 1) % SECTION_NAV_ITEMS.length;
+    return SECTION_NAV_ITEMS[nextIndex];
+  }, [sectionNavIndex]);
+
   const onboardingChecklist = useMemo(() => {
     const items = [
       {
@@ -836,8 +849,13 @@ export function PomodoroApp() {
         <button type="button" className="ghost" onClick={() => controller.resetTimer()}>
           ↺ Reset
         </button>
-        <button type="button" className="ghost" onClick={() => scrollToSection('task-capture')}>
-          ✅ Tasks
+        <button
+          type="button"
+          className="ghost"
+          onClick={() => nextSectionNavItem && scrollToSection(nextSectionNavItem.id)}
+          disabled={!nextSectionNavItem}
+        >
+          🧭 {nextSectionNavItem ? `Next: ${nextSectionNavItem.mobileLabel}` : 'Sections'}
         </button>
         <button
           type="button"
