@@ -38,6 +38,7 @@ import {
   buildWeeklyMomentumForecast,
   rankPresetPlans,
   recommendPresetByProfile,
+  scorePresetForProfile,
   sortPresetPlans,
   type MatchmakerContext,
   type MatchmakerEnergy,
@@ -63,7 +64,7 @@ type BeforeInstallPromptEvent = Event & {
 
 type LaunchPathAudienceFilter = LaunchPathAudience | 'all';
 
-const LAUNCH_PATH_SORT_MODES: ReadonlyArray<PresetPlanSortMode> = ['best-fit', 'xp-hour', 'fast-finish'];
+const LAUNCH_PATH_SORT_MODES: ReadonlyArray<PresetPlanSortMode> = ['best-fit', 'xp-hour', 'fast-finish', 'profile-fit'];
 
 const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
   id: LaunchPathAudienceFilter;
@@ -90,6 +91,10 @@ const LAUNCH_SORT_MODE_COPY: Record<PresetPlanSortMode, { label: string; detail:
   'fast-finish': {
     label: 'Fast finish cycle',
     detail: 'Promotes shorter loops so you can get a complete focus + break cycle done quickly.',
+  },
+  'profile-fit': {
+    label: 'Profile fit',
+    detail: 'Ranks paths by your current energy, context, and goal from the matchmaker profile.',
   },
 };
 
@@ -480,8 +485,8 @@ export function PomodoroApp() {
   );
 
   const sortedLaunchPathPlans = useMemo(
-    () => sortPresetPlans(filteredLaunchPathPlans, launchPathSortMode),
-    [filteredLaunchPathPlans, launchPathSortMode],
+    () => sortPresetPlans(filteredLaunchPathPlans, launchPathSortMode, matchmaker),
+    [filteredLaunchPathPlans, launchPathSortMode, matchmaker],
   );
 
   const visibleLaunchPathPlans = useMemo(
@@ -524,10 +529,13 @@ export function PomodoroApp() {
     const remainder = Math.max(planningMinutes - recommendedPreset.focusMinutes, 0);
     const focusDensity = Math.round(recommendedPreset.focusRatio * 100);
 
+    const profileFit = scorePresetForProfile(recommendedPreset.preset, matchmaker);
+
     const recommendationByMode: Record<PresetPlanSortMode, string> = {
       'best-fit': `${recommendedPreset.preset.name} is best fit: ${focusDensity}% focus density with ${remainder}m leftover.`,
       'xp-hour': `${recommendedPreset.preset.name} leads in output at ${recommendedPreset.xpPerHour} XP/hour.`,
       'fast-finish': `${recommendedPreset.preset.name} has one of the quickest full cycles for rapid momentum.`,
+      'profile-fit': `${recommendedPreset.preset.name} matches your profile at ${profileFit.confidence}% confidence.`,
     };
 
     return {
@@ -535,7 +543,7 @@ export function PomodoroApp() {
       sortDetail: sortCopy.detail,
       recommendation: recommendationByMode[launchPathSortMode],
     };
-  }, [launchPathSortMode, planningMinutes, recommendedPreset]);
+  }, [launchPathSortMode, matchmaker, planningMinutes, recommendedPreset]);
 
   const heroRecommendedPath = recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
   const heroRecommendedTiming = launchPathTimings.get(heroRecommendedPath.id);
@@ -1313,6 +1321,7 @@ export function PomodoroApp() {
               <option value="best-fit">Best fit</option>
               <option value="xp-hour">XP per hour</option>
               <option value="fast-finish">Fast finish cycle</option>
+              <option value="profile-fit">Profile fit</option>
             </select>
           </label>
           <p className="launch-path-sort-insight" role="status" aria-live="polite">
@@ -1335,6 +1344,7 @@ export function PomodoroApp() {
               {visibleLaunchPathPlans.map((plan) => {
                 const isRecommendedPath = plan.preset.id === recommendedPreset?.preset.id;
                 const planReadiness = buildPlanReadinessSignal(plan.preset.settings, planningMinutes);
+                const planProfileFit = scorePresetForProfile(plan.preset, matchmaker);
 
                 return (
                   <article key={`launch-${plan.preset.id}`} className="launch-path-card">
@@ -1346,6 +1356,9 @@ export function PomodoroApp() {
                   <span>{Math.round(plan.focusRatio * 100)}% focus density</span>
                   <small className="launch-path-delta" aria-label={`Comparison against current rhythm for ${plan.preset.name}`}>
                     vs current rhythm: {formatSignedNumber(plan.xpPerHour - activePlanPerformance.xpPerHour)} XP/hr | {formatSignedPercent(Math.round((plan.focusRatio - activePlanPerformance.focusRatio) * 100))} focus density
+                  </small>
+                  <small className="launch-path-profile-fit" aria-label={`Profile fit confidence for ${plan.preset.name}`}>
+                    Profile fit: {planProfileFit.confidence}%
                   </small>
                 </div>
                 <p>{plan.preset.outcome}</p>

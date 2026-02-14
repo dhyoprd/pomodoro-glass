@@ -573,6 +573,12 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   line-height: 1.35;
 }
 
+.launch-path-profile-fit {
+  color: #c4b5fd;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
 .launch-path-card p {
   margin: 0;
   color: var(--muted);

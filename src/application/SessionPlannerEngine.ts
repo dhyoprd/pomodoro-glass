@@ -36,7 +36,7 @@ export type RankedPresetPlan = {
   xpPerHour: number;
 };
 
-export type PresetPlanSortMode = 'best-fit' | 'xp-hour' | 'fast-finish';
+export type PresetPlanSortMode = 'best-fit' | 'xp-hour' | 'fast-finish' | 'profile-fit';
 
 export type SessionTimelineBlock = {
   id: string;
@@ -215,6 +215,7 @@ export function rankPresetPlans(presets: ReadonlyArray<UseCasePreset>, planningM
 export function sortPresetPlans(
   plans: ReadonlyArray<RankedPresetPlan>,
   mode: PresetPlanSortMode,
+  profile?: MatchmakerProfile,
 ): RankedPresetPlan[] {
   const sorted = [...plans];
 
@@ -232,10 +233,86 @@ export function sortPresetPlans(
       return b.score - a.score;
     }
 
+    if (mode === 'profile-fit' && profile) {
+      const aFit = scorePresetForProfile(a.preset, profile);
+      const bFit = scorePresetForProfile(b.preset, profile);
+
+      if (bFit.score !== aFit.score) return bFit.score - aFit.score;
+      if (b.xpPerHour !== a.xpPerHour) return b.xpPerHour - a.xpPerHour;
+      return b.score - a.score;
+    }
+
     return b.score - a.score;
   });
 
   return sorted;
+}
+
+export type PresetProfileFit = {
+  score: number;
+  confidence: number;
+  reasons: string[];
+};
+
+export function scorePresetForProfile(
+  preset: UseCasePreset,
+  profile: MatchmakerProfile,
+): PresetProfileFit {
+  let score = 0;
+  const reasons: string[] = [];
+
+  if (profile.context === 'mobile') {
+    if (preset.id === 'mobile-commute') {
+      score += 4;
+      reasons.push('Optimized for short mobile windows and interruption-heavy days.');
+    }
+
+    if (preset.settings.focus <= 15) {
+      score += 2;
+      reasons.push('Short focus blocks reduce friction when you are on the move.');
+    }
+  }
+
+  if (profile.context === 'desk' && preset.settings.focus >= 25) {
+    score += 1;
+    reasons.push('Longer focus blocks fit stable desk sessions.');
+  }
+
+  if (profile.goal === 'depth' && preset.id === 'deep-work') {
+    score += 4;
+    reasons.push('Deep-work cadence maximizes uninterrupted concentration.');
+  }
+
+  if (profile.goal === 'consistency' && preset.id === 'student-revision') {
+    score += 3;
+    reasons.push('Balanced cycle supports repeatable daily consistency.');
+  }
+
+  if (profile.goal === 'restart' && preset.id === 'high-energy') {
+    score += 4;
+    reasons.push('Fast loops rebuild momentum when starting feels hard.');
+  }
+
+  if (profile.energy === 'low' && preset.settings.focus <= 20) {
+    score += 2;
+    reasons.push('Lower energy days benefit from shorter wins.');
+  }
+
+  if (profile.energy === 'steady' && preset.settings.focus >= 20 && preset.settings.focus <= 30) {
+    score += 2;
+    reasons.push('Mid-length sessions match steady cognitive output.');
+  }
+
+  if (profile.energy === 'high' && preset.settings.focus >= 40) {
+    score += 2;
+    reasons.push('High energy can sustain deeper focus intervals.');
+  }
+
+  return {
+    score,
+    confidence: Math.min(98, 55 + score * 6),
+    reasons,
+  };
 }
 
 export function recommendPresetByProfile(
@@ -243,66 +320,10 @@ export function recommendPresetByProfile(
   profile: MatchmakerProfile,
 ): PresetMatchRecommendation | null {
   const recommendations = presets
-    .map((preset) => {
-      let score = 0;
-      const reasons: string[] = [];
-
-      if (profile.context === 'mobile') {
-        if (preset.id === 'mobile-commute') {
-          score += 4;
-          reasons.push('Optimized for short mobile windows and interruption-heavy days.');
-        }
-
-        if (preset.settings.focus <= 15) {
-          score += 2;
-          reasons.push('Short focus blocks reduce friction when you are on the move.');
-        }
-      }
-
-      if (profile.context === 'desk' && preset.settings.focus >= 25) {
-        score += 1;
-        reasons.push('Longer focus blocks fit stable desk sessions.');
-      }
-
-      if (profile.goal === 'depth' && preset.id === 'deep-work') {
-        score += 4;
-        reasons.push('Deep-work cadence maximizes uninterrupted concentration.');
-      }
-
-      if (profile.goal === 'consistency' && preset.id === 'student-revision') {
-        score += 3;
-        reasons.push('Balanced cycle supports repeatable daily consistency.');
-      }
-
-      if (profile.goal === 'restart' && preset.id === 'high-energy') {
-        score += 4;
-        reasons.push('Fast loops rebuild momentum when starting feels hard.');
-      }
-
-      if (profile.energy === 'low' && preset.settings.focus <= 20) {
-        score += 2;
-        reasons.push('Lower energy days benefit from shorter wins.');
-      }
-
-      if (profile.energy === 'steady' && preset.settings.focus >= 20 && preset.settings.focus <= 30) {
-        score += 2;
-        reasons.push('Mid-length sessions match steady cognitive output.');
-      }
-
-      if (profile.energy === 'high' && preset.settings.focus >= 40) {
-        score += 2;
-        reasons.push('High energy can sustain deeper focus intervals.');
-      }
-
-      const confidence = Math.min(98, 55 + score * 6);
-
-      return {
-        preset,
-        score,
-        confidence,
-        reasons,
-      };
-    })
+    .map((preset) => ({
+      preset,
+      ...scorePresetForProfile(preset, profile),
+    }))
     .sort((a, b) => b.score - a.score);
 
   const top = recommendations[0];
