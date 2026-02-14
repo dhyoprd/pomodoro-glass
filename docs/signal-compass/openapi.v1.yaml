@@ -1,8 +1,10 @@
 openapi: 3.0.3
 info:
   title: Signal Compass API
-  version: 1.0.0-hour0
-  description: Hour 0 baseline API contract for regime, drivers, playbook, and alerts.
+  version: 1.1.0-hour1
+  description: |
+    Hour 1 contract hardening for Signal Compass read APIs.
+    Adds explicit error envelopes, pagination metadata, and cache/freshness fields.
 servers:
   - url: https://api.signalcompass.app
     description: Production
@@ -27,18 +29,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CurrentRegimeResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /v1/regime/history:
     get:
       tags: [Regime]
       operationId: getRegimeHistory
       parameters:
-        - in: query
-          name: range
-          schema:
-            type: string
-            enum: [7d, 30d, 90d]
-            default: 30d
+        - $ref: '#/components/parameters/RangeParam'
       responses:
         '200':
           description: Historical regime snapshots
@@ -46,6 +45,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegimeHistoryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /v1/regime/drivers:
     get:
@@ -58,6 +61,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DriverBreakdownResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /v1/playbook/current:
     get:
@@ -70,19 +75,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PlaybookResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /v1/alerts:
     get:
       tags: [Alerts]
       operationId: listAlerts
       parameters:
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 20
-            minimum: 1
-            maximum: 100
+        - $ref: '#/components/parameters/AlertLimitParam'
+        - $ref: '#/components/parameters/AlertCursorParam'
       responses:
         '200':
           description: Recent alerts
@@ -90,8 +92,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AlertsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 components:
+  parameters:
+    RangeParam:
+      in: query
+      name: range
+      schema:
+        type: string
+        enum: [7d, 30d, 90d]
+        default: 30d
+      description: Time window for historical snapshots.
+
+    AlertLimitParam:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+      description: Number of alerts returned per page.
+
+    AlertCursorParam:
+      in: query
+      name: cursor
+      schema:
+        type: string
+      description: Opaque cursor for forward pagination.
+
+  responses:
+    BadRequest:
+      description: Invalid query parameters or malformed input.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+
+    InternalServerError:
+      description: Unhandled service error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+
   schemas:
     CurrentRegimeResponse:
       type: object
@@ -111,7 +159,13 @@ components:
           items:
             $ref: '#/components/schemas/RegimeSnapshot'
         meta:
-          $ref: '#/components/schemas/Meta'
+          allOf:
+            - $ref: '#/components/schemas/Meta'
+            - type: object
+              properties:
+                range:
+                  type: string
+                  enum: [7d, 30d, 90d]
 
     DriverBreakdownResponse:
       type: object
@@ -161,7 +215,12 @@ components:
           items:
             $ref: '#/components/schemas/AlertEvent'
         meta:
-          $ref: '#/components/schemas/Meta'
+          allOf:
+            - $ref: '#/components/schemas/Meta'
+            - type: object
+              properties:
+                page:
+                  $ref: '#/components/schemas/PageMeta'
 
     RegimeSnapshot:
       type: object
@@ -172,6 +231,7 @@ components:
         - score
         - confidence
         - modelVersion
+        - freshness
       properties:
         id:
           type: string
@@ -192,6 +252,9 @@ components:
           type: string
         delta:
           type: number
+          description: Score delta versus previous snapshot.
+        freshness:
+          $ref: '#/components/schemas/FreshnessMeta'
         staleFlags:
           type: array
           items:
@@ -235,15 +298,51 @@ components:
         acknowledged:
           type: boolean
 
+    PageMeta:
+      type: object
+      properties:
+        nextCursor:
+          type: string
+          nullable: true
+        hasMore:
+          type: boolean
+
+    FreshnessMeta:
+      type: object
+      required: [status, maxLagSeconds]
+      properties:
+        status:
+          type: string
+          enum: [fresh, degraded, stale]
+        maxLagSeconds:
+          type: integer
+          minimum: 0
+        feeds:
+          type: array
+          items:
+            type: object
+            required: [name, lagSeconds, status]
+            properties:
+              name:
+                type: string
+              lagSeconds:
+                type: integer
+                minimum: 0
+              status:
+                type: string
+                enum: [fresh, degraded, stale]
+
     Meta:
       type: object
-      required: [requestId, generatedAt]
+      required: [requestId, generatedAt, apiVersion]
       properties:
         requestId:
           type: string
         generatedAt:
           type: string
           format: date-time
+        apiVersion:
+          type: string
         warnings:
           type: array
           items:
@@ -264,3 +363,5 @@ components:
             details:
               type: object
               additionalProperties: true
+            requestId:
+              type: string

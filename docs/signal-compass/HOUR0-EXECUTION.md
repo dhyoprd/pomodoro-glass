@@ -30,3 +30,23 @@ Kick off immediately with actionable assets that unblock parallel implementation
 - [x] API contracts drafted
 - [x] Implementation sequence defined
 - [x] Hour 1 priorities identified
+
+---
+
+## Hour 1 Progress Update
+
+### Completed
+- Hardened OpenAPI contract from `1.0.0-hour0` to `1.1.0-hour1` with:
+  - explicit error response envelopes (`400`, `500`),
+  - reusable query parameters,
+  - freshness metadata for trust/state rendering,
+  - alert pagination metadata.
+- Added contract governance policy (`CONTRACT-GOVERNANCE.md`).
+- Added contract changelog (`CHANGELOG.md`) to make evolution auditable.
+- Expanded implementation plan with hour-scale execution slices and week-2 exit criteria.
+
+### Next Up (Hour 2)
+1. Generate frontend DTO types from OpenAPI and commit generated artifacts.
+2. Create runtime guards (zod or equivalent) for all envelope DTOs.
+3. Scaffold mock fixtures for `current`, `history`, `drivers`, `alerts`, and `playbook`.
+4. Wire first dashboard shell view-model mapper with loading/error/empty states.
