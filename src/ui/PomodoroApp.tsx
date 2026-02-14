@@ -78,6 +78,21 @@ const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
 
 const PLANNING_MINUTE_PRESETS = [30, 45, 60, 90, 120, 180, 240] as const;
 
+const LAUNCH_SORT_MODE_COPY: Record<PresetPlanSortMode, { label: string; detail: string }> = {
+  'best-fit': {
+    label: 'Best fit',
+    detail: 'Balances focus density and leftover minutes so your available window is used efficiently.',
+  },
+  'xp-hour': {
+    label: 'XP per hour',
+    detail: 'Prioritizes faster XP gain and output pace for high-energy, score-driven sessions.',
+  },
+  'fast-finish': {
+    label: 'Fast finish cycle',
+    detail: 'Promotes shorter loops so you can get a complete focus + break cycle done quickly.',
+  },
+};
+
 const SECTION_NAV_ITEMS = [
   { id: 'startup-hero', label: 'Overview', mobileLabel: 'Home' },
   { id: 'launch-paths', label: 'Launch Path', mobileLabel: 'Path' },
@@ -494,6 +509,33 @@ export function PomodoroApp() {
   }, [planningMinutes, sortedLaunchPathPlans]);
 
   const recommendedPreset = sortedLaunchPathPlans[0] ?? rankedPresetPlans[0];
+
+  const launchSortInsight = useMemo(() => {
+    const sortCopy = LAUNCH_SORT_MODE_COPY[launchPathSortMode];
+
+    if (!recommendedPreset) {
+      return {
+        sortLabel: sortCopy.label,
+        sortDetail: sortCopy.detail,
+        recommendation: 'No launch path available for this filter yet. Try widening the audience filter.',
+      };
+    }
+
+    const remainder = Math.max(planningMinutes - recommendedPreset.focusMinutes, 0);
+    const focusDensity = Math.round(recommendedPreset.focusRatio * 100);
+
+    const recommendationByMode: Record<PresetPlanSortMode, string> = {
+      'best-fit': `${recommendedPreset.preset.name} is best fit: ${focusDensity}% focus density with ${remainder}m leftover.`,
+      'xp-hour': `${recommendedPreset.preset.name} leads in output at ${recommendedPreset.xpPerHour} XP/hour.`,
+      'fast-finish': `${recommendedPreset.preset.name} has one of the quickest full cycles for rapid momentum.`,
+    };
+
+    return {
+      sortLabel: sortCopy.label,
+      sortDetail: sortCopy.detail,
+      recommendation: recommendationByMode[launchPathSortMode],
+    };
+  }, [launchPathSortMode, planningMinutes, recommendedPreset]);
 
   const heroRecommendedPath = recommendedPreset?.preset ?? USE_CASE_PRESETS[0];
   const heroRecommendedTiming = launchPathTimings.get(heroRecommendedPath.id);
@@ -1273,6 +1315,11 @@ export function PomodoroApp() {
               <option value="fast-finish">Fast finish cycle</option>
             </select>
           </label>
+          <p className="launch-path-sort-insight" role="status" aria-live="polite">
+            <strong>{launchSortInsight.sortLabel}</strong>
+            <span>{launchSortInsight.sortDetail}</span>
+            <small>{launchSortInsight.recommendation}</small>
+          </p>
           <label className="launch-path-link-mode">
             <input
               type="checkbox"
