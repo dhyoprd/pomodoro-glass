@@ -95,6 +95,14 @@
 
 Reference: `SPRINT-EXECUTION-BOARD.md`
 
+### Iteration 6 – Coding Window Kickoff Packaging (Done)
+- [x] Converted lane goals into concrete target file map for immediate implementation.
+- [x] Defined next-commit task bundles for Lane A/B/C with acceptance gates.
+- [x] Defined CI/policy worklist and merge-safe PR sequencing.
+- [x] Added explicit senior-FE review checklist for SOLID boundary enforcement.
+
+Reference: `HOUR8-IMPLEMENTATION-KICKOFF.md`
+
 ## Definition of Ready (per task)
 - Business rule written in one sentence.
 - Input/output contract identified.

@@ -154,3 +154,22 @@ Kick off immediately with actionable assets that unblock parallel implementation
 2. Scaffold guard + fixture packs and parser smoke tests.
 3. Start `Regime Hero` vertical slice with VM mapper and state-boundary integration.
 4. Add CI policy check for DTO import leakage in presenters.
+
+---
+
+## Hour 8 Progress Update
+
+### Completed
+- Authored `HOUR8-IMPLEMENTATION-KICKOFF.md` to translate lane-level sprint planning into coding-ready micro-iteration bundles.
+- Added explicit target-file map and acceptance gates for:
+  - Lane A: contract guards + fixtures + parse taxonomy,
+  - Lane B: `Regime Hero` VM/mapper/container/presenter + shared data-state boundary,
+  - Lane C: scoring policy ports + deterministic fixtures/tests.
+- Added CI/policy execution checklist and merge-safe PR sequencing to reduce integration risk while maintaining rapid cadence.
+- Synced index/implementation plan/sprint board to keep planning artifacts coherent.
+
+### Next Up (Hour 8.5)
+1. Execute PR-1 scaffolding (`contracts:generate`, guards, fixtures, smoke checks).
+2. Implement `DataStateBoundary` + `RegimeHeroVm` mapper with full state-matrix tests.
+3. Scaffold scoring policy ports and first golden fixture tests.
+4. Wire policy scripts into `npm run check` and capture baseline pass/fail evidence.

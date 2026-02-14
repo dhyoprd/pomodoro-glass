@@ -10,6 +10,7 @@
 - [Frontend System Design Spec](./FRONTEND-SYSTEM-DESIGN-SPEC.md)
 - [Scoring Engine Execution Spec](./SCORING-ENGINE-EXECUTION-SPEC.md)
 - [Sprint Execution Board](./SPRINT-EXECUTION-BOARD.md)
+- [Hour 8 Implementation Kickoff](./HOUR8-IMPLEMENTATION-KICKOFF.md)
 - [Execution Log](./HOUR0-EXECUTION.md)
 - [Contract Governance](./CONTRACT-GOVERNANCE.md)
 - [Contract Changelog](./CHANGELOG.md)

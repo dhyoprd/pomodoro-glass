@@ -39,3 +39,13 @@
 - `README.md` docs index now includes sprint execution board.
 - `IMPLEMENTATION-PLAN.md` now includes Iteration 5 to formalize sprint-oriented execution sequencing.
 - `HOUR0-EXECUTION.md` now includes Hour 7 progress update and next tactical tasks.
+
+## 2026-02-15 (Hour 8 implementation-kickoff packaging)
+### Added
+- `HOUR8-IMPLEMENTATION-KICKOFF.md` with coding-ready file targets, task bundles, acceptance gates, CI policy worklist, and merge-safe PR sequence.
+
+### Changed
+- `README.md` docs index now includes the Hour 8 kickoff artifact.
+- `IMPLEMENTATION-PLAN.md` now includes Iteration 6 (coding window kickoff packaging).
+- `SPRINT-EXECUTION-BOARD.md` now includes Hour 8 success criteria and progress snapshot.
+- `HOUR0-EXECUTION.md` now includes Hour 8 completion log and Hour 8.5 next actions.
