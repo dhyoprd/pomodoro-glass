@@ -706,10 +706,13 @@ export function PomodoroApp() {
     setMatchmaker(persona.profile);
   };
 
-  const launchHeroScenario = (personaId: string) => {
-    const persona = findMatchmakerPersona(personaId);
+  const launchHeroScenario = (scenario: (typeof HERO_QUICK_SCENARIOS)[number]) => {
+    const persona = findMatchmakerPersona(scenario.personaId);
     if (!persona) return;
 
+    setPlanningMinutes(normalizePlanningMinutes(scenario.budgetMinutes));
+    setLaunchPathSortMode('profile-fit');
+    setLaunchPathAudienceFilter(persona.profile.context);
     setMatchmaker(persona.profile);
 
     const recommendation = recommendPresetByProfile(USE_CASE_PRESETS, persona.profile);
@@ -1229,10 +1232,11 @@ export function PomodoroApp() {
               key={scenario.id}
               type="button"
               className="hero-scenario-chip"
-              onClick={() => launchHeroScenario(scenario.personaId)}
+              onClick={() => launchHeroScenario(scenario)}
             >
               <strong>{scenario.label}</strong>
               <span>{scenario.description}</span>
+              <small>{scenario.budgetMinutes}m launch budget</small>
             </button>
           ))}
         </div>

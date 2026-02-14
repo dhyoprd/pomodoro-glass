@@ -41,24 +41,28 @@ export const HERO_QUICK_SCENARIOS: ReadonlyArray<{
   label: string;
   description: string;
   personaId: string;
+  budgetMinutes: number;
 }> = [
   {
     id: 'hero-scenario-deep-desk',
     label: 'Deep desk ship',
     description: 'High-energy desk sprint for shipping output fast.',
     personaId: 'deep-desk-shipper',
+    budgetMinutes: 180,
   },
   {
     id: 'hero-scenario-steady-consistency',
     label: 'Steady consistency',
     description: 'Balanced daily loop for predictable progress.',
     personaId: 'steady-consistency-builder',
+    budgetMinutes: 120,
   },
   {
     id: 'hero-scenario-commute-rescue',
     label: 'Commute rescue',
     description: 'Low-friction mobile reset when momentum is slipping.',
     personaId: 'commute-rescue-runner',
+    budgetMinutes: 45,
   },
 ] as const;
 
