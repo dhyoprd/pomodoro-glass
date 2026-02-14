@@ -1,0 +1,266 @@
+openapi: 3.0.3
+info:
+  title: Signal Compass API
+  version: 1.0.0-hour0
+  description: Hour 0 baseline API contract for regime, drivers, playbook, and alerts.
+servers:
+  - url: https://api.signalcompass.app
+    description: Production
+  - url: https://staging-api.signalcompass.app
+    description: Staging
+
+tags:
+  - name: Regime
+  - name: Playbook
+  - name: Alerts
+
+paths:
+  /v1/regime/current:
+    get:
+      tags: [Regime]
+      operationId: getCurrentRegime
+      summary: Get current regime snapshot
+      responses:
+        '200':
+          description: Current regime
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentRegimeResponse'
+
+  /v1/regime/history:
+    get:
+      tags: [Regime]
+      operationId: getRegimeHistory
+      parameters:
+        - in: query
+          name: range
+          schema:
+            type: string
+            enum: [7d, 30d, 90d]
+            default: 30d
+      responses:
+        '200':
+          description: Historical regime snapshots
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegimeHistoryResponse'
+
+  /v1/regime/drivers:
+    get:
+      tags: [Regime]
+      operationId: getRegimeDrivers
+      responses:
+        '200':
+          description: Driver contribution breakdown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverBreakdownResponse'
+
+  /v1/playbook/current:
+    get:
+      tags: [Playbook]
+      operationId: getCurrentPlaybook
+      responses:
+        '200':
+          description: Current playbook recommendations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaybookResponse'
+
+  /v1/alerts:
+    get:
+      tags: [Alerts]
+      operationId: listAlerts
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Recent alerts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertsResponse'
+
+components:
+  schemas:
+    CurrentRegimeResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          $ref: '#/components/schemas/RegimeSnapshot'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    RegimeHistoryResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegimeSnapshot'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    DriverBreakdownResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [drivers, rationale]
+          properties:
+            drivers:
+              type: array
+              items:
+                $ref: '#/components/schemas/DriverContribution'
+            rationale:
+              type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    PlaybookResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [regime, actions, antiPatterns]
+          properties:
+            regime:
+              type: string
+              enum: [risk_on, neutral, risk_off]
+            actions:
+              type: array
+              items:
+                type: string
+            antiPatterns:
+              type: array
+              items:
+                type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    AlertsResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertEvent'
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    RegimeSnapshot:
+      type: object
+      required:
+        - id
+        - asOf
+        - regime
+        - score
+        - confidence
+        - modelVersion
+      properties:
+        id:
+          type: string
+        asOf:
+          type: string
+          format: date-time
+        regime:
+          type: string
+          enum: [risk_on, neutral, risk_off]
+        score:
+          type: number
+          minimum: -1
+          maximum: 1
+        confidence:
+          type: string
+          enum: [low, medium, high]
+        modelVersion:
+          type: string
+        delta:
+          type: number
+        staleFlags:
+          type: array
+          items:
+            type: string
+
+    DriverContribution:
+      type: object
+      required: [driver, direction, weight, contribution]
+      properties:
+        driver:
+          type: string
+        direction:
+          type: string
+          enum: [positive, negative, neutral]
+        weight:
+          type: number
+        contribution:
+          type: number
+        explanation:
+          type: string
+
+    AlertEvent:
+      type: object
+      required: [id, createdAt, type, severity, title]
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        type:
+          type: string
+          enum: [regime_transition, significant_delta, data_stale]
+        severity:
+          type: string
+          enum: [info, warning, critical]
+        title:
+          type: string
+        message:
+          type: string
+        acknowledged:
+          type: boolean
+
+    Meta:
+      type: object
+      required: [requestId, generatedAt]
+      properties:
+        requestId:
+          type: string
+        generatedAt:
+          type: string
+          format: date-time
+        warnings:
+          type: array
+          items:
+            type: string
+
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
