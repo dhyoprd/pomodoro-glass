@@ -592,6 +592,18 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   line-height: 1.4;
 }
 
+.launch-path-fit-reasons {
+  display: grid;
+  gap: 3px;
+}
+
+.launch-path-fit-reasons small,
+.launch-path-fit-fallback {
+  color: #ddd6fe;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
 .launch-path-readiness {
   display: inline-flex;
   width: fit-content;

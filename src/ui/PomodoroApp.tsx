@@ -1374,6 +1374,7 @@ export function PomodoroApp() {
                 const isRecommendedPath = plan.preset.id === recommendedPreset?.preset.id;
                 const planReadiness = buildPlanReadinessSignal(plan.preset.settings, planningMinutes);
                 const planProfileFit = scorePresetForProfile(plan.preset, matchmaker);
+                const planProfileHighlights = planProfileFit.reasons.slice(0, 2);
 
                 return (
                   <article key={`launch-${plan.preset.id}`} className="launch-path-card">
@@ -1391,6 +1392,15 @@ export function PomodoroApp() {
                   </small>
                 </div>
                 <p>{plan.preset.outcome}</p>
+                {planProfileHighlights.length ? (
+                  <div className="launch-path-fit-reasons" aria-label={`${plan.preset.name} profile fit reasons`}>
+                    {planProfileHighlights.map((reason) => (
+                      <small key={`${plan.preset.id}-${reason}`}>✨ {reason}</small>
+                    ))}
+                  </div>
+                ) : (
+                  <small className="launch-path-fit-fallback">Profile fit is based on your energy, context, and goal signals.</small>
+                )}
                 <small className={`launch-path-readiness ${planReadiness.tone}`}>
                   {planReadiness.label} cadence · {planReadiness.summary}
                 </small>
