@@ -27,3 +27,15 @@
 - `README.md` docs index now includes frontend system design spec.
 - `IMPLEMENTATION-PLAN.md` iteration checklist now references frontend system design spec as completed planning artifact.
 - `SIGNAL-COMPASS-MASTER-TODO.md` frontend guardrails now include parse-error taxonomy and system-design linkage.
+
+## 2026-02-15 (Hour 7 execution planning artifacts)
+### Added
+- `SPRINT-EXECUTION-BOARD.md` with lane-based micro-iteration sequencing and “done when” acceptance gates:
+  - Lane A (contracts + guards),
+  - Lane B (Regime Hero vertical slice),
+  - Lane C (scoring core setup).
+
+### Changed
+- `README.md` docs index now includes sprint execution board.
+- `IMPLEMENTATION-PLAN.md` now includes Iteration 5 to formalize sprint-oriented execution sequencing.
+- `HOUR0-EXECUTION.md` now includes Hour 7 progress update and next tactical tasks.

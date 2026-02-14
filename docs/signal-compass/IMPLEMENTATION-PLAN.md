@@ -8,7 +8,7 @@
 
 ## Workstreams
 
-## WS1 — Domain and Contracts
+## WS1 - Domain and Contracts
 **Objective:** lock vocabulary and API shape before service logic.
 
 ### Tasks
@@ -22,7 +22,7 @@
 - Contract governance checklist and changelog pattern.
 - CI stub for schema validation and breaking-change checks.
 
-## WS2 — Scoring Core
+## WS2 - Scoring Core
 **Objective:** deterministic regime scoring and confidence logic.
 
 ### Tasks
@@ -35,7 +35,7 @@
 - Scoring module with >90% line coverage.
 - Golden test fixtures for deterministic output.
 
-## WS3 — API Service
+## WS3 - API Service
 **Objective:** expose read endpoints with stable envelope and observability.
 
 ### Tasks
@@ -48,13 +48,13 @@
 - `/v1/regime/current`, `/history`, `/drivers`, `/playbook/current`, `/alerts`
 - API smoke tests in CI.
 
-## WS4 — Frontend Experience
+## WS4 - Frontend Experience
 **Objective:** clear, scan-fast, and explainable dashboard.
 
 ### Tasks
 1. Create API client + runtime response guards.
 2. Implement hero card (regime, confidence, freshness).
-3. Implement driver contribution panel (top +/− and rationale).
+3. Implement driver contribution panel (top +/- and rationale).
 4. Implement timeline + alert center with loading/empty/error states.
 
 ### Deliverables
@@ -63,12 +63,12 @@
 
 ## Hour-Scale Micro-Iterations (Execution Ready)
 
-### Iteration 1 — Contract Hardening (Done)
+### Iteration 1 - Contract Hardening (Done)
 - Added explicit error response envelopes and reusable query params.
 - Added freshness and pagination metadata to support trustworthy UX.
 - Introduced changelog + governance docs.
 
-### Iteration 2 — Frontend Contract Consumption (In Progress)
+### Iteration 2 - Frontend Contract Consumption (In Progress)
 - [x] Define senior-FE implementation blueprint (feature modules, container/presenter split, VM mapping contracts).
 - [x] Define slice-level frontend delivery plan with acceptance criteria + quality gates.
 - [x] Define frontend system design spec (ports, VM boundaries, caching/revalidation, parse-error taxonomy).
@@ -76,16 +76,24 @@
 - [ ] Build API client wrappers and parser guards.
 - [ ] Add mock fixture set aligned to `1.1.0-hour1`.
 
-### Iteration 3 — Scoring Slice (In Progress)
+### Iteration 3 - Scoring Slice (In Progress)
 - [x] Finalized V1 alert-threshold ADR (`ADR-001-alert-threshold-policy.md`) covering crossing/delta/gating/cooldown rules.
 - [x] Authored scoring implementation execution spec (`SCORING-ENGINE-EXECUTION-SPEC.md`) with ports/contracts/fixtures/test gates.
 - [ ] Implement pure scoring module with fixture-driven tests.
 - [ ] Add stale-data behavior path returning degraded confidence.
 - [ ] Encode suppression ordering (crossing > delta) in alert policy tests.
 
-### Iteration 4 — Vertical Slice Demo (Queued)
+### Iteration 4 – Vertical Slice Demo (Queued)
 - Hook mock API responses to dashboard shell.
 - Render hero + drivers + alerts with fallback states.
+
+### Iteration 5 – Sprint-Oriented Execution Sequencing (Done)
+- [x] Converted broad backlog into lane-based sprint board with acceptance gates.
+- [x] Added explicit FE/BE contract-boundary lane, first vertical slice lane, and scoring-core lane.
+- [x] Added cross-cutting quality gates and risk countermeasures for rapid iteration.
+- [x] Defined this-hour success criteria to support focused implementation handoff.
+
+Reference: `SPRINT-EXECUTION-BOARD.md`
 
 ## Definition of Ready (per task)
 - Business rule written in one sentence.
