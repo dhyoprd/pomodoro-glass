@@ -376,6 +376,19 @@ export function PomodoroApp() {
 
   const questProgress = useMemo(() => buildDailyQuestProgress(state), [state]);
 
+  const questRewardSummary = useMemo(() => {
+    const totalRewardXp = questProgress.reduce((sum, quest) => sum + quest.rewardXp, 0);
+    const earnedRewardXp = questProgress
+      .filter((quest) => quest.complete)
+      .reduce((sum, quest) => sum + quest.rewardXp, 0);
+
+    return {
+      totalRewardXp,
+      earnedRewardXp,
+      remainingRewardXp: Math.max(totalRewardXp - earnedRewardXp, 0),
+    };
+  }, [questProgress]);
+
   const socialProofPulse = useMemo(() => {
     const totalFocusWins = LANDING_SOCIAL_PROOF.reduce((sum, story) => {
       const wins = Number(story.focusWins.match(/\d+/)?.[0] ?? 0);
@@ -2022,7 +2035,10 @@ export function PomodoroApp() {
       <section className="quests" aria-label="Daily quests">
           <div className="quests-head">
             <h2>Daily Quests</h2>
-            <span>{questProgress.filter((quest) => quest.complete).length}/{questProgress.length} complete</span>
+            <span>
+              {questProgress.filter((quest) => quest.complete).length}/{questProgress.length} complete ·
+              {' '}+{questRewardSummary.earnedRewardXp}/{questRewardSummary.totalRewardXp} XP banked · {questRewardSummary.remainingRewardXp} XP left
+            </span>
           </div>
           <div className="quest-grid">
             {questProgress.map((quest) => (
@@ -2032,6 +2048,7 @@ export function PomodoroApp() {
                   <span>{quest.progressValue}/{quest.target}</span>
                 </div>
                 <p>{quest.description}</p>
+                <small>{quest.complete ? 'Reward secured' : 'Reward on completion'}: +{quest.rewardXp} XP</small>
                 <div className="progress-wrap" aria-hidden="true">
                   <div className="progress-bar quest-progress-bar" style={{ width: `${quest.progress}%` }} />
                 </div>
