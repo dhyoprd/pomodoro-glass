@@ -7,6 +7,7 @@
 - [Frontend Implementation Blueprint](./FRONTEND-IMPLEMENTATION-BLUEPRINT.md)
 - [Frontend Delivery Plan](./FRONTEND-DELIVERY-PLAN.md)
 - [Frontend Quality Engineering Plan](./FRONTEND-QUALITY-ENGINEERING-PLAN.md)
+- [Frontend System Design Spec](./FRONTEND-SYSTEM-DESIGN-SPEC.md)
 - [Scoring Engine Execution Spec](./SCORING-ENGINE-EXECUTION-SPEC.md)
 - [Execution Log](./HOUR0-EXECUTION.md)
 - [Contract Governance](./CONTRACT-GOVERNANCE.md)

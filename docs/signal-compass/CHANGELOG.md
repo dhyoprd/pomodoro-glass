@@ -19,6 +19,11 @@
 - `SCORING-ENGINE-EXECUTION-SPEC.md` with deterministic scoring module boundaries, domain contracts, fixture matrix, and test gates.
 - `FRONTEND-QUALITY-ENGINEERING-PLAN.md` with enforceable senior-FE quality gates and CI policy checks.
 
+## 2026-02-15 (Hour 6 planning artifacts)
+### Added
+- `FRONTEND-SYSTEM-DESIGN-SPEC.md` with implementation-grade frontend architecture boundaries, VM contracts, read-port interfaces, revalidation policy, and parse-error taxonomy.
+
 ### Changed
-- `IMPLEMENTATION-PLAN.md` iteration checklist now references scoring execution spec as completed planning artifact.
-- `SIGNAL-COMPASS-MASTER-TODO.md` frontend guardrails now include CI policy checks and quality-plan linkage.
+- `README.md` docs index now includes frontend system design spec.
+- `IMPLEMENTATION-PLAN.md` iteration checklist now references frontend system design spec as completed planning artifact.
+- `SIGNAL-COMPASS-MASTER-TODO.md` frontend guardrails now include parse-error taxonomy and system-design linkage.

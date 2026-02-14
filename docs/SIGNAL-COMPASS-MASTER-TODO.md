@@ -68,10 +68,12 @@
 ### H.1 Frontend Architecture Guardrails
 - [x] Frontend implementation blueprint documented (`docs/signal-compass/FRONTEND-IMPLEMENTATION-BLUEPRINT.md`).
 - [x] Frontend quality engineering plan documented (`docs/signal-compass/FRONTEND-QUALITY-ENGINEERING-PLAN.md`).
+- [x] Frontend system design spec documented (`docs/signal-compass/FRONTEND-SYSTEM-DESIGN-SPEC.md`).
 - [ ] Enforce container/presenter split for all Signal Compass feature slices.
 - [ ] Enforce DTO -> VM mapper boundary (no raw DTO in presentational components).
 - [ ] Standardize loading/empty/error/stale UI boundary component.
 - [ ] Add CI policy checks for DTO import leakage and fixture parity.
+- [ ] Introduce parse-error taxonomy + observability event contract (`signal_compass_contract_parse_error`).
 
 ## I) UX Rules (Aligned with current design direction)
 - [ ] Max 1 primary CTA above fold.

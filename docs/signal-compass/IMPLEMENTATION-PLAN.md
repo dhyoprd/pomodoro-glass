@@ -71,6 +71,7 @@
 ### Iteration 2 — Frontend Contract Consumption (In Progress)
 - [x] Define senior-FE implementation blueprint (feature modules, container/presenter split, VM mapping contracts).
 - [x] Define slice-level frontend delivery plan with acceptance criteria + quality gates.
+- [x] Define frontend system design spec (ports, VM boundaries, caching/revalidation, parse-error taxonomy).
 - [ ] Generate TS types from OpenAPI.
 - [ ] Build API client wrappers and parser guards.
 - [ ] Add mock fixture set aligned to `1.1.0-hour1`.
