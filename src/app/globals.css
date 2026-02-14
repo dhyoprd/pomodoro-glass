@@ -1695,6 +1695,16 @@ section {
   color: var(--muted);
   font-size: 0.8rem;
 }
+
+.finish-line-nudge {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: linear-gradient(145deg, rgba(14, 116, 144, 0.18) 0%, rgba(3, 7, 18, 0.55) 100%);
+  color: #bae6fd;
+  font-size: 0.82rem;
+}
 .mode-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .mode {
   border: 1px solid var(--line-strong);
@@ -2403,10 +2413,10 @@ input:focus { border-color: #71717a; }
 
   .mobile-command-status {
     grid-column: 1 / -1;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    gap: 4px 8px;
     min-width: 0;
     padding: 2px 2px 0;
   }
@@ -2422,6 +2432,13 @@ input:focus { border-color: #71717a; }
     color: var(--muted);
     text-align: right;
     white-space: nowrap;
+  }
+
+  .mobile-command-status small {
+    grid-column: 1 / -1;
+    font-size: 0.64rem;
+    color: #bae6fd;
+    line-height: 1.35;
   }
 
   .mobile-command-bar button {

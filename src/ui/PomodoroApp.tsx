@@ -358,6 +358,28 @@ export function PomodoroApp() {
     };
   }, [focusCombo.multiplier, state.mode, state.settings.focus, state.settings.longBreakInterval, state.stats.completed]);
 
+  const finishLineNudge = useMemo(() => {
+    if (!state.timer.running) return null;
+
+    if (state.mode === 'focus') {
+      if (state.timer.remaining <= 60) {
+        return 'Finish line: final 60 seconds. Lock in and close this focus win.';
+      }
+
+      if (state.timer.remaining <= 5 * 60) {
+        return `Finish line: ${Math.ceil(state.timer.remaining / 60)} minute${Math.ceil(state.timer.remaining / 60) === 1 ? '' : 's'} left in this focus sprint.`;
+      }
+
+      return null;
+    }
+
+    if (state.timer.remaining <= 30) {
+      return 'Break is almost done. Queue your next task and re-enter with intent.';
+    }
+
+    return null;
+  }, [state.mode, state.timer.remaining, state.timer.running]);
+
   const achievementProgress = useMemo(() => buildAchievementProgress(state), [state]);
 
   const questProgress = useMemo(() => buildDailyQuestProgress(state), [state]);
@@ -1140,6 +1162,7 @@ export function PomodoroApp() {
         <div className="mobile-command-status" aria-live="polite">
           <strong>{mobileModeIcon} {activeModeLabel}</strong>
           <span>{formatTime(state.timer.remaining)} · {Math.round(progress)}% run</span>
+          {finishLineNudge ? <small>{finishLineNudge}</small> : null}
         </div>
         <button type="button" onClick={() => controller.toggleTimer()}>
           {state.timer.running ? 'Pause' : 'Start'}
@@ -1960,6 +1983,9 @@ export function PomodoroApp() {
             <strong>{sessionPulse.title}</strong>
             <span>{sessionPulse.detail}</span>
           </div>
+          {finishLineNudge ? (
+            <p className="finish-line-nudge" role="status" aria-live="polite">{finishLineNudge}</p>
+          ) : null}
         </section>
 
       <section className="stats">
