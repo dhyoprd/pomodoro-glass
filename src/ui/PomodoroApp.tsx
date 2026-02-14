@@ -81,6 +81,7 @@ const PLANNING_MINUTE_PRESETS = [30, 45, 60, 90, 120, 180, 240] as const;
 const SECTION_NAV_ITEMS = [
   { id: 'startup-hero', label: 'Overview', mobileLabel: 'Home' },
   { id: 'launch-paths', label: 'Launch Path', mobileLabel: 'Path' },
+  { id: 'outcome-blueprints', label: 'Outcomes', mobileLabel: 'Wins' },
   { id: 'focus-timer', label: 'Timer', mobileLabel: 'Timer' },
   { id: 'session-planner', label: 'Planner', mobileLabel: 'Plan' },
   { id: 'task-capture', label: 'Tasks', mobileLabel: 'Tasks' },
