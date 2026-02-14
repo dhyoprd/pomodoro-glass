@@ -82,6 +82,12 @@ header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
   display: none;
 }
 
+.hotkey-hint {
+  margin: -4px 0 0;
+  color: #71717a;
+  font-size: 0.74rem;
+}
+
 .startup-hero {
   display: grid;
   gap: 12px;

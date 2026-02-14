@@ -179,6 +179,18 @@ export function PomodoroApp() {
       return tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button';
     };
 
+    const navigateSectionByDelta = (delta: 1 | -1) => {
+      const activeIndex = SECTION_NAV_ITEMS.findIndex((item) => item.id === activeSectionId);
+      const normalizedIndex = activeIndex >= 0 ? activeIndex : 0;
+      const nextIndex = (normalizedIndex + delta + SECTION_NAV_ITEMS.length) % SECTION_NAV_ITEMS.length;
+      const nextSection = SECTION_NAV_ITEMS[nextIndex];
+
+      if (!nextSection) return;
+
+      setActiveSectionId(nextSection.id);
+      scrollToSection(nextSection.id);
+    };
+
     const onKeyDown = (e: KeyboardEvent) => {
       const active = document.activeElement as HTMLElement | null;
       if (shouldIgnoreHotkeys(active)) return;
@@ -192,11 +204,21 @@ export function PomodoroApp() {
         e.preventDefault();
         controller.resetTimer();
       }
+
+      if (e.key === 'ArrowRight' && e.altKey) {
+        e.preventDefault();
+        navigateSectionByDelta(1);
+      }
+
+      if (e.key === 'ArrowLeft' && e.altKey) {
+        e.preventDefault();
+        navigateSectionByDelta(-1);
+      }
     };
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [controller]);
+  }, [activeSectionId, controller]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -1110,6 +1132,9 @@ export function PomodoroApp() {
           );
         })}
       </nav>
+      <p className="hotkey-hint" aria-label="Keyboard shortcuts">
+        Hotkeys: Space (start/pause), R (reset), Alt + ← / → (section nav)
+      </p>
 
       <aside className="mobile-command-bar" aria-label="Mobile quick actions">
         <div className="mobile-command-status" aria-live="polite">
