@@ -68,14 +68,19 @@
 - Added freshness and pagination metadata to support trustworthy UX.
 - Introduced changelog + governance docs.
 
-### Iteration 2 — Frontend Contract Consumption (Next)
-- Generate TS types from OpenAPI.
-- Build API client wrappers and parser guards.
-- Add mock fixture set aligned to `1.1.0-hour1`.
+### Iteration 2 — Frontend Contract Consumption (In Progress)
+- [x] Define senior-FE implementation blueprint (feature modules, container/presenter split, VM mapping contracts).
+- [x] Define slice-level frontend delivery plan with acceptance criteria + quality gates.
+- [ ] Generate TS types from OpenAPI.
+- [ ] Build API client wrappers and parser guards.
+- [ ] Add mock fixture set aligned to `1.1.0-hour1`.
 
-### Iteration 3 — Scoring Slice (Queued)
-- Implement pure scoring module with fixture-driven tests.
-- Add stale-data behavior path returning degraded confidence.
+### Iteration 3 — Scoring Slice (In Progress)
+- [x] Finalized V1 alert-threshold ADR (`ADR-001-alert-threshold-policy.md`) covering crossing/delta/gating/cooldown rules.
+- [x] Authored scoring implementation execution spec (`SCORING-ENGINE-EXECUTION-SPEC.md`) with ports/contracts/fixtures/test gates.
+- [ ] Implement pure scoring module with fixture-driven tests.
+- [ ] Add stale-data behavior path returning degraded confidence.
+- [ ] Encode suppression ordering (crossing > delta) in alert policy tests.
 
 ### Iteration 4 — Vertical Slice Demo (Queued)
 - Hook mock API responses to dashboard shell.

@@ -51,6 +51,7 @@
 - [ ] Add explainability text generator from structured drivers.
 
 ## G) Alerts Engine
+- [x] Finalize V1 threshold ADR (crossing/delta/gating/cooldown) — `docs/signal-compass/ADR-001-alert-threshold-policy.md`.
 - [ ] Trigger on regime crossing thresholds.
 - [ ] Trigger on significant delta move.
 - [ ] Add cooldown/debounce to prevent spam.
@@ -63,6 +64,14 @@
 - [ ] Timeline: 7d/30d regime track.
 - [ ] Playbook panel: regime-aligned actions + anti-overreaction guidance.
 - [ ] Alerts center with clear cause context.
+
+### H.1 Frontend Architecture Guardrails
+- [x] Frontend implementation blueprint documented (`docs/signal-compass/FRONTEND-IMPLEMENTATION-BLUEPRINT.md`).
+- [x] Frontend quality engineering plan documented (`docs/signal-compass/FRONTEND-QUALITY-ENGINEERING-PLAN.md`).
+- [ ] Enforce container/presenter split for all Signal Compass feature slices.
+- [ ] Enforce DTO -> VM mapper boundary (no raw DTO in presentational components).
+- [ ] Standardize loading/empty/error/stale UI boundary component.
+- [ ] Add CI policy checks for DTO import leakage and fixture parity.
 
 ## I) UX Rules (Aligned with current design direction)
 - [ ] Max 1 primary CTA above fold.

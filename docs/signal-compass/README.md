@@ -4,9 +4,14 @@
 - [Architecture](./ARCHITECTURE.md)
 - [OpenAPI Contract](./openapi.v1.yaml)
 - [Implementation Plan](./IMPLEMENTATION-PLAN.md)
+- [Frontend Implementation Blueprint](./FRONTEND-IMPLEMENTATION-BLUEPRINT.md)
+- [Frontend Delivery Plan](./FRONTEND-DELIVERY-PLAN.md)
+- [Frontend Quality Engineering Plan](./FRONTEND-QUALITY-ENGINEERING-PLAN.md)
+- [Scoring Engine Execution Spec](./SCORING-ENGINE-EXECUTION-SPEC.md)
 - [Execution Log](./HOUR0-EXECUTION.md)
 - [Contract Governance](./CONTRACT-GOVERNANCE.md)
 - [Contract Changelog](./CHANGELOG.md)
+- [ADR-001: Alert Threshold Policy](./ADR-001-alert-threshold-policy.md)
 
 ## Program Governance
 - [Master Todo](../SIGNAL-COMPASS-MASTER-TODO.md)

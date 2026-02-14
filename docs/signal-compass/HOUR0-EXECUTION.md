@@ -50,3 +50,83 @@ Kick off immediately with actionable assets that unblock parallel implementation
 2. Create runtime guards (zod or equivalent) for all envelope DTOs.
 3. Scaffold mock fixtures for `current`, `history`, `drivers`, `alerts`, and `playbook`.
 4. Wire first dashboard shell view-model mapper with loading/error/empty states.
+
+---
+
+## Hour 2 Progress Update
+
+### Completed
+- Added `FRONTEND-IMPLEMENTATION-BLUEPRINT.md` with:
+  - feature-sliced structure for Signal Compass route,
+  - strict container/presenter + mapper + VM contract boundaries,
+  - runtime guard strategy for API trust boundaries,
+  - frontend unit/integration/contract smoke testing matrix,
+  - cycle-based execution steps for rapid micro-iteration.
+- Updated implementation plan to mark Iteration 2 as active and checklist-driven.
+- Updated docs index to include the frontend blueprint for implementation handoff.
+
+### Next Up (Hour 2.5)
+1. Implement OpenAPI type generation output target and scripts.
+2. Commit runtime guards scaffold (`guards.ts`) for all primary read envelopes.
+3. Add fixture baseline files and parser smoke tests.
+4. Start `RegimeHeroContainer` + VM mapper + deterministic stale/error rendering.
+
+---
+
+## Hour 3 Progress Update
+
+### Completed
+- Authored `FRONTEND-DELIVERY-PLAN.md` with execution-ready slice backlog (FE-01..FE-04).
+- Added per-slice acceptance criteria, risk/mitigation notes, and shared quality gates.
+- Added explicit PR review checklist enforcing SOLID boundaries and stale/error-state proof.
+- Updated docs index and implementation plan to include delivery-plan checkpoint completion.
+
+### Next Up (Hour 3.5)
+1. Wire `contracts:generate` and `contracts:check` scripts in project tooling.
+2. Scaffold `generated.ts` + `guards.ts` and add parser/fixture smoke tests.
+3. Implement FE-02 hero vertical slice behind feature flag.
+4. Capture first demo screenshots for PR gate evidence.
+
+---
+
+## Hour 4 Progress Update
+
+### Completed
+- Authored and accepted `ADR-001-alert-threshold-policy.md` to unblock alerts-engine implementation.
+- Locked deterministic V1 thresholds for:
+  - regime boundary crossings,
+  - delta-magnitude severity,
+  - trust gating using freshness/confidence,
+  - cooldown + debounce controls.
+- Updated implementation plan to move Iteration 3 (Scoring Slice) to **In Progress** with explicit suppression-order test requirement.
+
+### Why this matters
+- Removes ambiguous alert behavior before coding.
+- Gives backend/frontend a shared source-of-truth for alert rationale copy and test fixtures.
+- Reduces false-positive risk while preserving explainability.
+
+### Next Up (Hour 4.5)
+1. Add alert fixture matrix for threshold boundaries and suppression paths.
+2. Implement `AlertPolicyPort` contract and baseline policy adapter.
+3. Add unit tests for cooldown fingerprinting and stale/low-confidence suppression.
+4. Reflect policy evidence fields in OpenAPI response examples.
+
+---
+
+## Hour 5 Progress Update
+
+### Completed
+- Authored `SCORING-ENGINE-EXECUTION-SPEC.md` with implementation-ready interfaces, deterministic rules, fixture packs, and micro-iteration sequence for backend scoring work.
+- Authored `FRONTEND-QUALITY-ENGINEERING-PLAN.md` to enforce senior-FE quality gates (DTO/VM boundaries, state-completeness tests, a11y smoke, CI policy checks).
+- Updated docs index and implementation/todo plans to wire these new execution artifacts into active workstreams.
+
+### Why this matters
+- Removes ambiguity between architecture docs and coding tasks.
+- Converts broad SOLID guidance into enforceable module contracts and PR/CI gates.
+- De-risks contract and UI-state regressions before implementation accelerates.
+
+### Next Up (Hour 5.5)
+1. Implement contract guard scaffolding + parse-error taxonomy (`guards.ts`).
+2. Add fixture packs + parser smoke tests for all read endpoints.
+3. Scaffold scoring policy interfaces in code and attach golden test harness.
+4. Add CI script to block DTO imports inside presentational components.
