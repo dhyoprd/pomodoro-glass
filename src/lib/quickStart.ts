@@ -14,6 +14,17 @@ const PLANNING_MINUTES_MIN = 30;
 const PLANNING_MINUTES_MAX = 360;
 const PLANNING_MINUTES_STEP = 15;
 
+const QUICK_START_QUERY_KEYS = [
+  'preset',
+  'autostart',
+  'task',
+  'minutes',
+  'profileEnergy',
+  'profileContext',
+  'profileGoal',
+  'source',
+] as const;
+
 const LAUNCH_SOURCE_BADGES: Record<string, LaunchSourceBadge> = {
   'shortcut-deep-work': {
     icon: '🚀',
@@ -62,12 +73,19 @@ const LAUNCH_SOURCE_BADGES: Record<string, LaunchSourceBadge> = {
   },
 };
 
+function removeQuickStartParams(url: URL): void {
+  QUICK_START_QUERY_KEYS.forEach((key) => {
+    url.searchParams.delete(key);
+  });
+}
+
 export function buildPresetQuickStartUrl(
   currentUrl: string,
   presetId: string,
   options?: { task?: string; planningMinutes?: number; source?: string; autostart?: boolean },
 ): string {
   const url = new URL(currentUrl);
+  removeQuickStartParams(url);
   url.searchParams.set('preset', presetId);
 
   if (options?.autostart ?? true) {
@@ -102,6 +120,7 @@ export function buildMatchmakerProfileUrl(
   options?: { source?: string },
 ): string {
   const url = new URL(currentUrl);
+  removeQuickStartParams(url);
   url.searchParams.set('profileEnergy', profile.energy);
   url.searchParams.set('profileContext', profile.context);
   url.searchParams.set('profileGoal', profile.goal);
@@ -118,26 +137,11 @@ export function consumeQuickStartParamsFromUrl(currentUrl: string): void {
   if (typeof window === 'undefined') return;
 
   const url = new URL(currentUrl);
-  const hadQuickStartParams =
-    url.searchParams.has('preset') ||
-    url.searchParams.has('autostart') ||
-    url.searchParams.has('task') ||
-    url.searchParams.has('minutes') ||
-    url.searchParams.has('profileEnergy') ||
-    url.searchParams.has('profileContext') ||
-    url.searchParams.has('profileGoal') ||
-    url.searchParams.has('source');
+  const hadQuickStartParams = QUICK_START_QUERY_KEYS.some((key) => url.searchParams.has(key));
 
   if (!hadQuickStartParams) return;
 
-  url.searchParams.delete('preset');
-  url.searchParams.delete('autostart');
-  url.searchParams.delete('task');
-  url.searchParams.delete('minutes');
-  url.searchParams.delete('profileEnergy');
-  url.searchParams.delete('profileContext');
-  url.searchParams.delete('profileGoal');
-  url.searchParams.delete('source');
+  removeQuickStartParams(url);
 
   const nextPath = `${url.pathname}${url.search}${url.hash}`;
   window.history.replaceState(window.history.state, '', nextPath);
