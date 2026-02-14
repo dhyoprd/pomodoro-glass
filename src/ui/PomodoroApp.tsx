@@ -15,6 +15,12 @@ import { LANDING_SOCIAL_PROOF } from '@/constants/landingProof';
 import { LANDING_METRICS } from '@/constants/landingMetrics';
 import { LANDING_FAQ } from '@/constants/landingFaq';
 import {
+  findMatchmakerPersona,
+  HERO_QUICK_SCENARIOS,
+  HERO_TIME_BUDGET_PRESETS,
+  MATCHMAKER_PERSONAS,
+} from '@/constants/startupHero';
+import {
   XP_PER_FOCUS_MINUTE,
   XP_PER_SESSION,
   buildAchievementProgress,
@@ -85,69 +91,6 @@ type SectionId = (typeof SECTION_NAV_ITEMS)[number]['id'];
 const SECTION_IDS: ReadonlySet<SectionId> = new Set(SECTION_NAV_ITEMS.map((item) => item.id));
 
 const isSectionId = (value: string): value is SectionId => SECTION_IDS.has(value as SectionId);
-
-const MATCHMAKER_PERSONAS: ReadonlyArray<{
-  id: string;
-  label: string;
-  blurb: string;
-  profile: {
-    energy: MatchmakerEnergy;
-    context: MatchmakerContext;
-    goal: MatchmakerGoal;
-  };
-}> = [
-  {
-    id: 'deep-desk-shipper',
-    label: 'Deep Desk Shipper',
-    blurb: 'High energy + deep work output at your desk.',
-    profile: { energy: 'high', context: 'desk', goal: 'depth' },
-  },
-  {
-    id: 'steady-consistency-builder',
-    label: 'Steady Consistency Builder',
-    blurb: 'Reliable daily progress with balanced energy.',
-    profile: { energy: 'steady', context: 'desk', goal: 'consistency' },
-  },
-  {
-    id: 'commute-rescue-runner',
-    label: 'Commute Rescue Runner',
-    blurb: 'Low-friction momentum restart while mobile.',
-    profile: { energy: 'low', context: 'mobile', goal: 'restart' },
-  },
-] as const;
-
-const HERO_QUICK_SCENARIOS: ReadonlyArray<{
-  id: string;
-  label: string;
-  description: string;
-  personaId: string;
-}> = [
-  {
-    id: 'hero-scenario-deep-desk',
-    label: 'Deep desk ship',
-    description: 'High-energy desk sprint for shipping output fast.',
-    personaId: 'deep-desk-shipper',
-  },
-  {
-    id: 'hero-scenario-steady-consistency',
-    label: 'Steady consistency',
-    description: 'Balanced daily loop for predictable progress.',
-    personaId: 'steady-consistency-builder',
-  },
-  {
-    id: 'hero-scenario-commute-rescue',
-    label: 'Commute rescue',
-    description: 'Low-friction mobile reset when momentum is slipping.',
-    personaId: 'commute-rescue-runner',
-  },
-] as const;
-
-const HERO_TIME_BUDGET_PRESETS: ReadonlyArray<{ minutes: number; label: string }> = [
-  { minutes: 45, label: 'Quick sprint' },
-  { minutes: 90, label: 'Standard run' },
-  { minutes: 120, label: 'Deep work' },
-  { minutes: 180, label: 'Long game' },
-] as const;
 
 export function PomodoroApp() {
   const { state, controller } = usePomodoroController();
@@ -706,14 +649,14 @@ export function PomodoroApp() {
   };
 
   const applyMatchmakerPersona = (personaId: string) => {
-    const persona = MATCHMAKER_PERSONAS.find((item) => item.id === personaId);
+    const persona = findMatchmakerPersona(personaId);
     if (!persona) return;
 
     setMatchmaker(persona.profile);
   };
 
   const launchHeroScenario = (personaId: string) => {
-    const persona = MATCHMAKER_PERSONAS.find((item) => item.id === personaId);
+    const persona = findMatchmakerPersona(personaId);
     if (!persona) return;
 
     setMatchmaker(persona.profile);
@@ -2348,5 +2291,8 @@ function formatTimelineLabel(kind: 'focus' | 'shortBreak' | 'longBreak'): string
   if (kind === 'shortBreak') return 'Short break';
   return 'Long break';
 }
+
+
+
 
 
