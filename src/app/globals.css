@@ -2535,3 +2535,112 @@ input:focus { border-color: #71717a; }
     grid-template-columns: 1fr;
   }
 }
+
+/* Signal Compass route */
+.sc-root {
+  width: min(1080px, 96vw);
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+
+.sc-hero {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.sc-kicker {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sc-hero h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+  letter-spacing: -0.02em;
+}
+
+.sc-sub { color: var(--muted); margin: 8px 0 0; }
+
+.sc-hero-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sc-btn {
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  padding: 9px 14px;
+  text-decoration: none;
+  color: var(--text);
+  background: #18181b;
+}
+
+.sc-btn-primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+.sc-btn-ghost { background: transparent; }
+
+.sc-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 12px;
+}
+
+.sc-card {
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.sc-card ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+}
+
+.sc-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.sc-card-hero h2 { margin: 8px 0 4px; font-size: 1.6rem; }
+.sc-meta { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+.sc-subscores {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.sc-subcard {
+  border: 1px solid var(--line);
+  background: #0f0f12;
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+}
+
+.sc-subcard span { color: var(--muted); font-size: 0.82rem; }
+.sc-subcard strong { font-size: 1.2rem; }
+.sc-subcard em { color: var(--ok); font-style: normal; font-size: 0.82rem; }
+
+@media (max-width: 980px) {
+  .sc-grid { grid-template-columns: 1fr; }
+  .sc-subscores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
