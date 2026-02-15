@@ -103,6 +103,22 @@ Reference: `SPRINT-EXECUTION-BOARD.md`
 
 Reference: `HOUR8-IMPLEMENTATION-KICKOFF.md`
 
+### Iteration 7 – Hourly Execution Cutline (Done)
+- [x] Defined strict 60-minute micro-iteration cutline (M1-M4) for contract tooling, hero slice boundaries, scoring determinism, and PR packaging.
+- [x] Added non-negotiable PR readiness contract (boundary/state/contract/determinism/observability proof).
+- [x] Added risk burn-down map to prevent planning-to-code drift and hidden cross-PR coupling.
+- [x] Added reviewer fast-path checklist to speed merges without relaxing quality gates.
+
+Reference: `HOUR9-EXECUTION-CUTLINE.md`
+
+### Iteration 8 – Hour 10 Commit-Grade Execution Plan (Done)
+- [x] Converted Hour 9 cutline into a strict execution sequence with timeboxes and acceptance checks.
+- [x] Added one-push packaging rules to prevent unrelated churn and preserve revert safety.
+- [x] Added PR narrative template to keep reviewer context concise and implementation-factual.
+- [x] Added explicit definition of success centered on deterministic verification commands.
+
+Reference: `HOUR10-MICRO-ITERATION-PLAN.md`
+
 ## Definition of Ready (per task)
 - Business rule written in one sentence.
 - Input/output contract identified.

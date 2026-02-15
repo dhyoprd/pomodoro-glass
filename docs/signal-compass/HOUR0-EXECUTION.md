@@ -173,3 +173,40 @@ Kick off immediately with actionable assets that unblock parallel implementation
 2. Implement `DataStateBoundary` + `RegimeHeroVm` mapper with full state-matrix tests.
 3. Scaffold scoring policy ports and first golden fixture tests.
 4. Wire policy scripts into `npm run check` and capture baseline pass/fail evidence.
+
+---
+
+## Hour 9 Progress Update
+
+### Completed
+- Authored `HOUR9-EXECUTION-CUTLINE.md` to constrain the next coding window into four micro-iterations with explicit in/out-of-scope boundaries.
+- Added PR readiness contract with proof obligations for:
+  - SOLID boundary integrity,
+  - full data-state coverage,
+  - contract drift detection,
+  - deterministic scoring fixture behavior,
+  - parse-error observability.
+- Added risk burn-down map and reviewer fast-path checklist to reduce review latency without relaxing merge safety.
+- Synced changelog/index/implementation/sprint docs to keep execution artifacts coherent.
+
+### Next Up (Hour 9.5)
+1. Implement contract script scaffolding in `package.json` + smoke script file.
+2. Add first fixture schema and invalid-case fail path for contract checks.
+3. Scaffold Regime Hero VM + mapper signatures and DataStateBoundary API.
+4. Add scoring policy ports + golden fixture schema/test file stubs.
+
+---
+
+## Hour 10 Progress Update
+
+### Completed
+- Authored `HOUR10-MICRO-ITERATION-PLAN.md` to convert Hour 9 cutline into commit-grade execution with strict timeboxes, deliverables, and acceptance checks.
+- Added explicit one-push packaging rules to prevent unrelated diff churn and keep this run revert-safe.
+- Added deterministic success criteria and PR narrative template so reviewer validation remains fast and unambiguous.
+- Synchronized docs index, changelog, implementation plan, and sprint board with Hour 10 artifact references.
+
+### Next Up (Execution Window)
+1. Activate contract scripts + smoke fixture pair and confirm failing invalid path.
+2. Codify Regime Hero VM mapper + `DataStateBoundary` contract with full state matrix tests.
+3. Seed scoring policy ports + deterministic golden fixture harness.
+4. Package one clean commit and push with focused Signal Compass scope.

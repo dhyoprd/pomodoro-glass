@@ -11,6 +11,8 @@
 - [Scoring Engine Execution Spec](./SCORING-ENGINE-EXECUTION-SPEC.md)
 - [Sprint Execution Board](./SPRINT-EXECUTION-BOARD.md)
 - [Hour 8 Implementation Kickoff](./HOUR8-IMPLEMENTATION-KICKOFF.md)
+- [Hour 9 Execution Cutline](./HOUR9-EXECUTION-CUTLINE.md)
+- [Hour 10 Micro-Iteration Plan](./HOUR10-MICRO-ITERATION-PLAN.md)
 - [Execution Log](./HOUR0-EXECUTION.md)
 - [Contract Governance](./CONTRACT-GOVERNANCE.md)
 - [Contract Changelog](./CHANGELOG.md)

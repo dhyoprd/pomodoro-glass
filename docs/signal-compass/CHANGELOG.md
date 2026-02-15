@@ -49,3 +49,21 @@
 - `IMPLEMENTATION-PLAN.md` now includes Iteration 6 (coding window kickoff packaging).
 - `SPRINT-EXECUTION-BOARD.md` now includes Hour 8 success criteria and progress snapshot.
 - `HOUR0-EXECUTION.md` now includes Hour 8 completion log and Hour 8.5 next actions.
+
+## 2026-02-15 (Hour 9 execution cutline planning)
+### Added
+- `HOUR9-EXECUTION-CUTLINE.md` with strict 60-minute micro-iteration cutline (M1-M4), PR readiness contract, risk burn-down map, and reviewer fast-path checklist.
+
+### Changed
+- `README.md` docs index now includes the Hour 9 execution-cutline artifact.
+- `IMPLEMENTATION-PLAN.md` now includes Iteration 7 (hourly execution cutline).
+- `SPRINT-EXECUTION-BOARD.md` now includes Hour 9 progress snapshot and references.
+
+## 2026-02-15 (Hour 10 commit-grade micro-iteration planning)
+### Added
+- `HOUR10-MICRO-ITERATION-PLAN.md` with strict timeboxed M1-M4 deliverables, acceptance checks, one-push packaging rules, and reviewer-facing PR narrative template.
+
+### Changed
+- `README.md` docs index now includes Hour 10 micro-iteration plan.
+- `IMPLEMENTATION-PLAN.md` now includes Iteration 8 (commit-grade execution plan).
+- `SPRINT-EXECUTION-BOARD.md` now includes Hour 10 progress snapshot and references.
