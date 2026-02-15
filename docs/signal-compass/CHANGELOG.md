@@ -67,3 +67,12 @@
 - `README.md` docs index now includes Hour 10 micro-iteration plan.
 - `IMPLEMENTATION-PLAN.md` now includes Iteration 8 (commit-grade execution plan).
 - `SPRINT-EXECUTION-BOARD.md` now includes Hour 10 progress snapshot and references.
+
+## 2026-02-15 (Hour 11 delivery sequencing planning)
+### Added
+- `HOUR11-DELIVERY-SEQUENCING.md` with code-boundary-aligned batch sequencing, acceptance evidence per batch, single-push merge strategy, and senior-frontend review checklist.
+
+### Changed
+- `README.md` docs index now includes Hour 11 delivery sequencing artifact.
+- `IMPLEMENTATION-PLAN.md` now includes Iteration 9 (delivery sequencing for active code boundaries).
+- `SPRINT-EXECUTION-BOARD.md` now includes Hour 11 progress snapshot and references.

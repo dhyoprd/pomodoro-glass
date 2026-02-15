@@ -119,6 +119,14 @@ Reference: `HOUR9-EXECUTION-CUTLINE.md`
 
 Reference: `HOUR10-MICRO-ITERATION-PLAN.md`
 
+### Iteration 9 – Hour 11 Delivery Sequencing for Active Code Boundaries (Done)
+- [x] Translated micro-iteration intent into batch sequencing aligned to current `src/` architecture boundaries.
+- [x] Added per-batch target file map and acceptance evidence to keep implementation reviewable and revert-safe.
+- [x] Added single-push merge strategy and senior-frontend review checklist tied to SOLID import rules.
+- [x] Added command bundle definition for deterministic reviewer verification.
+
+Reference: `HOUR11-DELIVERY-SEQUENCING.md`
+
 ## Definition of Ready (per task)
 - Business rule written in one sentence.
 - Input/output contract identified.
