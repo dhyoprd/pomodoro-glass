@@ -71,10 +71,10 @@ const LAUNCH_PATH_AUDIENCE_OPTIONS: ReadonlyArray<{
   icon: string;
   label: string;
 }> = [
-  { id: 'all', icon: '🧭', label: 'All paths' },
-  { id: 'desk', icon: LAUNCH_PATH_AUDIENCE_META.desk.icon, label: LAUNCH_PATH_AUDIENCE_META.desk.label },
-  { id: 'mobile', icon: LAUNCH_PATH_AUDIENCE_META.mobile.icon, label: LAUNCH_PATH_AUDIENCE_META.mobile.label },
-  { id: 'reset', icon: LAUNCH_PATH_AUDIENCE_META.reset.icon, label: LAUNCH_PATH_AUDIENCE_META.reset.label },
+  { id: 'all', icon: '', label: 'All paths' },
+  { id: 'desk', icon: '', label: LAUNCH_PATH_AUDIENCE_META.desk.label },
+  { id: 'mobile', icon: '', label: LAUNCH_PATH_AUDIENCE_META.mobile.label },
+  { id: 'reset', icon: '', label: LAUNCH_PATH_AUDIENCE_META.reset.label },
 ] as const;
 
 const PLANNING_MINUTE_PRESETS = [30, 45, 60, 90, 120, 180, 240] as const;
@@ -453,9 +453,9 @@ export function PomodoroApp() {
   );
 
   const mobileModeIcon = useMemo(() => {
-    if (state.mode === 'shortBreak') return '☕';
-    if (state.mode === 'longBreak') return '🌿';
-    return '🎯';
+    if (state.mode === 'shortBreak') return 'SB';
+    if (state.mode === 'longBreak') return 'LB';
+    return 'FOCUS';
   }, [state.mode]);
 
   const plannerSettings = activePreset?.settings ?? state.settings;
@@ -1293,8 +1293,8 @@ export function PomodoroApp() {
         ) : null}
         <aside className="hero-briefing" aria-label="Recommended launch briefing">
           <div className="hero-briefing-head">
-            <strong>🧠 Today&apos;s best-fit launch</strong>
-            <span>{heroRecommendedPath.icon} {heroRecommendedPath.name}</span>
+            <strong>Today&apos;s best-fit launch</strong>
+            <span>{heroRecommendedPath.name}</span>
           </div>
           <ul>
             <li>
@@ -1695,7 +1695,7 @@ export function PomodoroApp() {
         <ul>
           {onboardingChecklist.items.map((item) => (
             <li key={item.id} className={item.done ? 'done' : ''}>
-              <strong>{item.done ? '✅' : '⬜'}</strong>
+              <strong>{item.done ? 'Done' : 'Todo'}</strong>
               <span>{item.label}</span>
               {!item.done ? (
                 <button type="button" className="onboarding-action" onClick={item.action.run}>
@@ -1714,19 +1714,19 @@ export function PomodoroApp() {
         </div>
         <div className="momentum-grid">
           <article className="momentum-card">
-            <strong>⏱️ {momentumStats.totalHours}h</strong>
+            <strong>{momentumStats.totalHours}h</strong>
             <p>Total focused hours tracked</p>
           </article>
           <article className="momentum-card">
-            <strong>🍅 {formatAverageMinutes(momentumStats.avgMinutesPerSession)}m</strong>
+            <strong>{formatAverageMinutes(momentumStats.avgMinutesPerSession)}m</strong>
             <p>Average minutes per completed session</p>
           </article>
           <article className="momentum-card">
-            <strong>📈 {momentumStats.activeDays}/7</strong>
+            <strong>{momentumStats.activeDays}/7</strong>
             <p>Active days this week</p>
           </article>
           <article className="momentum-card">
-            <strong>🧭 {focusHealth.score} · {focusHealth.tier}</strong>
+            <strong>{focusHealth.score} · {focusHealth.tier}</strong>
             <p>Focus Health Score ({focusHealth.metrics.weeklySessions} sessions, {focusHealth.metrics.streak}d streak)</p>
             <small>{focusHealth.recommendation}</small>
           </article>
@@ -1744,7 +1744,7 @@ export function PomodoroApp() {
           </p>
           <div className="streak-rescue-actions">
             <button type="button" onClick={() => applyPresetAndStart(rescuePreset)}>
-              {rescuePreset.icon} Rescue with {rescuePreset.name}
+Rescue with {rescuePreset.name}
             </button>
             <button type="button" className="ghost" onClick={() => scrollToSection('session-planner')}>
               Tune plan first
@@ -2302,7 +2302,7 @@ export function PomodoroApp() {
           </div>
           <ul id="taskList">
             {!state.tasks.length ? (
-              <li><span>No tasks yet. Add one above ✨</span></li>
+              <li><span>No tasks yet. Add one above.</span></li>
             ) : (
               state.tasks.map((task) => (
                 <li key={task.id} className={task.done ? 'done' : ''}>
